@@ -26,7 +26,7 @@ new Vue({
     },
     methods: {
         login() {
-            if (this.password == "secret" && this.email == "test") { //axios get
+            if (this.password == "test" && this.email == "test") { //axios get
                 this.loggedIn = true
             } else {
                 this.errorMessage = "Wrong"

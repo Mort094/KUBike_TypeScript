@@ -12,17 +12,17 @@
 
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 
-  <title>HELP</title>
+  <title>app</title>
 </head>
 
 <body>
-  <h1>HELP</h1>
+  <h1>Login</h1>
   <div id="app">
     <div v-if="loggedIn">
-      <button class="btn btn-success" v-on:click="getAllBikes">TEST</button>
-  
+      <button class="btn btn-success" v-on:click="getAllBikes">Get all bikes</button>
+      <button class="btn btn-success" v-on:click="logout">Log out</button>
       <ul id="cyclelist" v-if="cycles.length">
-        <li v-for="cycle in cycles" >
+        <li v-for="cycle in cycles" key="cycle_id" >
           {{ cycle.cycle_name }}
         </li>
       </ul>
