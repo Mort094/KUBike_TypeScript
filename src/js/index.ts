@@ -15,12 +15,26 @@ interface ICycle {
 new Vue({
     el: "#app",
     data: {
+        loggedIn: false,
+        email: "",
+        password: "",
+        errorMessage: "",
         cycles: []
     },
-    created(){
+    created() {
         this.getAllBikes()
     },
     methods: {
+        login() {
+            if (this.password == "secret" && this.email == "test") { //axios get
+                this.loggedIn = true
+            } else {
+                this.errorMessage = "Wrong"
+            }
+
+        }, logout() {
+            this.loggedIn = false
+        },
         helperGetAndShow(url: string) { // helper metode: getAllCar + getByVendor are very similar
             axios.get<ICycle[]>(url)
                 .then((response: AxiosResponse<ICycle[]>) => {

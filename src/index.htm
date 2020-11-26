@@ -18,7 +18,7 @@
 <body>
   <h1>Hello</h1>
   <div id="app">
-    <div>
+    <div v-if="loggedIn">
       <button class="btn btn-success" v-on:click="getAllBikes">TEST</button>
   
       <ul id="cyclelist" v-if="cycles.length">
@@ -27,6 +27,15 @@
         </li>
       </ul>
       <div v-else>Virker ikke</div>
+    </div>
+    
+    <div v-else>
+      <label for="Email">Email</label><br>
+      <input type="email" v-model="email" name="Email" placeholder="Email"><br>
+      <label for="Password">Password</label><br>
+      <input type="Password" v-model="password" name="Password" placeholder="Password"><br><br>
+      <button class="btn btn-success" v-on:click="login">Login</button>
+      <div class="text-warning">{{ errorMessage }}</div>
     </div>
 
 
