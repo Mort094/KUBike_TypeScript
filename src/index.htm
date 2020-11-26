@@ -18,24 +18,18 @@
 <body>
   <h1>Hello</h1>
   <div id="app">
-<<<<<<< HEAD
     <div>
       <button class="btn btn-success" v-on:click="getAllBikes">TEST</button>
   
       <ul id="cyclelist" v-if="cycles.length">
         <li v-for="cycle in cycles" >
-          {{cycle.cycle_id}}. {{cycle.cycle_name}} : {{cycle.cycle_coordinates}} {{cycle.cycle_status_id}}
+          {{ cycle.cycle_name }}
         </li>
       </ul>
       <div v-else>Virker ikke</div>
     </div>
 
 
-=======
-    <input v-model="name" placeholder="Name">
-    <button v-on:click="sayHello()" class="btn btn-primary">Say hello</button>
-    <div>{{ greeting }}</div>
->>>>>>> parent of 87d8b27... VIRKER
   </div>
 
   <script src="bundle.js"></script>
