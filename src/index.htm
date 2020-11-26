@@ -23,7 +23,7 @@
   
       <ul id="cyclelist" v-if="cycles.length">
         <li v-for="cycle in cycles" >
-          {{ cycle.cycle_name }}
+          {{cycle.cycle_id}}. {{cycle.cycle_name}} : {{cycle.cycle_coordinates}} {{cycle.cycle_status_id}}
         </li>
       </ul>
       <div v-else>Virker ikke</div>
