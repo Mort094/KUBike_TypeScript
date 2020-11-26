@@ -1,3 +1,4 @@
+import { Vue } from "../../node_modules/vue/types/vue";
 import axios, {
     AxiosResponse,
     AxiosError
