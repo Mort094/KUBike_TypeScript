@@ -18,9 +18,18 @@
 <body>
   <h1>Hello</h1>
   <div id="app">
-    <input v-model="name" placeholder="Name">
-    <button v-on:click="sayHello()" class="btn btn-primary">Say hello</button>
-    <div>{{ greeting }}</div>
+    <div>
+      <button class="btn btn-success" v-on:click="getAllBikes">TEST</button>
+  
+      <ul id="cyclelist" v-if="cycles.length">
+        <li v-for="cycle in cycles" >
+          {{ cycle.cycle_name }}
+        </li>
+      </ul>
+      <div v-else>Virker ikke</div>
+    </div>
+
+
   </div>
 
   <script src="bundle.js"></script>
