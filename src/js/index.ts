@@ -1,39 +1,39 @@
+<<<<<<< HEAD
 import { Vue } from "../../node_modules/vue/types/vue";
 import axios, {
+=======
+import Axios , {
+>>>>>>> parent of 87d8b27... VIRKER
     AxiosResponse,
     AxiosError
 } from "../../node_modules/axios/index";
 
 
-let baseUrl: string = "http://mort-rest.azurewebsites.net/api/cycles/"
+let baseUrl: string = "http://mort-rest.azurewebsites.net/api/cycles";
 
 interface ICycle {
-    cycle_id: number
-    cycle_name: string
-    cycle_coordinates: string
-    fk_cycle_status_id: number
+    cycle_id: number;
+    cycle_name: string;
+    cycle_coordinates: string;
+    cycle_status_id: number;
 }
 new Vue({
-    el: "#app",
-    data: {
-        cycles: []
-    },
-    created(){
-        this.getAllBikes()
-    },
-    methods: {
-        helperGetAndShow(url: string) { // helper metode: getAllCar + getByVendor are very similar
-            axios.get<ICycle[]>(url)
+        el: "#app",
+        data:{
+            cycles: []
+        },
+        methods: {
+            helperGetAndShow(url: string) {
+                Axios.get<ICycle[]>(url)
                 .then((response: AxiosResponse<ICycle[]>) => {
-                    this.cycles = response.data
+                    this.Bikes = response.data
                 })
                 .catch((error: AxiosError) => {
-                    //this.message = error.message
-                    alert(error.message) // https://www.w3schools.com/js/js_popup.asp
+                    alert(error.message)
                 })
+            }
         },
-        getAllBikes() {
+        getAllBikes(){
             this.helperGetAndShow(baseUrl)
         }
-    }
 })
