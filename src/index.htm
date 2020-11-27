@@ -16,26 +16,52 @@
 </head>
 
 <body>
-  <h1>Login</h1>
   <div id="app">
     <div v-if="loggedIn">
       <button class="btn btn-success" v-on:click="getAllBikes">Get all bikes</button>
       <button class="btn btn-success" v-on:click="logout">Log out</button>
       <ul id="cyclelist" v-if="cycles.length">
-        <li v-for="cycle in cycles" key="cycle_id" >
+        <li v-for="cycle in cycles" key="cycle_id">
           {{ cycle.cycle_name }}
         </li>
       </ul>
       <div v-else>Virker ikke</div>
     </div>
-    
+
     <div v-else>
-      <label for="Email">Email</label><br>
-      <input type="email" v-model="email" name="Email" placeholder="Email"><br>
-      <label for="Password">Password</label><br>
-      <input type="Password" v-model="password" name="Password" placeholder="Password"><br><br>
-      <button class="btn btn-success" v-on:click="login">Login</button>
-      <div class="text-warning">{{ errorMessage }}</div>
+      <div v-if="loginPage">
+        <div class="container">
+          <h2>Login</h2>
+          <div class="form-group">
+            <label for="Email">Email</label><br>
+            <input type="email" class="form-control" v-model="loginEmail" id="email" placeholder="Email">
+            <label for="password">Password</label><br>
+            <input type="Password" class="form-control" v-model="loginPassword" name="password" placeholder="Password">
+            <div class="text-warning">{{ errorMessage }}</div> <br>
+            <button class="btn btn-success" v-on:click="login">Login</button><br><br>
+            <button class="btn btn-primary" v-on:click="createPage">Opret Bruger</button>
+          </div>
+        </div>
+      </div>
+      <div v-if="createUserPage">
+        <div class="container">
+          <h2>Opret bruger</h2>
+          <div class="form-group">
+            <label for="email">Email</label><br>
+            <input type="email" class="form-control" v-model="addData.user_email" id="email" placeholder="Email">
+            <label for="password">Password</label><br>
+            <input type="Password" class="form-control" v-model="addData.user_password" id="password" placeholder="Password">
+            <label for="name">Fornavn</label><br>
+            <input type="text" class="form-control" v-model="addData.user_firstname" id="name" placeholder="Fornavn">
+            <label for="lastname">Efternavn</label><br>
+            <input type="text" class="form-control" v-model="addData.user_lastname" id="lastname" placeholder="Efternavn">
+            <label for="phone">Telefon nummer</label><br>
+            <input type="text" class="form-control" v-model="addData.user_mobile" id="phone" placeholder="Telefon Nummer"><br>
+            <button class="btn btn-success" v-on:click="addUser">Opret bruger</button>
+            <div>{{addMessage}}</div>
+          </div>
+        </div>
+      </div>
     </div>
 
 

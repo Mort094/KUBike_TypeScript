@@ -4,7 +4,8 @@ import axios, {
 } from "../../node_modules/axios/index";
 
 
-let baseUrl: string = "http://mort-rest.azurewebsites.net/api/cycles/"
+let baseCycleUrl: string = "http://mort-rest.azurewebsites.net/api/cycles/"
+let baseUserUrl: string = "http://mort-rest.azurewebsites.net/api/users/"
 
 interface ICycle {
     cycle_id: number
@@ -12,13 +13,26 @@ interface ICycle {
     cycle_coordinates: string
     fk_cycle_status_id: number
 }
+interface IUser {
+    user_id: number
+    user_email: string
+    user_password: string
+    user_firstname: string
+    user_lastname: string
+    user_mobile: number
+    fk_account_status_id: number
+}
 new Vue({
     el: "#app",
     data: {
         loggedIn: false,
-        email: "",
-        password: "",
+        loginPage: false,
+        createUserPage: true,
+        loginEmail: "",
+        loginPassword: "",
+        addData: {user_email: "", user_password: "", user_firstname: "", user_lastname: "", user_mobile: 0}, 
         errorMessage: "",
+        addMessage:"",
         cycles: []
     },
     created() {
@@ -26,7 +40,7 @@ new Vue({
     },
     methods: {
         login() {
-            if (this.password == "test" && this.email == "test") { //axios get
+            if (this.loginEmail == "test" && this.loginPassword == "test") { //axios get
                 this.loggedIn = true
             } else {
                 this.errorMessage = "Wrong"
@@ -34,6 +48,10 @@ new Vue({
 
         }, logout() {
             this.loggedIn = false
+        }, createPage(){
+            this.createUserPage = true
+            this.loginPage = false
+          
         },
         helperGetAndShow(url: string) { // helper metode: getAllCar + getByVendor are very similar
             axios.get<ICycle[]>(url)
@@ -46,7 +64,18 @@ new Vue({
                 })
         },
         getAllBikes() {
-            this.helperGetAndShow(baseUrl)
-        }
+            this.helperGetAndShow(baseCycleUrl)
+        }, addUser() {
+            axios.post<IUser>(baseUserUrl, this.addData)
+                .then((response: AxiosResponse) => {
+                    let message: string = "response " + response.status + " " + response.statusText
+                    this.addMessage = message
+
+                })
+                .catch((error: AxiosError) => {
+                    // this.addMessage = error.message
+                    alert(error.message)
+                })
+        },
     }
 })
