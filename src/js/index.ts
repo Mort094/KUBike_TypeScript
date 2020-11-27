@@ -25,8 +25,8 @@ interface IUser {
 new Vue({
     el: "#app",
     data: {
-        loggedIn: false,
-        loginPage: true,
+        loggedIn: true,
+        loginPage: false,
         createUserPage: false,
         overviewPage: false,
         cyclePage: true,
