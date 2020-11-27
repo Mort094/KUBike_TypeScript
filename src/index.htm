@@ -18,14 +18,25 @@
 <body>
   <div id="app">
     <div v-if="loggedIn">
-      <button class="btn btn-success" v-on:click="getAllBikes">Get all bikes</button>
-      <button class="btn btn-success" v-on:click="logout">Log out</button>
-      <ul id="cyclelist" v-if="cycles.length">
-        <li v-for="cycle in cycles" key="cycle_id">
-          {{ cycle.cycle_name }}
-        </li>
-      </ul>
-      <div v-else>Virker ikke</div>
+      <div v-if="overviewPage">
+        <button class="btn btn-success" v-on:click="getAllBikes">Get all bikes</button>
+        <button class="btn btn-success" v-on:click="logout">Log out</button>
+        <ul id="cyclelist" v-if="cycles.length">
+          <li v-for="cycle in cycles" key="cycle_id">
+            {{ cycle.cycle_name }}
+          </li>
+        </ul>
+        <div v-else>Virker ikke</div>
+      </div>
+      <div v-if="cyclePage">
+        <div class="container">
+          
+
+            <h2>Cykel navn</h2>
+            <h2>TEST</h2>
+          
+        </div>
+      </div>
     </div>
 
     <div v-else>
@@ -50,13 +61,16 @@
             <label for="email">Email</label><br>
             <input type="email" class="form-control" v-model="addData.user_email" id="email" placeholder="Email">
             <label for="password">Password</label><br>
-            <input type="Password" class="form-control" v-model="addData.user_password" id="password" placeholder="Password">
+            <input type="Password" class="form-control" v-model="addData.user_password" id="password"
+              placeholder="Password">
             <label for="name">Fornavn</label><br>
             <input type="text" class="form-control" v-model="addData.user_firstname" id="name" placeholder="Fornavn">
             <label for="lastname">Efternavn</label><br>
-            <input type="text" class="form-control" v-model="addData.user_lastname" id="lastname" placeholder="Efternavn">
+            <input type="text" class="form-control" v-model="addData.user_lastname" id="lastname"
+              placeholder="Efternavn">
             <label for="phone">Telefon nummer</label><br>
-            <input type="text" class="form-control" v-model="addData.user_mobile" id="phone" placeholder="Telefon Nummer"><br>
+            <input type="text" class="form-control" v-model="addData.user_mobile" id="phone"
+              placeholder="Telefon Nummer"><br>
             <button class="btn btn-success" v-on:click="addUser">Opret bruger</button>
             <div>{{addMessage}}</div>
           </div>
