@@ -25,17 +25,14 @@ interface IUser {
 new Vue({
     el: "#app",
     data: {
-<<<<<<< Updated upstream
         loggedIn: false,
         loginPage: true,
         createUserPage: false,
-=======
         loggedIn: true,
         loginPage: false,
         createUserPage: false,
         overviewPage: false,
         cyclePage: true,
->>>>>>> Stashed changes
         loginEmail: "",
         loginPassword: "",
         addData: {user_email: "", user_password: "", user_firstname: "", user_lastname: "", user_mobile: 0}, 
