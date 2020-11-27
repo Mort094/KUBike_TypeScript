@@ -26,8 +26,8 @@ new Vue({
     el: "#app",
     data: {
         loggedIn: false,
-        loginPage: false,
-        createUserPage: true,
+        loginPage: true,
+        createUserPage: false,
         loginEmail: "",
         loginPassword: "",
         addData: {user_email: "", user_password: "", user_firstname: "", user_lastname: "", user_mobile: 0}, 
@@ -46,7 +46,22 @@ new Vue({
                 this.errorMessage = "Wrong"
             }
 
-        }, logout() {
+        },
+        loginTry(){
+            axios.get(baseUserUrl + this.loginEmail + '/' + this.loginPassword)
+            .then(function (response) {
+                // handle success
+                this.response;
+            })
+            .catch(function (error) {
+                // handle error
+                this.error;
+            })
+            .then(function () {
+                // always executed
+            });
+        },
+         logout() {
             this.loggedIn = false
         }, createPage(){
             this.createUserPage = true
