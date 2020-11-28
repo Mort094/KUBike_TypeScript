@@ -46,15 +46,22 @@ new Vue({
             }
 
         },
-        loginTry(){
+        loginTry() {
             axios.get(baseUserUrl + this.loginEmail + '/' + this.loginPassword)
             .then(function (response) {
-                // handle success
-                this.response;
+                console.log(response.data)
+                console.log(response)
+                if(response.data == true){
+                    console.log("Rigtig kode!")
+                    this.loggedIn = true
+                }
+                else{
+                    this.errorMessage = "Wrong"
+                }
             })
             .catch(function (error) {
                 // handle error
-                this.error;
+                console.log(error);
             })
             .then(function () {
                 // always executed
