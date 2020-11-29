@@ -25,11 +25,12 @@ interface IUser {
 new Vue({
     el: "#app",
     data: {
-        loggedIn: false,
-        loginPage: true,
+        loggedIn: true,
+        loginPage: false,
         createUserPage: false,
         overviewPage: false,
         cyclePage: true,
+        cycleId: 1,
         loginEmail: "",
         loginPassword: "",
         addData: {user_email: "", user_password: "", user_firstname: "", user_lastname: "", user_mobile: 0}, 
@@ -86,7 +87,11 @@ new Vue({
         },
         getAllBikes() {
             this.helperGetAndShow(baseCycleUrl)
-        }, addUser() {
+        }, getOneBike(id: number){
+            let url = baseCycleUrl + "/Id/" + id
+            this.helperGetAndShow(url)
+        },
+        addUser() {
             axios.post<IUser>(baseUserUrl, this.addData)
                 .then((response: AxiosResponse) => {
                     let message: string = "response " + response.status + " " + response.statusText
