@@ -59,12 +59,13 @@
         <p>
         Last result: <b>{{ decodedContent }}</b> <b>{{cycle_id}}</b>
         </p>
-      
+        <button class="btn btn-success" v-on:click="getOneBike"> Hent cykel</button>
         <p class="error">
           {{ errorMessage }}
         </p>
       
         <qrcode-stream @decode="onDecode" @init="onInit"></qrcode-stream>
+        
       </div>
 
 
@@ -74,6 +75,7 @@
             <h2>TEST</h2>
 
             <p>Cykel navn: {{ singleCycle.cycle_name }} </h2>
+              <button class="btn btn-success" id="StatButton" v-on:click="startTrip">Start tur</button>
 
           </div>
         </div>

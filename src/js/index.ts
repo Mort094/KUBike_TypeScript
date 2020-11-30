@@ -45,7 +45,7 @@ new Vue({
         cycles: []
     }, created() {
         console.log(window.location.search)
-        this.getOneBike(this.cycle_id)
+        //this.getOneBike(this.cycle_id)
     },
     methods: {
 
@@ -117,8 +117,8 @@ new Vue({
         getAllBikes() {
             this.helperGetAndShow(baseCycleUrl)
         },
-        getOneBike(id: number) {
-            let urlGet = baseCycleUrl + id
+        getOneBike() {
+            let urlGet = baseCycleUrl + this.cycle_id
             axios.get<ICycle>(urlGet)
                 .then((response: AxiosResponse<ICycle>) => {
                     this.singleCycle = response.data
@@ -126,6 +126,8 @@ new Vue({
                 .catch((error: AxiosError) => {
                     alert(error.message)
                 })
+                this.QR_ScanPage = false;
+                this.cyclePage = true;
         },
         addUser() {
             var mailformat = /^[a-zA-Z0-9.!#$%&'*+=?^_`{|}~-]+@+k+u+\.+d+k/;
