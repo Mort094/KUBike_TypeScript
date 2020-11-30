@@ -31,11 +31,11 @@ new Vue({
         _status: null,
         decodedContent: '',
         errorMessage: '',
-        loggedIn: true,
+        loggedIn: false,
         contentCheck: "",
-        loginPage: false,
+        loginPage: true,
         createUserPage: false,
-        overviewPage: true,
+        overviewPage: false,
         cyclePage: false,
         cycle_id: null,
         QR_ScanPage: false,
@@ -100,6 +100,11 @@ new Vue({
             this.createUserPage = true
             this.loginPage = false
 
+        },
+        OverviewPage(){
+            this.QR_ScanPage = false
+            this.cyclePage = false
+            this.overviewPage = true
         },
         QRPage() {
             this.QR_ScanPage = true
@@ -176,6 +181,8 @@ new Vue({
                     // this.addMessage = error.message
                     alert(error.message)
                 })
+                this.loginPage = true
+                this.createUserPage = false
             }
             else
             {
