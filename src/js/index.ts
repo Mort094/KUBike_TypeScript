@@ -52,17 +52,31 @@ new Vue({
 
         },
         loginTry(vendor: string) {
+            var mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+            if(this.loginEmail.match(mailformat))
+            {
             this.LoginHelpAndShow(baseUserUrl + this.loginEmail + '/' + this.loginPassword)
+            }
+            else
+            {
+            this.errorMessage = "Dette er ikke en rigtig email!";
+            }
         },
         LoginHelpAndShow(url: string) { // helper metode: getAllCar + getByVendor are very similar
             axios.get<IUser[]>(url)
                 .then((response: AxiosResponse<IUser[]>) => {
                     this.loggedIn = response.data
-                    this.user_email = this.loginEmail
-                    console.log(`Denne bruger email er blevet logget ind "${this.user_email}" `)
+                    if(this.loggedIn == true)
+                    {
+                        this.user_email = this.loginEmail
+                        this.loggedIn = response.data
+                        console.log(`Denne bruger email er blevet logget ind "${this.user_email}" `)
+                    }
+                   
+                    this.errorMessage = "Forkert brugernavn eller password"
                 })
                 .catch((error: AxiosError) => {
-                    this.message = error.message
+                    error.message = this.message
                     alert(error.message) // https://www.w3schools.com/js/js_popup.asp
                 })
         },
