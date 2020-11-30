@@ -48,31 +48,47 @@ new Vue({
         this.getOneBike(this.cycle_id)
     },
     methods: {
-
         login() {
-            if (this.loginEmail == "test" && this.loginPassword == "test") { //axios get
-                this.loggedIn = true
-            } else {
-                this.errorMessage = "Wrong"
-            }
-
+            this.createUserPage = false
+            this.loginPage = true
+            document.getElementById('login-email').className = "form-control";
+            this.errorMessage = ''
         },
         loginTry(vendor: string) {
             var mailformat = /^[a-zA-Z0-9.!#$%&'*+=?^_`{|}~-]+@+k+u+\.+d+k/;
             // https://regex101.com/r/h7oSha/1
-            if(this.loginEmail.match(mailformat))
-            {
+            if(this.loginPassword == '' && this.loginEmail == ''){
+                this.errorMessage = "Du skal skrive dit password og din email";
+                document.getElementById('login-password').className = "form-control error";
+                document.getElementById('login-email').className = "form-control error";
+            }
+            else{
                 if(this.loginPassword == ''){
                     this.errorMessage = "Du skal skrive et password";
+                    document.getElementById('login-password').className = "form-control error";
+                    document.getElementById('login-email').className = "form-control";
+
+                }
+                else if(this.loginEmail == ''){
+                    this.errorMessage = "Du skal skrive et en email";
+                    document.getElementById('login-password').className = "form-control";
+                    document.getElementById('login-email').className = "form-control error";
                 }
                 else{
+                    if(this.loginEmail.match(mailformat))
+                    {
                     this.LoginHelpAndShow(baseUserUrl + this.loginEmail + '/' + this.loginPassword)
+                    }
+                    else
+                    {
+                    this.errorMessage = "Din mail skal hedde @ku.dk";
+                    document.getElementById('login-email').className = "form-control error";
+                    document.getElementById('login-password').className = "form-control";
+
+                    }
                 }
             }
-            else
-            {
-            this.errorMessage = "Dette er ikke en rigtig email!";
-            }
+            
         },
         LoginHelpAndShow(url: string) { // helper metode: getAllCar + getByVendor are very similar
             axios.get<IUser[]>(url)
@@ -86,6 +102,9 @@ new Vue({
                     }
                    
                     this.errorMessage = "Forkert Email eller Password"
+                    //document.getElementById('opret-email').className = "green";
+                    document.getElementById('login-password').className = "form-control error";
+                    document.getElementById('login-email').className = "form-control error";
                 })
                 .catch((error: AxiosError) => {
                     error.message = this.message
@@ -94,10 +113,11 @@ new Vue({
         },
         logout() {
             this.loggedIn = false
-        }, createPage() {
+        },
+        createPage() {
             this.createUserPage = true
             this.loginPage = false
-
+            this.errorMessage = ''
         },
         QRPage() {
             this.QR_ScanPage = true
@@ -130,8 +150,6 @@ new Vue({
         addUser() {
             var mailformat = /^[a-zA-Z0-9.!#$%&'*+=?^_`{|}~-]+@+k+u+\.+d+k/;
             // https://regex101.com/r/h7oSha/1
-            console.log(this.addData.user_email)
-            console.log(this.addData.user_email.match(mailformat))
             if(this.addData.user_email.match(mailformat))
             {
                 axios.post<IUser>(baseUserUrl, this.addData)
@@ -142,8 +160,8 @@ new Vue({
 
                 })
                 .catch((error: AxiosError) => {
-                    // this.addMessage = error.message
-                    alert(error.message)
+                    this.errorMessage = error.message
+                    this.errorMessage
                 })
             }
             else

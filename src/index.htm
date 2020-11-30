@@ -84,13 +84,13 @@
       <div v-if="loginPage">
         <div class="container">
           <h2>Login</h2>
-          <div class="form-group">
+          <div class="form-group" id="login-page-form">
             <label for="Email">Email</label><br>
-            <input type="email" class="form-control" v-model="loginEmail" id="email" placeholder="Email">
+            <input id="login-email" type="email" class="form-control" v-model="loginEmail" placeholder="Email">
             <label for="password">Password</label><br>
-            <input type="Password" class="form-control" v-model="loginPassword" name="password" placeholder="Password">
+            <input id="login-password" type="Password" class="form-control" v-model="loginPassword" name="password" placeholder="Password">
             <div class="text-warning">{{ errorMessage }}</div> <br>
-            <button class="btn btn-success" id="login" v-on:click="loginTry">Login</button><br><br>
+            <button class="btn btn-success" id="login" v-on:click="loginTry">Login</button>
             <button class="btn btn-primary" v-on:click="createPage">Opret Bruger</button>
           </div>
         </div>
@@ -98,12 +98,12 @@
       <div v-if="createUserPage">
         <div class="container">
           <h2>Opret bruger</h2>
-          <div class="form-group">
+          <div class="form-group" id="opret-page-form">
             <label for="email">Email</label><br>
-            <input type="email" value="" class="form-control" v-model="addData.user_email" id="email" placeholder="Email">
+            <input type="email" class="form-control" v-model="addData.user_email" id="opret-email" placeholder="Email">
             <div class="text-warning">{{ errorMessage }}</div>
             <label for="password">Password</label><br>
-            <input type="Password" class="form-control" v-model="addData.user_password" id="password"
+            <input type="Password" class="form-control" v-model="addData.user_password" id="opret-password"
               placeholder="Password">
             <label for="name">Fornavn</label><br>
             <input type="text" class="form-control" v-model="addData.user_firstname" id="name" placeholder="Fornavn">
@@ -114,6 +114,8 @@
             <input type="text" class="form-control" v-model="addData.user_mobile" id="phone"
               placeholder="Telefon Nummer"><br>
             <button class="btn btn-success" v-on:click="addUser">Opret bruger</button>
+            <button class="btn btn-success" id="login" v-on:click="login">Login</button>
+            <div class="text-warning">{{ errorMessage }}</div>
           </div>
         </div>
       </div>
@@ -122,7 +124,12 @@
 
 
   </div>
-
+  <style>
+    #login-page-form .error
+    {
+        border-color: red;
+    }
+  </style>
   <script src="bundle.js"></script>
 </body>
 
