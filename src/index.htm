@@ -11,6 +11,7 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script src="https://kit.fontawesome.com/0729182226.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://unpkg.com/vue-qrcode-reader@2.3.15/dist/VueQrcodeReader.umd.min.js"></script>
 
 
   <title>app</title>
@@ -55,8 +56,17 @@
 
       <div v-if= "QR_ScanPage">
         <H2>QR-Scanner</H2>
-        <qrcode-stream></qrcode-stream>
+        <p>
+          Last result: <b>{{ decodedContent }}</b>
+        </p>
+      
+        <p class="error">
+          {{ errorMessage }}
+        </p>
+      
+        <qrcode-stream @decode="onDecode" @init="onInit"></qrcode-stream>
       </div>
+
 
       <div v-if="cyclePage">
         <div v-if="cycle_id">
@@ -90,7 +100,7 @@
           <h2>Opret bruger</h2>
           <div class="form-group">
             <label for="email">Email</label><br>
-            <input type="email" class="form-control" v-model="addData.user_email" id="email" placeholder="Email">
+            <input type="email" class="form-control" v-model="addData.user_email" id="emailc" placeholder="Email">
             <label for="password">Password</label><br>
             <input type="Password" class="form-control" v-model="addData.user_password" id="password"
               placeholder="Password">
@@ -114,8 +124,6 @@
   </div>
 
   <script src="bundle.js"></script>
-  <script src="./vue.js"></script>
-  <script src="./VueQrcodeReader.umd.min.js"></script>
 </body>
 
 </html>

@@ -2,6 +2,7 @@ import axios, {
     AxiosResponse,
     AxiosError
 } from "../../node_modules/axios/index";
+// import { Vue } from "../../node_modules/vue/types/vue";
 //import { QrcodeStream, QrcodeDropZone, QrcodeCapture } from "../../node_modules/vue-qrcode-reader";
 // import VueQrcodeReader from "../../node_modules/vue-qrcode-reader/index";
 
@@ -28,25 +29,27 @@ interface IUser {
 new Vue({
     el: "#app",
     data: {
+        decodedContent: '',
+        errorMessage: '',
         loggedIn: true,
         loginPage: false,
         createUserPage: false,
-        overviewPage: false,
+        overviewPage: true,
         cyclePage: false,
         cycle_id: 1,
-        QR_ScanPage: true,
+        QR_ScanPage: false,
         singleCycle: null,
         loginEmail: "",
         loginPassword: "",
         addData: { user_email: "", user_password: "", user_firstname: "", user_lastname: "", user_mobile: 0 },
-        errorMessage: "",
         addMessage: "",
         cycles: []
-    }, created(){
+    }, created() {
         console.log(window.location.search)
         this.getOneBike(this.cycle_id)
     },
     methods: {
+
         login() {
             if (this.loginEmail == "test" && this.loginPassword == "test") { //axios get
                 this.loggedIn = true
@@ -57,26 +60,23 @@ new Vue({
         },
         loginTry(vendor: string) {
             var mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-            if(this.loginEmail.match(mailformat))
-            {
-            this.LoginHelpAndShow(baseUserUrl + this.loginEmail + '/' + this.loginPassword)
+            if (this.loginEmail.match(mailformat)) {
+                this.LoginHelpAndShow(baseUserUrl + this.loginEmail + '/' + this.loginPassword)
             }
-            else
-            {
-            this.errorMessage = "Dette er ikke en rigtig email!";
+            else {
+                this.errorMessage = "Dette er ikke en rigtig email!";
             }
         },
         LoginHelpAndShow(url: string) { // helper metode: getAllCar + getByVendor are very similar
             axios.get<IUser[]>(url)
                 .then((response: AxiosResponse<IUser[]>) => {
                     this.loggedIn = response.data
-                    if(this.loggedIn == true)
-                    {
+                    if (this.loggedIn == true) {
                         this.user_email = this.loginEmail
                         this.loggedIn = response.data
                         console.log(`Denne bruger email er blevet logget ind "${this.user_email}" `)
                     }
-                   
+
                     this.errorMessage = "Forkert brugernavn eller password"
                 })
                 .catch((error: AxiosError) => {
@@ -131,5 +131,29 @@ new Vue({
                     alert(error.message)
                 })
         },
+        onDecode(content: any) {
+            this.decodedContent = content
+        },
+
+        onInit(promise: any) {
+            promise.then(() => {
+                console.log('Successfully initilized! Ready for scanning now!')
+            })
+                .catch((error: { name: string; message: string; }) => {
+                    if (error.name === 'NotAllowedError') {
+                        this.errorMessage = 'Hey! I need access to your camera'
+                    } else if (error.name === 'NotFoundError') {
+                        this.errorMessage = 'Do you even have a camera on your device?'
+                    } else if (error.name === 'NotSupportedError') {
+                        this.errorMessage = 'Seems like this page is served in non-secure context (HTTPS, localhost or file://)'
+                    } else if (error.name === 'NotReadableError') {
+                        this.errorMessage = 'Couldn\'t access your camera. Is it already in use?'
+                    } else if (error.name === 'OverconstrainedError') {
+                        this.errorMessage = 'Constraints don\'t match any installed camera. Did you asked for the front camera although there is none?'
+                    } else {
+                        this.errorMessage = 'UNKNOWN ERROR: ' + error.message
+                    }
+                })
+        }
     }
 })
