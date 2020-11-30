@@ -25,8 +25,8 @@ interface IUser {
 new Vue({
     el: "#app",
     data: {
-        loggedIn: true,
-        loginPage: false,
+        loggedIn: false,
+        loginPage: true,
         createUserPage: false,
         overviewPage: false,
         cyclePage: true,
@@ -51,26 +51,20 @@ new Vue({
             }
 
         },
-        loginTry() {
-            axios.get(baseUserUrl + this.loginEmail + '/' + this.loginPassword)
-                .then(function (response) {
+        loginTry(vendor: string) {
+            this.LoginHelpAndShow(baseUserUrl + this.loginEmail + '/' + this.loginPassword)
+        },
+        LoginHelpAndShow(url: string) { // helper metode: getAllCar + getByVendor are very similar
+            axios.get<IUser[]>(url)
+                .then((response: AxiosResponse<IUser[]>) => {
+                    this.loggedIn = response.data
                     console.log(response.data)
-                    console.log(response)
-                    if (response.data == true) {
-                        console.log("Rigtig kode!")
-                        this.loggedIn = true
-                    }
-                    else {
-                        this.errorMessage = "Wrong"
-                    }
+                    console.log(this.loggedIn)
                 })
-                .catch(function (error) {
-                    // handle error
-                    console.log(error);
+                .catch((error: AxiosError) => {
+                    this.message = error.message
+                    alert(error.message) // https://www.w3schools.com/js/js_popup.asp
                 })
-                .then(function () {
-                    // always executed
-                });
         },
         logout() {
             this.loggedIn = false
