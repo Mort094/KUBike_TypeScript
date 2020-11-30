@@ -28,6 +28,7 @@ interface IUser {
 new Vue({
     el: "#app",
     data: {
+        _status: null,
         decodedContent: '',
         errorMessage: '',
         loggedIn: true,
@@ -103,6 +104,26 @@ new Vue({
             this.QR_ScanPage = true
             this.overviewPage = false
             this.cyclePage = false
+        },
+        startTrip(_status: 1) {
+            let urlGet = baseCycleUrl + "start/" + this.cycle_id
+            axios.put<ICycle>(urlGet)
+                .then((response: AxiosResponse<ICycle>) => {
+                    this.singleCycle = response.data
+                })
+                .catch((error: AxiosError) => {
+                    alert(error.message)
+                })
+        },
+        slutTrip(_status: 2) {
+            let urlGet = baseCycleUrl + "slut/" + this.cycle_id
+            axios.put<ICycle>(urlGet)
+                .then((response: AxiosResponse<ICycle>) => {
+                    this.singleCycle = response.data
+                })
+                .catch((error: AxiosError) => {
+                    alert(error.message)
+                })
         },
         helperGetAndShow(url: string) { // helper metode: getAllCar + getByVendor are very similar
             axios.get<ICycle[]>(url)
