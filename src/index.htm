@@ -100,7 +100,8 @@
           <h2>Opret bruger</h2>
           <div class="form-group">
             <label for="email">Email</label><br>
-            <input type="email" class="form-control" v-model="addData.user_email" id="emailc" placeholder="Email">
+            <input type="email" value="" class="form-control" v-model="addData.user_email" id="email" placeholder="Email">
+            <div class="text-warning">{{ errorMessage }}</div>
             <label for="password">Password</label><br>
             <input type="Password" class="form-control" v-model="addData.user_password" id="password"
               placeholder="Password">
@@ -113,7 +114,6 @@
             <input type="text" class="form-control" v-model="addData.user_mobile" id="phone"
               placeholder="Telefon Nummer"><br>
             <button class="btn btn-success" v-on:click="addUser">Opret bruger</button>
-            <div>{{addMessage}}</div>
           </div>
         </div>
       </div>

@@ -25,13 +25,12 @@ interface IUser {
     fk_account_status_id: number
 }
 
-
 new Vue({
     el: "#app",
     data: {
         decodedContent: '',
         errorMessage: '',
-        loggedIn: true,
+        loggedIn: false,
         loginPage: false,
         createUserPage: false,
         overviewPage: true,
@@ -59,24 +58,28 @@ new Vue({
 
         },
         loginTry(vendor: string) {
-            var mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-            if (this.loginEmail.match(mailformat)) {
-                this.LoginHelpAndShow(baseUserUrl + this.loginEmail + '/' + this.loginPassword)
+            var mailformat = /^[a-zA-Z0-9.!#$%&'*+=?^_`{|}~-]+@+k+u+\.+d+k/;
+            // https://regex101.com/r/h7oSha/1
+            if(this.loginEmail.match(mailformat))
+            {
+            this.LoginHelpAndShow(baseUserUrl + this.loginEmail + '/' + this.loginPassword)
             }
-            else {
-                this.errorMessage = "Dette er ikke en rigtig email!";
+            else
+            {
+            this.errorMessage = "Dette er ikke en rigtig email!";
             }
         },
         LoginHelpAndShow(url: string) { // helper metode: getAllCar + getByVendor are very similar
             axios.get<IUser[]>(url)
                 .then((response: AxiosResponse<IUser[]>) => {
                     this.loggedIn = response.data
-                    if (this.loggedIn == true) {
+                    if(this.loggedIn == true)
+                    {
                         this.user_email = this.loginEmail
                         this.loggedIn = response.data
                         console.log(`Denne bruger email er blevet logget ind "${this.user_email}" `)
                     }
-
+                   
                     this.errorMessage = "Forkert brugernavn eller password"
                 })
                 .catch((error: AxiosError) => {
@@ -120,9 +123,16 @@ new Vue({
                 })
         },
         addUser() {
-            axios.post<IUser>(baseUserUrl, this.addData)
+            var mailformat = /^[a-zA-Z0-9.!#$%&'*+=?^_`{|}~-]+@+k+u+\.+d+k/;
+            // https://regex101.com/r/h7oSha/1
+            console.log(this.addData.user_email)
+            console.log(this.addData.user_email.match(mailformat))
+            if(this.addData.user_email.match(mailformat))
+            {
+                axios.post<IUser>(baseUserUrl, this.addData)
                 .then((response: AxiosResponse) => {
                     let message: string = "response " + response.status + " " + response.statusText
+                    console.log(message)
                     this.addMessage = message
 
                 })
@@ -130,6 +140,11 @@ new Vue({
                     // this.addMessage = error.message
                     alert(error.message)
                 })
+            }
+            else
+            {
+            this.errorMessage = "Dette er ikke en @ku.dk mail!";
+            }
         },
         onDecode(content: any) {
             this.decodedContent = content
