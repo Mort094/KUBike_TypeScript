@@ -30,13 +30,17 @@ new Vue({
         createUserPage: false,
         overviewPage: false,
         cyclePage: true,
-        cycleId: 1,
+        cycle_id: 1,
+        singleCycle: null,
         loginEmail: "",
         loginPassword: "",
-        addData: {user_email: "", user_password: "", user_firstname: "", user_lastname: "", user_mobile: 0}, 
+        addData: { user_email: "", user_password: "", user_firstname: "", user_lastname: "", user_mobile: 0 },
         errorMessage: "",
-        addMessage:"",
+        addMessage: "",
         cycles: []
+    }, created(){
+        console.log(window.location.search)
+        this.getOneBike(this.cycle_id)
     },
     methods: {
         login() {
@@ -49,31 +53,31 @@ new Vue({
         },
         loginTry() {
             axios.get(baseUserUrl + this.loginEmail + '/' + this.loginPassword)
-            .then(function (response) {
-                console.log(response.data)
-                console.log(response)
-                if(response.data == true){
-                    console.log("Rigtig kode!")
-                    this.loggedIn = true
-                }
-                else{
-                    this.errorMessage = "Wrong"
-                }
-            })
-            .catch(function (error) {
-                // handle error
-                console.log(error);
-            })
-            .then(function () {
-                // always executed
-            });
+                .then(function (response) {
+                    console.log(response.data)
+                    console.log(response)
+                    if (response.data == true) {
+                        console.log("Rigtig kode!")
+                        this.loggedIn = true
+                    }
+                    else {
+                        this.errorMessage = "Wrong"
+                    }
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log(error);
+                })
+                .then(function () {
+                    // always executed
+                });
         },
-         logout() {
+        logout() {
             this.loggedIn = false
-        }, createPage(){
+        }, createPage() {
             this.createUserPage = true
             this.loginPage = false
-          
+
         },
         helperGetAndShow(url: string) { // helper metode: getAllCar + getByVendor are very similar
             axios.get<ICycle[]>(url)
@@ -87,9 +91,16 @@ new Vue({
         },
         getAllBikes() {
             this.helperGetAndShow(baseCycleUrl)
-        }, getOneBike(id: number){
-            let url = baseCycleUrl + "/Id/" + id
-            this.helperGetAndShow(url)
+        },
+        getOneBike(id: number) {
+            let urlGet = baseCycleUrl + id
+            axios.get<ICycle>(urlGet)
+                .then((response: AxiosResponse<ICycle>) => {
+                    this.singleCycle = response.data
+                })
+                .catch((error: AxiosError) => {
+                    alert(error.message)
+                })
         },
         addUser() {
             axios.post<IUser>(baseUserUrl, this.addData)
