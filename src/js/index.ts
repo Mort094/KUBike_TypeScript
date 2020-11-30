@@ -32,6 +32,7 @@ new Vue({
         decodedContent: '',
         errorMessage: '',
         loggedIn: true,
+        contentCheck: "",
         loginPage: false,
         createUserPage: false,
         overviewPage: true,
@@ -114,6 +115,7 @@ new Vue({
                 .catch((error: AxiosError) => {
                     alert(error.message)
                 })
+                alert("Tur startet")
         },
         slutTrip(_status: 2) {
             let urlGet = baseCycleUrl + "slut/" + this.cycle_id
@@ -124,6 +126,7 @@ new Vue({
                 .catch((error: AxiosError) => {
                     alert(error.message)
                 })
+                alert("Tur Stoppet")
         },
         helperGetAndShow(url: string) { // helper metode: getAllCar + getByVendor are very similar
             axios.get<ICycle[]>(url)
@@ -139,6 +142,7 @@ new Vue({
             this.helperGetAndShow(baseCycleUrl)
         },
         getOneBike() {
+            if(this.contentCheck == "http://qr.getbike/") {
             let urlGet = baseCycleUrl + this.cycle_id
             axios.get<ICycle>(urlGet)
                 .then((response: AxiosResponse<ICycle>) => {
@@ -149,6 +153,10 @@ new Vue({
                 })
                 this.QR_ScanPage = false;
                 this.cyclePage = true;
+            }
+            else {
+                alert("Ikke en gyldig Cykel QR.");
+            }
         },
         addUser() {
             var mailformat = /^[a-zA-Z0-9.!#$%&'*+=?^_`{|}~-]+@+k+u+\.+d+k/;
@@ -176,6 +184,7 @@ new Vue({
         },
         onDecode(content: any) {
             this.decodedContent = content
+            this.contentCheck = content.substr(0,18)
             this.cycle_id = content.slice(18)
         },
 
