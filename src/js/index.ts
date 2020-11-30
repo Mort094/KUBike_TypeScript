@@ -30,12 +30,12 @@ new Vue({
     data: {
         decodedContent: '',
         errorMessage: '',
-        loggedIn: false,
-        loginPage: true,
+        loggedIn: true,
+        loginPage: false,
         createUserPage: false,
         overviewPage: true,
         cyclePage: false,
-        cycle_id: 1,
+        cycle_id: null,
         QR_ScanPage: false,
         singleCycle: null,
         loginEmail: "",
@@ -153,6 +153,7 @@ new Vue({
         },
         onDecode(content: any) {
             this.decodedContent = content
+            this.cycle_id = content.slice(18)
         },
 
         onInit(promise: any) {
