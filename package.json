@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "axios": "^0.21.0",
-    "vue": "^2.6.12"
+    "vue": "^2.6.12",
+    "vue-qrcode-reader": "^2.3.15"
   }
 }

@@ -2,7 +2,8 @@ import axios, {
     AxiosResponse,
     AxiosError
 } from "../../node_modules/axios/index";
-
+//import { QrcodeStream, QrcodeDropZone, QrcodeCapture } from "../../node_modules/vue-qrcode-reader";
+// import VueQrcodeReader from "../../node_modules/vue-qrcode-reader/index";
 
 let baseCycleUrl: string = "https://mort-rest.azurewebsites.net/api/cycles/"
 let baseUserUrl: string = "https://mort-rest.azurewebsites.net/api/users/"
@@ -22,15 +23,18 @@ interface IUser {
     user_mobile: number
     fk_account_status_id: number
 }
+
+
 new Vue({
     el: "#app",
     data: {
-        loggedIn: false,
-        loginPage: true,
+        loggedIn: true,
+        loginPage: false,
         createUserPage: false,
         overviewPage: false,
-        cyclePage: true,
+        cyclePage: false,
         cycle_id: 1,
+        QR_ScanPage: true,
         singleCycle: null,
         loginEmail: "",
         loginPassword: "",
@@ -86,6 +90,11 @@ new Vue({
             this.createUserPage = true
             this.loginPage = false
 
+        },
+        QRPage() {
+            this.QR_ScanPage = true
+            this.overviewPage = false
+            this.cyclePage = false
         },
         helperGetAndShow(url: string) { // helper metode: getAllCar + getByVendor are very similar
             axios.get<ICycle[]>(url)
