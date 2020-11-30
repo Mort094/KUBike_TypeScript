@@ -31,7 +31,7 @@ new Vue({
         decodedContent: '',
         errorMessage: '',
         loggedIn: false,
-        loginPage: false,
+        loginPage: true,
         createUserPage: false,
         overviewPage: true,
         cyclePage: false,
