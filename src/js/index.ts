@@ -4,8 +4,8 @@ import axios, {
 } from "../../node_modules/axios/index";
 
 
-let baseCycleUrl: string = "http://mort-rest.azurewebsites.net/api/cycles/"
-let baseUserUrl: string = "http://mort-rest.azurewebsites.net/api/users/"
+let baseCycleUrl: string = "https://mort-rest.azurewebsites.net/api/cycles/"
+let baseUserUrl: string = "https://mort-rest.azurewebsites.net/api/users/"
 
 interface ICycle {
     cycle_id: number
