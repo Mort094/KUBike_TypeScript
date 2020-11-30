@@ -58,8 +58,8 @@ new Vue({
             axios.get<IUser[]>(url)
                 .then((response: AxiosResponse<IUser[]>) => {
                     this.loggedIn = response.data
-                    console.log(response.data)
-                    console.log(this.loggedIn)
+                    this.user_email = this.loginEmail
+                    console.log(`Denne bruger email er blevet logget ind "${this.user_email}" `)
                 })
                 .catch((error: AxiosError) => {
                     this.message = error.message
