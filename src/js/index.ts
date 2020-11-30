@@ -62,7 +62,12 @@ new Vue({
             // https://regex101.com/r/h7oSha/1
             if(this.loginEmail.match(mailformat))
             {
-            this.LoginHelpAndShow(baseUserUrl + this.loginEmail + '/' + this.loginPassword)
+                if(this.loginPassword == ''){
+                    this.errorMessage = "Du skal skrive et password";
+                }
+                else{
+                    this.LoginHelpAndShow(baseUserUrl + this.loginEmail + '/' + this.loginPassword)
+                }
             }
             else
             {
@@ -80,7 +85,7 @@ new Vue({
                         console.log(`Denne bruger email er blevet logget ind "${this.user_email}" `)
                     }
                    
-                    this.errorMessage = "Forkert brugernavn eller password"
+                    this.errorMessage = "Forkert Email eller Password"
                 })
                 .catch((error: AxiosError) => {
                     error.message = this.message
