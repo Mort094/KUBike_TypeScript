@@ -28,14 +28,16 @@ interface IUser {
 new Vue({
     el: "#app",
     data: {
+        _status: null,
         decodedContent: '',
         errorMessage: '',
         loggedIn: false,
+        contentCheck: "",
         loginPage: true,
         createUserPage: false,
-        overviewPage: true,
+        overviewPage: false,
         cyclePage: false,
-        cycle_id: 1,
+        cycle_id: null,
         QR_ScanPage: false,
         singleCycle: null,
         loginEmail: "",
@@ -45,7 +47,7 @@ new Vue({
         cycles: []
     }, created() {
         console.log(window.location.search)
-        this.getOneBike(this.cycle_id)
+        //this.getOneBike(this.cycle_id)
     },
     methods: {
         login() {
@@ -119,10 +121,37 @@ new Vue({
             this.loginPage = false
             this.errorMessage = ''
         },
+        OverviewPage(){
+            this.QR_ScanPage = false
+            this.cyclePage = false
+            this.overviewPage = true
+        },
         QRPage() {
             this.QR_ScanPage = true
             this.overviewPage = false
             this.cyclePage = false
+        },
+        startTrip(_status: 1) {
+            let urlGet = baseCycleUrl + "start/" + this.cycle_id
+            axios.put<ICycle>(urlGet)
+                .then((response: AxiosResponse<ICycle>) => {
+                    this.singleCycle = response.data
+                })
+                .catch((error: AxiosError) => {
+                    alert(error.message)
+                })
+                alert("Tur startet")
+        },
+        slutTrip(_status: 2) {
+            let urlGet = baseCycleUrl + "slut/" + this.cycle_id
+            axios.put<ICycle>(urlGet)
+                .then((response: AxiosResponse<ICycle>) => {
+                    this.singleCycle = response.data
+                })
+                .catch((error: AxiosError) => {
+                    alert(error.message)
+                })
+                alert("Tur Stoppet")
         },
         helperGetAndShow(url: string) { // helper metode: getAllCar + getByVendor are very similar
             axios.get<ICycle[]>(url)
@@ -137,8 +166,9 @@ new Vue({
         getAllBikes() {
             this.helperGetAndShow(baseCycleUrl)
         },
-        getOneBike(id: number) {
-            let urlGet = baseCycleUrl + id
+        getOneBike() {
+            if(this.contentCheck == "http://qr.getbike/") {
+            let urlGet = baseCycleUrl + this.cycle_id
             axios.get<ICycle>(urlGet)
                 .then((response: AxiosResponse<ICycle>) => {
                     this.singleCycle = response.data
@@ -146,6 +176,12 @@ new Vue({
                 .catch((error: AxiosError) => {
                     alert(error.message)
                 })
+                this.QR_ScanPage = false;
+                this.cyclePage = true;
+            }
+            else {
+                alert("Ikke en gyldig Cykel QR.");
+            }
         },
         addUser() {
             var mailformat = /^[a-zA-Z0-9.!#$%&'*+=?^_`{|}~-]+@+k+u+\.+d+k/;
@@ -163,6 +199,8 @@ new Vue({
                     this.errorMessage = error.message
                     this.errorMessage
                 })
+                this.loginPage = true
+                this.createUserPage = false
             }
             else
             {
@@ -171,6 +209,8 @@ new Vue({
         },
         onDecode(content: any) {
             this.decodedContent = content
+            this.contentCheck = content.substr(0,18)
+            this.cycle_id = content.slice(18)
         },
 
         onInit(promise: any) {

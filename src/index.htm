@@ -22,7 +22,7 @@
     <div v-if="loggedIn">
 
       <nav class="navbar fixed-bottom navbar-expand-lg navbar-light bg-light ">
-        <button style="text-align: center; background: none; border: none;">
+        <button style="text-align: center; background: none; border: none;"  v-on:click="OverviewPage">
           <i class="fas fa-map-marker-alt" style="font-size: 45px;"></i><br>
           Kort
         </button>
@@ -56,25 +56,26 @@
 
       <div v-if= "QR_ScanPage">
         <H2>QR-Scanner</H2>
-        <p>
-          Last result: <b>{{ decodedContent }}</b>
-        </p>
-      
-        <p class="error">
+        <!--<p>
+        Last result: <b>{{ decodedContent }}</b> <b>{{cycle_id}}</b>
+        </p>-->
+        <button class="btn btn-success" v-on:click="getOneBike"> Hent cykel</button>
+        <!--<p class="error">
           {{ errorMessage }}
-        </p>
+        </p> -->
       
         <qrcode-stream @decode="onDecode" @init="onInit"></qrcode-stream>
+        
       </div>
 
 
       <div v-if="cyclePage">
         <div v-if="cycle_id">
           <div class="container">
-            <h2>TEST</h2>
-
-            <p>Cykel navn: {{ singleCycle.cycle_name }} </h2>
-
+            <h2>Du har valgt en cykel</h2>
+            <p>Cykel navn: {{ cycle_name }} </h2>
+              <button class="btn btn-success" id="StatButton" v-on:click="startTrip">Start tur</button>
+              <button class="btn btn-success" id="SlutButton" v-on:click="slutTrip">Slut tur</button>
           </div>
         </div>
       </div>
