@@ -102,21 +102,22 @@
           <div class="form-group" id="opret-page-form">
             <label for="email">Email</label><br>
             <input type="email" class="form-control" v-model="addData.user_email" id="opret-email" placeholder="Email">
-            <div class="text-warning">{{ errorMessage }}</div>
             <label for="password">Password</label><br>
             <input type="Password" class="form-control" v-model="addData.user_password" id="opret-password"
               placeholder="Password">
             <label for="name">Fornavn</label><br>
-            <input type="text" class="form-control" v-model="addData.user_firstname" id="name" placeholder="Fornavn">
+            <input type="text" class="form-control" v-model="addData.user_firstname" id="opret-name" placeholder="Fornavn">
             <label for="lastname">Efternavn</label><br>
-            <input type="text" class="form-control" v-model="addData.user_lastname" id="lastname"
+            <input type="text" class="form-control" v-model="addData.user_lastname" id="opret-lastname"
               placeholder="Efternavn">
             <label for="phone">Telefon nummer</label><br>
-            <input type="text" class="form-control" v-model="addData.user_mobile" id="phone"
-              placeholder="Telefon Nummer"><br>
+            <input type="text" class="form-control" id="opret-phone" v-model="addData.user_mobile" id="phone"
+              placeholder="Telefon Nummer">
+              <br>
+              <p id="demo"></p>
+            <div class="text-warning">{{ errorMessage }}</div> <br>
             <button class="btn btn-success" v-on:click="addUser">Opret bruger</button>
             <button class="btn btn-success" id="login" v-on:click="login">Login</button>
-            <div class="text-warning">{{ errorMessage }}</div>
           </div>
         </div>
       </div>
@@ -126,7 +127,8 @@
 
   </div>
   <style>
-    #login-page-form .error
+    #login-page-form .error,
+    #opret-page-form .error
     {
         border-color: red;
     }
