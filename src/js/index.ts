@@ -63,10 +63,12 @@ new Vue({
         loginEmail: "",
         loginPassword: "",
         addData: { user_email: "", user_password: "", user_firstname: "", user_lastname: "", user_mobile: 0 },
-        addTripData: { trip_map_json: "TESTTEST" },
+        addTripData: { trip_id: 0, trip_start: "", trip_end: "",  trip_map_json: "TESTTEST", fk_user_id: 0, fk_cycle_id: 0 },
         addMessage: "",
         cycles: [],
-        cycles2: []
+        cycles2: [],
+        userTrips: [],
+        activeBikes: []
     },
 
     created() {
@@ -76,6 +78,8 @@ new Vue({
         this.cycles
         this.getAllBikesAdmin()
         this.cycles2
+        this.GetActiveBikes()
+        this.activeBikes
     },
     methods: {
         login() {
@@ -171,6 +175,7 @@ new Vue({
 
         opretTrip() {
             let urlSecond = baseTripUrl
+            this.addTripData.trip_id = 1
             this.addTripData.fk_user_id = this.user_id
             this.addTripData.fk_cycle_id = this.cycle_id
             axios.post<ITrip>(urlSecond, this.addTripData)
@@ -192,28 +197,49 @@ new Vue({
             this.UserTripID.addData(this.ITrip.trip_id)
         },
 
-        HentTrip() {
-            let url = baseTripUrl
-            axios.get<ITrip>(url)
+        GetActiveBikes() {
+            let url = baseTripUrl + "alleusertrips/" + this.user_id
+            axios.get<ITrip[]>(url)
+            .then((response: AxiosResponse<ITrip[]>) => {
+                this.userTrips = response.data
+            })
+            .catch((error: AxiosError) => {
+                alert(error.message);
+            })
+            this.activeBikes.push(this.userTrips.fk_cycle_id)
         },
 
         slutTrip(_status: 2) {
+            this.TjekBruger()
             let urlGet = baseCycleUrl + "slut/" + this.cycle_id
-            axios.put<ICycle>(urlGet)
-                .then((response: AxiosResponse<ICycle>) => {
-                    this.singleCycle = response.data
+            if (this.activeBikes.find(this.cycle_id)) {
+                axios.put<ICycle>(urlGet)
+                    .then((response: AxiosResponse<ICycle>) => {
+                        this.singleCycle = response.data
+                    })
+                    .catch((error: AxiosError) => {
+                        alert(error.message)
+                    })
+                alert("Tur Stoppet")
+            }
+            else {
+                alert("Du er ikke den registrerede bruger af denne cykel")
+            }
+        },
+
+        TjekBruger() {
+            let urlGet = baseCycleUrl + "getwithuser/" + this.trip_id
+            axios.get<ITrip[]>(urlGet)
+                .then((response: AxiosResponse<ITrip[]>) => {
+                    this.userTrips = response.data
                 })
                 .catch((error: AxiosError) => {
-                    alert(error.message)
+                    alert(error.message);
                 })
-            alert("Tur Stoppet")
-
-            //else () {
-            //  alert("du er ikke registreret bruger af denne cykel")
         },
 
 
-        helperGetAndShow(url: string) { // helper metode: getAllCar + getByVendor are very similar
+        helperGetAndShow(url: string) { 
             axios.get<ICycle[]>(url)
                 .then((response: AxiosResponse<ICycle[]>) => {
                     this.cycles = response.data
@@ -224,7 +250,7 @@ new Vue({
                 })
         },
         getAllBikesAdmin() {
-            let url = baseCycleUrl + "alle-cykler/"
+            let url = baseCycleUrl + "alle-cykler/" 
             axios.get<ICycle[]>(url)
                 .then((response: AxiosResponse<ICycle[]>) => {
                     this.cycles2 = response.data
