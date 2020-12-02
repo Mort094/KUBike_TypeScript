@@ -63,12 +63,14 @@ new Vue({
         addData: { user_email: "", user_password: "", user_firstname: "", user_lastname: "", user_mobile: 0 },
         addTripData:{ trip_map_json: "TESTTEST"},
         addMessage: "",
-        cycles: []
+        cycles: [],
+        cycles2: []
     }, 
     
     created() {
         // console.log(window.location.search)
         // this.getOneBike(this.cycle_id)
+        this.getAllBikesAdmin()
         this.getAllBikes()
         this.cycles
     },
@@ -208,6 +210,9 @@ new Vue({
                     alert(error.message) // https://www.w3schools.com/js/js_popup.asp
                 })
         },
+        getAllBikesAdmin() {
+            this.helperGetAndShow(baseCycleUrl + "alle-cykler/")
+        },
         getAllBikes() {
             this.helperGetAndShow(baseCycleUrl)
         },
@@ -221,8 +226,21 @@ new Vue({
                     .catch((error: AxiosError) => {
                         alert(error.message)
                     })
-                this.QR_ScanPage = false;
-                this.cyclePage = true;
+                    if (this.cycle_id != null) {
+                        let urlGet = baseCycleUrl + "ledig/" + this.cycle_id
+                        axios.get<ICycle>(urlGet)
+                            .then((response: AxiosResponse<ICycle>) => {
+                                this.singleCycle = response.data
+                            })
+                            .catch((error: AxiosError) => {
+                                alert("Cykel er ikke ledig")
+                            })
+                            this.QR_ScanPage = false
+                            this.cyclePage = true
+                    }
+                    else {
+                        alert("ikke en gyldig cykel QR")
+                    }
             }
             else {
                 alert("Ikke en gyldig Cykel QR.");
@@ -358,28 +376,29 @@ new Vue({
                         this.errorMessage = 'UNKNOWN ERROR: ' + error.message
                     }
                 })
-        }
-    },
-    Unavaliable(_status: 1) {
-        let urlGet = baseCycleUrl + "start/" + this.cycle_id
-        axios.put<ICycle>(urlGet)
-            .then((response: AxiosResponse<ICycle>) => {
-                this.selected = response.data
-            })
-            .catch((error: AxiosError) => {
-                alert(error.message)
-            })
-        alert("Unavaliable Now")
-    },
-    Avaliable(_status: 2) {
-        let urlGet = baseCycleUrl + "slut/" + this.cycle_id
-        axios.put<ICycle>(urlGet)
-            .then((response: AxiosResponse<ICycle>) => {
-                this.selected = response.data
-            })
-            .catch((error: AxiosError) => {
-                alert(error.message)
-            })
-        alert("Avaliable Now")
-    },
+        },
+        Unavaliable(_status: 1) {
+            let urlGet = baseCycleUrl + "start/" + this.selected
+            // this.opretTrip()
+            axios.put<ICycle>(urlGet)
+                .then((response: AxiosResponse<ICycle>) => {
+                    this.selected = response.data
+                })
+                .catch((error: AxiosError) => {
+                    alert(error.message)
+                })
+            alert("Unavaliable Now")
+        },
+        Avaliable(_status: 2) {
+            let urlGet = baseCycleUrl + "slut/" + this.cycle_id
+            axios.put<ICycle>(urlGet)
+                .then((response: AxiosResponse<ICycle>) => {
+                    this.selected = response.data
+                })
+                .catch((error: AxiosError) => {
+                    alert(error.message)
+                })
+            alert("Avaliable Now")
+        },
+    }
 })

@@ -75,14 +75,14 @@
             <p>
               <button class="btn btn-success" id="StatButton" v-on:click="startTrip">Start tur</button>
               <button class="btn btn-success" id="SlutButton" v-on:click="slutTrip">Slut tur</button>
-<h4>Skade på cykel?</h4>
-<p>
+            <h4>Skade på cykel?</h4>
+            <p>
               <a href="mailto:KU-Bikes@QR.com?subject=Indgiv skade&body=Rappoter skade på cykel:">
                 <button id="btnOutlook">Indgiv skade fra outlook app</button>
               </a>
             </p>
-            
-          <p>Eller send en mail til KU-Bikes@QR.com</p>
+
+            <p>Eller send en mail til KU-Bikes@QR.com</p>
             </p>
           </div>
         </div>
@@ -133,30 +133,29 @@
       </div>
     </div>
 
-  <div v-if="CSPage">
-    <br>
-    <select  v-model="selected"  >
-      <option v-key="cycle.cycle_id"  v-for="cycle in cycles" 
-      value ="cycle.value">{{ cycle.cycle_name }}
-      </option>
-    </select>
-    <span>Selected: {{ selected }}</span>
-    <br>
-    <button class="btn btn-success" id="Unavaliable" v-on:click="Unavaliable">Unavaliable</button>
-    <button class="btn btn-success" id="Avaliable" v-on:click="Avaliable">Avaliable</button>
-  </body>
-  </div>
+    <div v-if="CSPage">
+      <br>
+      <select v-model="selected">
+        <option v-for="cycle in cycles2"> {{cycle.cycle_id}}
+        </option>
+      </select>
+      <span>Selected: {{ selected }}</span>
+      <br>
+      <button class="btn btn-success" id="UnavaliableButton" v-on:click="Unavaliable">Unavaliable</button>
+      <button class="btn btn-success" id="AvaliableButton" v-on:click="Avaliable">Avaliable</button>
+</body>
+</div>
 
- 
 
-  </div>
-  <style>
-    #login-page-form .error,
-    #opret-page-form .error {
-      border-color: red;
-    }
-  </style>
-  <script src="bundle.js"></script>
+
+</div>
+<style>
+  #login-page-form .error,
+  #opret-page-form .error {
+    border-color: red;
+  }
+</style>
+<script src="bundle.js"></script>
 </body>
 
 </html>
