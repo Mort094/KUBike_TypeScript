@@ -15,6 +15,7 @@ var indholder8Tal = /\d\d\d\d\d\d\d\d/;
 
 let baseCycleUrl: string = "https://mort-rest.azurewebsites.net/api/cycles/"
 let baseUserUrl: string = "https://mort-rest.azurewebsites.net/api/users/"
+let baseTripUrl: string = "https://mort-rest.azurewebsites.net/api/trip/"
 
 interface ICycle {
     cycle_id: number
@@ -30,6 +31,14 @@ interface IUser {
     user_lastname: string
     user_mobile: number
     fk_account_status_id: number
+}
+interface ITrip {
+    trip_id: number
+    trip_start: Date
+    trip_end: Date
+    trip_map_json: string
+    fk_cycle_id: number
+    fk_user_id: number
 }
 
 new Vue({
@@ -52,6 +61,7 @@ new Vue({
         loginEmail: "",
         loginPassword: "",
         addData: { user_email: "", user_password: "", user_firstname: "", user_lastname: "", user_mobile: 0 },
+        addTripData:{ trip_map_json: "TESTTEST"},
         addMessage: "",
         cycles: []
     }, 
@@ -139,8 +149,10 @@ new Vue({
             this.overviewPage = false
             this.cyclePage = false
         },
+
         startTrip(_status: 1) {
             let urlGet = baseCycleUrl + "start/" + this.cycle_id
+            this.opretTrip()
             axios.put<ICycle>(urlGet)
                 .then((response: AxiosResponse<ICycle>) => {
                     this.singleCycle = response.data
@@ -150,6 +162,29 @@ new Vue({
                 })
             alert("Tur startet")
         },
+
+        opretTrip() {
+            let urlSecond = baseTripUrl
+            this.addTripData.fk_user_id = this.user_id
+            this.addTripData.fk_cycle_id = this.cycle_id
+            axios.post<ITrip>(urlSecond, this.addTripData)
+            .then 
+            (
+                (response: AxiosResponse) => {
+                    let message: string = "response" + response.status + " " + response.statusText
+                    console.log(message)
+                    this.addMessage = message
+                    //sideskift?
+                }
+            )
+            .catch(
+                (error: AxiosError) => {
+                    this.errorMessage = error.message
+                    this.errorMessage
+                }
+            )
+        },
+
         slutTrip(_status: 2) {
             let urlGet = baseCycleUrl + "slut/" + this.cycle_id
             axios.put<ICycle>(urlGet)
@@ -161,6 +196,8 @@ new Vue({
                 })
             alert("Tur Stoppet")
         },
+
+
         helperGetAndShow(url: string) { // helper metode: getAllCar + getByVendor are very similar
             axios.get<ICycle[]>(url)
                 .then((response: AxiosResponse<ICycle[]>) => {

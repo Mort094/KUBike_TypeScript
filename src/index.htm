@@ -22,13 +22,11 @@
     <div v-if="loggedIn">
 
       <nav class="navbar fixed-bottom navbar-expand-lg navbar-light bg-light ">
-        <button style="text-align: center; background: none; border: none;"  v-on:click="OverviewPage">
+        <button style="text-align: center; background: none; border: none;" v-on:click="OverviewPage">
           <i class="fas fa-map-marker-alt" style="font-size: 45px;"></i><br>
           Kort
         </button>
-        <button style="text-align: center; background: none; border: none;"
-        v-on:click="QRPage"
-        >
+        <button style="text-align: center; background: none; border: none;" v-on:click="QRPage">
 
           <i class="fas fa-qrcode" style="font-size: 45px;"></i><br>
           Scan Cykel
@@ -54,7 +52,7 @@
         <div v-else>Virker ikke</div>
       </div>
 
-      <div v-if= "QR_ScanPage">
+      <div v-if="QR_ScanPage">
         <H2>QR-Scanner</H2>
         <!--<p>
         Last result: <b>{{ decodedContent }}</b> <b>{{cycle_id}}</b>
@@ -63,9 +61,9 @@
         <!--<p class="error">
           {{ errorMessage }}
         </p> -->
-      
+
         <qrcode-stream @decode="onDecode" @init="onInit"></qrcode-stream>
-        
+
       </div>
 
 
@@ -73,9 +71,19 @@
         <div v-if="cycle_id">
           <div class="container">
             <h2>Du har valgt en cykel</h2>
-            <p>Cykel navn: {{ cycle_name }} </h2>
+            <p>Cykel id: {{ cycle_id }} </p>
+            <p>
               <button class="btn btn-success" id="StatButton" v-on:click="startTrip">Start tur</button>
               <button class="btn btn-success" id="SlutButton" v-on:click="slutTrip">Slut tur</button>
+<h4>Skade på cykel?</h4>
+<p>
+              <a href="mailto:KU-Bikes@QR.com?subject=Indgiv skade&body=Rappoter skade på cykel:">
+                <button id="btnOutlook">Indgiv skade fra outlook app</button>
+              </a>
+            </p>
+            
+          <p>Eller send en mail til KU-Bikes@QR.com</p>
+            </p>
           </div>
         </div>
       </div>
@@ -89,7 +97,8 @@
             <label for="Email">Email</label><br>
             <input id="login-email" type="email" class="form-control" v-model="loginEmail" placeholder="Email">
             <label for="password">Password</label><br>
-            <input id="login-password" type="Password" class="form-control" v-model="loginPassword" name="password" placeholder="Password">
+            <input id="login-password" type="Password" class="form-control" v-model="loginPassword" name="password"
+              placeholder="Password">
             <div class="text-warning">{{ errorMessage }}</div> <br>
             <button class="btn btn-success" id="login" v-on:click="loginTry">Login</button>
             <button class="btn btn-primary" v-on:click="createPage">Opret Bruger</button>
@@ -106,15 +115,16 @@
             <input type="Password" class="form-control" v-model="addData.user_password" id="opret-password"
               placeholder="Password">
             <label for="name">Fornavn</label><br>
-            <input type="text" class="form-control" v-model="addData.user_firstname" id="opret-name" placeholder="Fornavn">
+            <input type="text" class="form-control" v-model="addData.user_firstname" id="opret-name"
+              placeholder="Fornavn">
             <label for="lastname">Efternavn</label><br>
             <input type="text" class="form-control" v-model="addData.user_lastname" id="opret-lastname"
               placeholder="Efternavn">
             <label for="phone">Telefon nummer</label><br>
             <input type="text" class="form-control" id="opret-phone" v-model="addData.user_mobile" id="phone"
               placeholder="Telefon Nummer">
-              <br>
-              <p id="demo"></p>
+            <br>
+            <p id="demo"></p>
             <div class="text-warning">{{ errorMessage }}</div> <br>
             <button class="btn btn-success" v-on:click="addUser">Opret bruger</button>
             <button class="btn btn-success" id="login" v-on:click="login">Login</button>
@@ -142,9 +152,8 @@
   </div>
   <style>
     #login-page-form .error,
-    #opret-page-form .error
-    {
-        border-color: red;
+    #opret-page-form .error {
+      border-color: red;
     }
   </style>
   <script src="bundle.js"></script>
