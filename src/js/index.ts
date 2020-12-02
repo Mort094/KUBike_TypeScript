@@ -50,29 +50,32 @@ new Vue({
         errorMessage: '',
         loggedIn: false,
         contentCheck: "",
-        loginPage: false,
+        loginPage: true,
         createUserPage: false,
         overviewPage: false,
         cyclePage: false,
-        CSPage: true,
+        CSPage: false,
         cycle_id: null,
         QR_ScanPage: false,
         singleCycle: null,
+        CurrentUserId: null,
+        UserTripID: [],
         loginEmail: "",
         loginPassword: "",
         addData: { user_email: "", user_password: "", user_firstname: "", user_lastname: "", user_mobile: 0 },
-        addTripData:{ trip_map_json: "TESTTEST"},
+        addTripData: { trip_map_json: "TESTTEST" },
         addMessage: "",
         cycles: [],
         cycles2: []
-    }, 
-    
+    },
+
     created() {
         // console.log(window.location.search)
         // this.getOneBike(this.cycle_id)
-        this.getAllBikesAdmin()
         this.getAllBikes()
         this.cycles
+        this.getAllBikesAdmin()
+        this.cycles2
     },
     methods: {
         login() {
@@ -120,6 +123,7 @@ new Vue({
                     if (this.loggedIn == true) {
                         this.user_email = this.loginEmail
                         this.loggedIn = response.data
+                        this.CurrentUserId = this.IUser.user_id
                         console.log(`Denne bruger email er blevet logget ind "${this.user_email}" `)
                     }
 
@@ -170,21 +174,27 @@ new Vue({
             this.addTripData.fk_user_id = this.user_id
             this.addTripData.fk_cycle_id = this.cycle_id
             axios.post<ITrip>(urlSecond, this.addTripData)
-            .then 
-            (
-                (response: AxiosResponse) => {
-                    let message: string = "response" + response.status + " " + response.statusText
-                    console.log(message)
-                    this.addMessage = message
-                    //sideskift?
-                }
-            )
-            .catch(
-                (error: AxiosError) => {
-                    this.errorMessage = error.message
-                    this.errorMessage
-                }
-            )
+                .then
+                (
+                    (response: AxiosResponse) => {
+                        let message: string = "response" + response.status + " " + response.statusText
+                        console.log(message)
+                        this.addMessage = message
+                        //sideskift?
+                    }
+                )
+                .catch(
+                    (error: AxiosError) => {
+                        this.errorMessage = error.message
+                        this.errorMessage
+                    }
+                )
+            this.UserTripID.addData(this.ITrip.trip_id)
+        },
+
+        HentTrip() {
+            let url = baseTripUrl
+            axios.get<ITrip>(url)
         },
 
         slutTrip(_status: 2) {
@@ -197,6 +207,9 @@ new Vue({
                     alert(error.message)
                 })
             alert("Tur Stoppet")
+
+            //else () {
+            //  alert("du er ikke registreret bruger af denne cykel")
         },
 
 
@@ -211,7 +224,14 @@ new Vue({
                 })
         },
         getAllBikesAdmin() {
-            this.helperGetAndShow(baseCycleUrl + "alle-cykler/")
+            let url = baseCycleUrl + "alle-cykler/"
+            axios.get<ICycle[]>(url)
+                .then((response: AxiosResponse<ICycle[]>) => {
+                    this.cycles2 = response.data
+                })
+                .catch((error: AxiosError) => {
+                    alert(error.message)
+                })
         },
         getAllBikes() {
             this.helperGetAndShow(baseCycleUrl)
@@ -226,21 +246,21 @@ new Vue({
                     .catch((error: AxiosError) => {
                         alert(error.message)
                     })
-                    if (this.cycle_id != null) {
-                        let urlGet = baseCycleUrl + "ledig/" + this.cycle_id
-                        axios.get<ICycle>(urlGet)
-                            .then((response: AxiosResponse<ICycle>) => {
-                                this.singleCycle = response.data
-                            })
-                            .catch((error: AxiosError) => {
-                                alert("Cykel er ikke ledig")
-                            })
-                            this.QR_ScanPage = false
-                            this.cyclePage = true
-                    }
-                    else {
-                        alert("ikke en gyldig cykel QR")
-                    }
+                if (this.cycle_id != null) {
+                    let urlGet = baseCycleUrl + "ledig/" + this.cycle_id
+                    axios.get<ICycle>(urlGet)
+                        .then((response: AxiosResponse<ICycle>) => {
+                            this.singleCycle = response.data
+                        })
+                        .catch((error: AxiosError) => {
+                            alert("Cykel er ikke ledig")
+                        })
+                    this.QR_ScanPage = false
+                    this.cyclePage = true
+                }
+                else {
+                    alert("ikke en gyldig cykel QR")
+                }
             }
             else {
                 alert("Ikke en gyldig Cykel QR.");
@@ -390,7 +410,7 @@ new Vue({
             alert("Unavaliable Now")
         },
         Avaliable(_status: 2) {
-            let urlGet = baseCycleUrl + "slut/" + this.cycle_id
+            let urlGet = baseCycleUrl + "slut/" + this.selected
             axios.put<ICycle>(urlGet)
                 .then((response: AxiosResponse<ICycle>) => {
                     this.selected = response.data
@@ -399,6 +419,6 @@ new Vue({
                     alert(error.message)
                 })
             alert("Avaliable Now")
-        },
-    }
+        }
+    },
 })
