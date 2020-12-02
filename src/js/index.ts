@@ -35,15 +35,17 @@ interface IUser {
 new Vue({
     el: "#app",
     data: {
+        selected: null,
         _status: null,
         decodedContent: '',
         errorMessage: '',
         loggedIn: false,
         contentCheck: "",
-        loginPage: true,
+        loginPage: false,
         createUserPage: false,
         overviewPage: false,
         cyclePage: false,
+        CSPage: true,
         cycle_id: null,
         QR_ScanPage: false,
         singleCycle: null,
@@ -52,9 +54,13 @@ new Vue({
         addData: { user_email: "", user_password: "", user_firstname: "", user_lastname: "", user_mobile: 0 },
         addMessage: "",
         cycles: []
-    }, created() {
+    }, 
+    
+    created() {
         // console.log(window.location.search)
         // this.getOneBike(this.cycle_id)
+        this.getAllBikes()
+        this.cycles
     },
     methods: {
         login() {
@@ -316,5 +322,27 @@ new Vue({
                     }
                 })
         }
-    }
+    },
+    Unavaliable(_status: 1) {
+        let urlGet = baseCycleUrl + "start/" + this.cycle_id
+        axios.put<ICycle>(urlGet)
+            .then((response: AxiosResponse<ICycle>) => {
+                this.selected = response.data
+            })
+            .catch((error: AxiosError) => {
+                alert(error.message)
+            })
+        alert("Unavaliable Now")
+    },
+    Avaliable(_status: 2) {
+        let urlGet = baseCycleUrl + "slut/" + this.cycle_id
+        axios.put<ICycle>(urlGet)
+            .then((response: AxiosResponse<ICycle>) => {
+                this.selected = response.data
+            })
+            .catch((error: AxiosError) => {
+                alert(error.message)
+            })
+        alert("Avaliable Now")
+    },
 })

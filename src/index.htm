@@ -123,7 +123,21 @@
       </div>
     </div>
 
+  <div v-if="CSPage">
+    <br>
+    <select  v-model="selected"  >
+      <option v-key="cycle.cycle_id"  v-for="cycle in cycles" 
+      value ="cycle.value">{{ cycle.cycle_name }}
+      </option>
+    </select>
+    <span>Selected: {{ selected }}</span>
+    <br>
+    <button class="btn btn-success" id="Unavaliable" v-on:click="Unavaliable">Unavaliable</button>
+    <button class="btn btn-success" id="Avaliable" v-on:click="Avaliable">Avaliable</button>
+  </body>
+  </div>
 
+ 
 
   </div>
   <style>
