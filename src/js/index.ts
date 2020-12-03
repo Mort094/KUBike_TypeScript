@@ -172,9 +172,9 @@ new Vue({
             let urlSecond = baseTripUrl
             this.addTripData.fk_user_id = this.CurrentUserId
             this.addTripData.fk_cycle_id = this.cycle_id
-            this.addTripData.trip_map_json = "cc"
-            this.addTripData.trip_start = "xx"
-            this.addTripData.trip_end = "yy"
+            this.addTripData.trip_map_json = "map"
+            this.addTripData.trip_start = "start time"
+            this.addTripData.trip_end = "end time"
             axios.post<ITrip>(urlSecond, this.addTripData)
                 .then
                 ((response: AxiosResponse) => {
