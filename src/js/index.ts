@@ -45,6 +45,7 @@ new Vue({
         selected: null,
         _status: null,
         decodedContent: '',
+        currentTrip: [],
         errorMessage: '',
         loggedIn: false,
         contentCheck: "",
@@ -60,7 +61,7 @@ new Vue({
         loginEmail: "",
         loginPassword: "",
         addData: { user_email: "", user_password: "", user_firstname: "", user_lastname: "", user_mobile: 0 },
-        addTripData: { trip_start: "XX", trip_end: "XX", trip_map_json: "TESTTEST", fk_user_id: 0, fk_cycle_id: 0 },
+        addTripData: { trip_start: "", trip_end: "", trip_map_json: "", fk_user_id: 0, fk_cycle_id: 0 },
         addMessage: "",
         cycles: [],
         cycles2: [],
@@ -157,11 +158,9 @@ new Vue({
 
         startTrip(_status: 1) {
             let urlGet = baseCycleUrl + "start/" + this.cycle_id
-            
             axios.put<ICycle>(urlGet)
                 .then((response: AxiosResponse<ICycle>) => {
                     this.singleCycle = response.data
-                    this.opretTrip()
                 })
                 .catch((error: AxiosError) => {
                     alert(error.message)
@@ -178,11 +177,8 @@ new Vue({
             this.addTripData.trip_end = "yy"
             axios.post<ITrip>(urlSecond, this.addTripData)
                 .then
-                (
-                    (response: AxiosResponse) => {
-                        let message: string = "response" + response.status + " " + response.statusText
-                        console.log(message)
-                        this.addMessage = message
+                ((response: AxiosResponse) => {
+                        this.currentTrip = response
                         //sideskift?
                     }
                 )

@@ -73,7 +73,7 @@
             <h2>Du har valgt en cykel</h2>
             <p>Cykel id: {{ cycle_id }} </p>
             <p>
-              <button class="btn btn-success" id="StatButton" v-on:click="startTrip">Start tur</button>
+              <button class="btn btn-success" id="StatButton" v-on:click="startTrip(); opretTrip();">Start tur</button>
               <button class="btn btn-success" id="SlutButton" v-on:click="slutTrip">Slut tur</button>
             <h4>Skade på cykel?</h4>
             <p>
