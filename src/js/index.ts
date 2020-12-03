@@ -11,8 +11,6 @@ var indholdeSmallBogstaver = /.*[a-z].*/;
 var indeholdeBigBogstaver = /.*[A-Z].*/;
 var indholder8Tal = /\d\d\d\d\d\d\d\d/;
 
-
-
 let baseCycleUrl: string = "https://mort-rest.azurewebsites.net/api/cycles/"
 let baseUserUrl: string = "https://mort-rest.azurewebsites.net/api/users/"
 let baseTripUrl: string = "https://mort-rest.azurewebsites.net/api/trip/"
@@ -59,16 +57,15 @@ new Vue({
         QR_ScanPage: false,
         singleCycle: null,
         CurrentUserId: null,
-        UserTripID: [],
         loginEmail: "",
         loginPassword: "",
         addData: { user_email: "", user_password: "", user_firstname: "", user_lastname: "", user_mobile: 0 },
-        addTripData: { trip_id: 0, trip_start: "", trip_end: "",  trip_map_json: "TESTTEST", fk_user_id: 0, fk_cycle_id: 0 },
+        addTripData: { trip_start: "XX", trip_end: "XX", trip_map_json: "TESTTEST", fk_user_id: 0, fk_cycle_id: 0 },
         addMessage: "",
         cycles: [],
         cycles2: [],
-        userTrips: [],
-        activeBikes: []
+        activeBikes: [],
+        AllUserTrips: []
     },
 
     created() {
@@ -78,7 +75,6 @@ new Vue({
         this.cycles
         this.getAllBikesAdmin()
         this.cycles2
-        this.GetActiveBikes()
         this.activeBikes
     },
     methods: {
@@ -109,12 +105,12 @@ new Vue({
                 else {
                     if (this.loginEmail.match(mailformat)) {
                         this.LoginHelpAndShow(baseUserUrl + this.loginEmail + '/' + this.loginPassword)
+                        this.HentBruger()
                     }
                     else {
                         this.errorMessage = "Din mail skal hedde @ku.dk";
                         document.getElementById('login-email').className = "form-control error";
                         document.getElementById('login-password').className = "form-control";
-
                     }
                 }
             }
@@ -127,10 +123,8 @@ new Vue({
                     if (this.loggedIn == true) {
                         this.user_email = this.loginEmail
                         this.loggedIn = response.data
-                        this.CurrentUserId = this.IUser.user_id
                         console.log(`Denne bruger email er blevet logget ind "${this.user_email}" `)
                     }
-
                     this.errorMessage = "Forkert Email eller Password"
                     //document.getElementById('opret-email').className = "green";
                     document.getElementById('login-password').className = "form-control error";
@@ -158,14 +152,16 @@ new Vue({
             this.QR_ScanPage = true
             this.overviewPage = false
             this.cyclePage = false
+            this.GetActiveBikes()
         },
 
         startTrip(_status: 1) {
             let urlGet = baseCycleUrl + "start/" + this.cycle_id
-            this.opretTrip()
+            
             axios.put<ICycle>(urlGet)
                 .then((response: AxiosResponse<ICycle>) => {
                     this.singleCycle = response.data
+                    this.opretTrip()
                 })
                 .catch((error: AxiosError) => {
                     alert(error.message)
@@ -175,9 +171,11 @@ new Vue({
 
         opretTrip() {
             let urlSecond = baseTripUrl
-            this.addTripData.trip_id = 1
-            this.addTripData.fk_user_id = this.user_id
+            this.addTripData.fk_user_id = this.CurrentUserId
             this.addTripData.fk_cycle_id = this.cycle_id
+            this.addTripData.trip_map_json = "cc"
+            this.addTripData.trip_start = "xx"
+            this.addTripData.trip_end = "yy"
             axios.post<ITrip>(urlSecond, this.addTripData)
                 .then
                 (
@@ -194,29 +192,24 @@ new Vue({
                         this.errorMessage
                     }
                 )
-            this.UserTripID.addData(this.ITrip.trip_id)
         },
 
         GetActiveBikes() {
-            let url = baseTripUrl + "alleusertrips/" + this.user_id
+            let url = baseTripUrl + "allusertrips/" + this.CurrentUserId
             axios.get<ITrip[]>(url)
-            .then((response: AxiosResponse<ITrip[]>) => {
-                this.userTrips = response.data
-            })
-            .catch((error: AxiosError) => {
-                alert(error.message);
-            })
-            this.activeBikes.push(this.userTrips.fk_cycle_id)
+                .then((response: AxiosResponse<ITrip[]>) => {
+                    this.activeBikes = response.data
+                })
+                .catch((error: AxiosError) => {
+                    alert(error.message);
+                })
         },
 
         slutTrip(_status: 2) {
-            this.TjekBruger()
             let urlGet = baseCycleUrl + "slut/" + this.cycle_id
-            if (this.activeBikes.find(this.cycle_id)) {
+            if (this.activeBikes.indexOf(this.cycle_id)) {
                 axios.put<ICycle>(urlGet)
-                    .then((response: AxiosResponse<ICycle>) => {
-                        this.singleCycle = response.data
-                    })
+                    .then(r => console.log(r.status))
                     .catch((error: AxiosError) => {
                         alert(error.message)
                     })
@@ -227,19 +220,30 @@ new Vue({
             }
         },
 
+        HentBruger() {
+            let urlGet = baseUserUrl + this.loginEmail
+            axios.get<IUser>(urlGet)
+                .then((response: AxiosResponse<IUser>) => {
+                    this.CurrentUserId = response.data
+                })
+                .catch((error: AxiosError) => {
+                    alert(error.message);
+                })
+
+        },
+
         TjekBruger() {
-            let urlGet = baseCycleUrl + "getwithuser/" + this.trip_id
+            let urlGet = baseTripUrl + "allusertrips/" + this.CurrentUserId
             axios.get<ITrip[]>(urlGet)
                 .then((response: AxiosResponse<ITrip[]>) => {
-                    this.userTrips = response.data
+                    this.AllUserTrips = response.data
                 })
                 .catch((error: AxiosError) => {
                     alert(error.message);
                 })
         },
 
-
-        helperGetAndShow(url: string) { 
+        helperGetAndShow(url: string) {
             axios.get<ICycle[]>(url)
                 .then((response: AxiosResponse<ICycle[]>) => {
                     this.cycles = response.data
@@ -250,7 +254,7 @@ new Vue({
                 })
         },
         getAllBikesAdmin() {
-            let url = baseCycleUrl + "alle-cykler/" 
+            let url = baseCycleUrl + "alle-cykler/"
             axios.get<ICycle[]>(url)
                 .then((response: AxiosResponse<ICycle[]>) => {
                     this.cycles2 = response.data
