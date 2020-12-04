@@ -31,9 +31,8 @@ interface IUser {
     fk_account_status_id: number
 }
 interface ITrip {
-    trip_id: number
-    trip_start: Date
-    trip_end: Date
+    trip_start: string
+    trip_end: string
     trip_map_json: string
     fk_cycle_id: number
     fk_user_id: number
@@ -48,7 +47,7 @@ new Vue({
         singleCycle: null,
         //#region Id's
         CurrentUserId: null,
-        cycle_id: null,
+        cycle_id: 0,
         //#endregion
         //#region Messages
         errorMessage: '',
@@ -82,10 +81,11 @@ new Vue({
         //#region login
         loginEmail: "",
         loginPassword: "",
+        ResponseTrip: null,
         //#endregion
         //#region Create data
         addData: { user_email: "", user_password: "", user_firstname: "", user_lastname: "", user_mobile: 0 },
-        addTripData: { trip_start: "", trip_end: "", trip_map_json: "", fk_user_id: 0, fk_cycle_id: 0 },
+        addTripData: { trip_start: "", trip_end: "", trip_map_json: "", fk_user_id: 0, fk_cycle_id: 0 }
         //#endregion
     },
 
@@ -241,22 +241,24 @@ new Vue({
             let urlSecond = baseTripUrl
             this.addTripData.fk_user_id = this.CurrentUserId
             this.addTripData.fk_cycle_id = this.cycle_id
-            this.addTripData.trip_map_json = "map"
-            this.addTripData.trip_start = "start time"
-            this.addTripData.trip_end = "end time"
+            this.addTripData.trip_map_json = "some map stuff"
+            this.addTripData.trip_start = "some start time"
+            this.addTripData.trip_end = "some end time"
             axios.post<ITrip>(urlSecond, this.addTripData)
                 .then
                 ((response: AxiosResponse) => {
-                    this.currentTrip = response
+                    //this.currentTrip[] = response
                     //sideskift?
+                    this.responseTrip = response.data
                 }
                 )
                 .catch(
                     (error: AxiosError) => {
-                        this.errorMessage = error.message
-                        this.errorMessage
+                        alert(error.message)
                     }
                 )
+                alert("XXX")
+                // this.startTrip()
         },
         slutTrip(_status: 2) {
             let urlGet = baseCycleUrl + "slut/" + this.cycle_id
