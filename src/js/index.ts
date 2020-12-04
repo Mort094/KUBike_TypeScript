@@ -41,6 +41,7 @@ interface ITrip {
 new Vue({
     el: "#app",
     data: {
+        currentDateWithFormat: "",
         select: '',
         _status: null,
         decodedContent: '',
@@ -85,7 +86,7 @@ new Vue({
         //#endregion
         //#region Create data
         addData: { user_email: "", user_password: "", user_firstname: "", user_lastname: "", user_mobile: 0 },
-        addTripData: { trip_start: "", trip_end: "", trip_map_json: "", fk_user_id: 0, fk_cycle_id: 0 }
+        addTripData: { trip_start: "", trip_end: "", trip_map_json: "", user_id: 0, cycle_id: 0 }
         //#endregion
     },
 
@@ -239,11 +240,12 @@ new Vue({
 
         opretTrip() {
             let urlSecond = baseTripUrl
-            this.addTripData.fk_user_id = this.CurrentUserId
-            this.addTripData.fk_cycle_id = this.cycle_id
+            this.TimeFunction()
+            this.addTripData.user_id = this.CurrentUserId
+            this.addTripData.cycle_id = this.cycle_id
             this.addTripData.trip_map_json = "some map stuff"
-            this.addTripData.trip_start = "some start time"
-            this.addTripData.trip_end = "some end time"
+            this.addTripData.trip_start = this.currentDateWithFormat
+            this.addTripData.trip_end = "Awaiting end"
             axios.post<ITrip>(urlSecond, this.addTripData)
                 .then
                 ((response: AxiosResponse) => {
@@ -260,6 +262,12 @@ new Vue({
                 alert("XXX")
                 // this.startTrip()
         },
+
+        TimeFunction: function () {
+            this.currentDateWithFormat = new Date().toString()
+            console.log(this.currentDateWithFormat);
+        },
+
         slutTrip(_status: 2) {
             let urlGet = baseCycleUrl + "slut/" + this.cycle_id
             if (this.activeBikes.indexOf(this.cycle_id)) {
