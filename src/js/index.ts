@@ -42,31 +42,50 @@ interface ITrip {
 new Vue({
     el: "#app",
     data: {
-        selected: null,
+        select: null,
         _status: null,
         decodedContent: '',
-        currentTrip: [],
+        singleCycle: null,
+        //#region Id's
+        CurrentUserId: null,
+        cycle_id: null,
+        //#endregion
+        //#region Messages
         errorMessage: '',
-        loggedIn: false,
         contentCheck: "",
-        loginPage: true,
+        addMessage: "",
+        //#endregion
+        //#region Pages
+        loginPage: false,
+        loggedIn: true,
+        //admin
+        admin: true,
+        ADMCyclePage: true,
+        ADMOverviewPage: false,
+        //before login
         createUserPage: false,
+        //After login
         overviewPage: false,
         cyclePage: false,
-        CSPage: false,
-        cycle_id: null,
         QR_ScanPage: false,
-        singleCycle: null,
-        CurrentUserId: null,
-        loginEmail: "",
-        loginPassword: "",
-        addData: { user_email: "", user_password: "", user_firstname: "", user_lastname: "", user_mobile: 0 },
-        addTripData: { trip_start: "", trip_end: "", trip_map_json: "", fk_user_id: 0, fk_cycle_id: 0 },
-        addMessage: "",
+        profilePage: false,
+        settingsPage: false,
+        //#endregion
+        //#region Arrays
+        currentTrip: [],
         cycles: [],
         cycles2: [],
         activeBikes: [],
-        AllUserTrips: []
+        AllUserTrips: [],
+        //#endregion
+        //#region login
+        loginEmail: "",
+        loginPassword: "",
+        //#endregion
+        //#region Create data
+        addData: { user_email: "", user_password: "", user_firstname: "", user_lastname: "", user_mobile: 0 },
+        addTripData: { trip_start: "", trip_end: "", trip_map_json: "", fk_user_id: 0, fk_cycle_id: 0 },
+        //#endregion
     },
 
     created() {
@@ -79,6 +98,7 @@ new Vue({
         this.activeBikes
     },
     methods: {
+        //#region Login
         login() {
             this.createUserPage = false
             this.loginPage = true
@@ -124,6 +144,9 @@ new Vue({
                     if (this.loggedIn == true) {
                         this.user_email = this.loginEmail
                         this.loggedIn = response.data
+                        if (this.loginEmail == "adm@ku.dk") {
+                            this.admin = true
+                        }
                         console.log(`Denne bruger email er blevet logget ind "${this.user_email}" `)
                     }
                     this.errorMessage = "Forkert Email eller Password"
@@ -138,24 +161,54 @@ new Vue({
         },
         logout() {
             this.loggedIn = false
+            this.loginEmail = null
         },
+        //#endregion
+        //#region Pages
         createPage() {
             this.createUserPage = true
             this.loginPage = false
             this.errorMessage = ''
         },
+        ADMUOverviewPage() {
+            this.ADMOverviewPage = true
+            this.ADMCyclePage = false
+        },
+        ADMCyclesPage() {
+            this.ADMOverviewPage = false
+            this.ADMCyclePage = true
+        },
         OverviewPage() {
+            this.settingsPage = false
+            this.overviewPage = true
             this.QR_ScanPage = false
             this.cyclePage = false
-            this.overviewPage = true
+            this.profilePage = false
         },
         QRPage() {
-            this.QR_ScanPage = true
+            this.settingsPage = false
             this.overviewPage = false
+            this.QR_ScanPage = true
             this.cyclePage = false
+            this.profilePage = false
             this.GetActiveBikes()
         },
-
+        Settings() {
+            this.settingsPage = true
+            this.overviewPage = false
+            this.QR_ScanPage = false
+            this.cyclePage = false
+            this.profilePage = false
+        },
+        Profile() {
+            this.settingsPage = false
+            this.overviewPage = false
+            this.QR_ScanPage = false
+            this.cyclePage = false
+            this.profilePage = true
+        },
+        //#endregion
+        //#region Trip
         startTrip(_status: 1) {
             let urlGet = baseCycleUrl + "start/" + this.cycle_id
             axios.put<ICycle>(urlGet)
@@ -178,9 +231,9 @@ new Vue({
             axios.post<ITrip>(urlSecond, this.addTripData)
                 .then
                 ((response: AxiosResponse) => {
-                        this.currentTrip = response
-                        //sideskift?
-                    }
+                    this.currentTrip = response
+                    //sideskift?
+                }
                 )
                 .catch(
                     (error: AxiosError) => {
@@ -189,18 +242,6 @@ new Vue({
                     }
                 )
         },
-
-        GetActiveBikes() {
-            let url = baseTripUrl + "allusertrips/" + this.CurrentUserId
-            axios.get<ITrip[]>(url)
-                .then((response: AxiosResponse<ITrip[]>) => {
-                    this.activeBikes = response.data
-                })
-                .catch((error: AxiosError) => {
-                    alert(error.message);
-                })
-        },
-
         slutTrip(_status: 2) {
             let urlGet = baseCycleUrl + "slut/" + this.cycle_id
             if (this.activeBikes.indexOf(this.cycle_id)) {
@@ -215,7 +256,8 @@ new Vue({
                 alert("Du er ikke den registrerede bruger af denne cykel")
             }
         },
-
+        //#endregion
+        //#region Bruger
         HentBruger() {
             let urlGet = baseUserUrl + this.loginEmail
             axios.get<IUser>(urlGet)
@@ -237,60 +279,6 @@ new Vue({
                 .catch((error: AxiosError) => {
                     alert(error.message);
                 })
-        },
-
-        helperGetAndShow(url: string) {
-            axios.get<ICycle[]>(url)
-                .then((response: AxiosResponse<ICycle[]>) => {
-                    this.cycles = response.data
-                })
-                .catch((error: AxiosError) => {
-                    //this.message = error.message
-                    alert(error.message) // https://www.w3schools.com/js/js_popup.asp
-                })
-        },
-        getAllBikesAdmin() {
-            let url = baseCycleUrl + "alle-cykler/"
-            axios.get<ICycle[]>(url)
-                .then((response: AxiosResponse<ICycle[]>) => {
-                    this.cycles2 = response.data
-                })
-                .catch((error: AxiosError) => {
-                    alert(error.message)
-                })
-        },
-        getAllBikes() {
-            this.helperGetAndShow(baseCycleUrl)
-        },
-        getOneBike() {
-            if (this.contentCheck == "http://qr.getbike/") {
-                let urlGet = baseCycleUrl + this.cycle_id
-                axios.get<ICycle>(urlGet)
-                    .then((response: AxiosResponse<ICycle>) => {
-                        this.singleCycle = response.data
-                    })
-                    .catch((error: AxiosError) => {
-                        alert(error.message)
-                    })
-                if (this.cycle_id != null) {
-                    let urlGet = baseCycleUrl + "ledig/" + this.cycle_id
-                    axios.get<ICycle>(urlGet)
-                        .then((response: AxiosResponse<ICycle>) => {
-                            this.singleCycle = response.data
-                        })
-                        .catch((error: AxiosError) => {
-                            alert("Cykel er ikke ledig")
-                        })
-                    this.QR_ScanPage = false
-                    this.cyclePage = true
-                }
-                else {
-                    alert("ikke en gyldig cykel QR")
-                }
-            }
-            else {
-                alert("Ikke en gyldig Cykel QR.");
-            }
         },
         addUser() {
 
@@ -397,6 +385,73 @@ new Vue({
 
 
         },
+        //#endregion
+        //#region Bikes
+        helperGetAndShow(url: string) {
+            axios.get<ICycle[]>(url)
+                .then((response: AxiosResponse<ICycle[]>) => {
+                    this.cycles = response.data
+                })
+                .catch((error: AxiosError) => {
+                    //this.message = error.message
+                    alert(error.message) // https://www.w3schools.com/js/js_popup.asp
+                })
+        },
+        getAllBikesAdmin() {
+            let url = baseCycleUrl + "alle-cykler/"
+            axios.get<ICycle[]>(url)
+                .then((response: AxiosResponse<ICycle[]>) => {
+                    this.cycles2 = response.data
+                })
+                .catch((error: AxiosError) => {
+                    alert(error.message)
+                })
+        },
+        getAllBikes() {
+            this.helperGetAndShow(baseCycleUrl)
+        },
+        getOneBike() {
+            if (this.contentCheck == "http://qr.getbike/") {
+                let urlGet = baseCycleUrl + this.cycle_id
+                axios.get<ICycle>(urlGet)
+                    .then((response: AxiosResponse<ICycle>) => {
+                        this.singleCycle = response.data
+                    })
+                    .catch((error: AxiosError) => {
+                        alert(error.message)
+                    })
+                if (this.cycle_id != null) {
+                    let urlGet = baseCycleUrl + "ledig/" + this.cycle_id
+                    axios.get<ICycle>(urlGet)
+                        .then((response: AxiosResponse<ICycle>) => {
+                            this.singleCycle = response.data
+                        })
+                        .catch((error: AxiosError) => {
+                            alert("Cykel er ikke ledig")
+                        })
+                    this.QR_ScanPage = false
+                    this.cyclePage = true
+                }
+                else {
+                    alert("ikke en gyldig cykel QR")
+                }
+            }
+            else {
+                alert("Ikke en gyldig Cykel QR.");
+            }
+        },
+        GetActiveBikes() {
+            let url = baseTripUrl + "allusertrips/" + this.CurrentUserId
+            axios.get<ITrip[]>(url)
+                .then((response: AxiosResponse<ITrip[]>) => {
+                    this.activeBikes = response.data
+                })
+                .catch((error: AxiosError) => {
+                    alert(error.message);
+                })
+        },
+        //#endregion  
+        //#region QR code
         onDecode(content: any) {
             this.decodedContent = content
             this.contentCheck = content.substr(0, 18)
@@ -423,12 +478,14 @@ new Vue({
                     }
                 })
         },
+        //#endregion
+        //#region Bike available/not
         Unavaliable(_status: 1) {
-            let urlGet = baseCycleUrl + "start/" + this.selected
+            let urlGet = baseCycleUrl + "start/" + this.select
             // this.opretTrip()
             axios.put<ICycle>(urlGet)
                 .then((response: AxiosResponse<ICycle>) => {
-                    this.selected = response.data
+                    this.select = response.data
                 })
                 .catch((error: AxiosError) => {
                     alert(error.message)
@@ -436,15 +493,16 @@ new Vue({
             alert("Unavaliable Now")
         },
         Avaliable(_status: 2) {
-            let urlGet = baseCycleUrl + "slut/" + this.selected
+            let urlGet = baseCycleUrl + "slut/" + this.select
             axios.put<ICycle>(urlGet)
                 .then((response: AxiosResponse<ICycle>) => {
-                    this.selected = response.data
+                    this.select = response.data
                 })
                 .catch((error: AxiosError) => {
                     alert(error.message)
                 })
             alert("Avaliable Now")
-        }
+        },
+        //#endregion
     },
 })

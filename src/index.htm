@@ -18,72 +18,134 @@
 </head>
 
 <body>
-  <div id="app">
+  <div id="app" class="text-center">
     <div v-if="loggedIn">
+      <div v-if="admin">
+        <nav class="navbar fixed-bottom navbar-expand-lg navbar-light bg-light d-flex justify-content-around flex-row">
+          <button style="text-align: center; background: none; border: none;" v-on:click="ADMUOverviewPage">
+            <i class="fas fa-user-friends" style="font-size: 40px;"></i><br>
+            Brugere
+          </button>
 
-      <nav class="navbar fixed-bottom navbar-expand-lg navbar-light bg-light ">
-        <button style="text-align: center; background: none; border: none;" v-on:click="OverviewPage">
-          <i class="fas fa-map-marker-alt" style="font-size: 45px;"></i><br>
-          Kort
-        </button>
-        <button style="text-align: center; background: none; border: none;" v-on:click="QRPage">
+          <button style="text-align: center; background: none; border: none;" v-on:click="ADMCyclesPage" >
+            <i class="fas fa-bicycle" style="font-size: 40px;"></i><br>
+            Cykler
+          </button>
 
-          <i class="fas fa-qrcode" style="font-size: 45px;"></i><br>
-          Scan Cykel
-        </button>
-        <button style="text-align: center; background: none; border: none;">
-          <i class="fas fa-user-alt" style="font-size: 45px;"></i><br>
-          Profil
-        </button>
-        <button style="text-align: center; background: none; border: none;">
-          <i class="fas fa-wrench" style="font-size: 45px;"></i><br>
-          Indstillinger
-        </button>
-      </nav>
+          <button style="text-align: center; background: none; border: none;">
+            <i class="fas fa-user-alt" style="font-size: 40px;"></i><br>
+            Profil
+          </button>
+          <button style="text-align: center; background: none; border: none;">
+            <i class="fas fa-wrench" style="font-size: 40px;"></i><br>
+            Indstillinger
+          </button>
+        </nav>
+        <h1>HELLO BOSS MAN</h1>
 
-      <div v-if="overviewPage">
-        <button class="btn btn-success" v-on:click="getAllBikes">Get all bikes</button>
-        <button class="btn btn-success" v-on:click="logout">Log out</button>
-        <ul id="cyclelist" v-if="cycles.length">
-          <li v-for="cycle in cycles" key="cycle_id">
-            {{ cycle.cycle_name }}
-          </li>
-        </ul>
-        <div v-else>Virker ikke</div>
+        <div v-if="ADMOverviewPage">
+          <button class="btn btn-success" v-on:click="getAllBikes">Get all bikes</button>
+          <ul id="cyclelist" v-if="cycles.length">
+            <li v-for="cycle in cycles" key="cycle_id">
+              {{ cycle.cycle_name }}
+            </li>
+          </ul>
+          <div v-else>Virker ikke</div>
+        </div>
+
+        <div v-if="ADMCyclePage">
+          <br>
+          <select v-model="select">
+            <option value="" disabled selected>Select a bike</option>
+            <option v-for="cycle in cycles2"> {{cycle.cycle_id}}
+            </option>
+          </select>
+          <span>Selected: {{ select }}</span>
+          <br>
+          <br>
+          <button class="btn btn-success" id="AvaliableButton" v-on:click="Avaliable">Avaliable</button>
+          <button class="btn btn-warning" id="UnavaliableButton" v-on:click="Unavaliable">Unavaliable</button>
+
+        </div>
       </div>
 
-      <div v-if="QR_ScanPage">
-        <H2>QR-Scanner</H2>
-        <!--<p>
+      <div v-else>
+        <nav class="navbar fixed-bottom navbar-expand-lg navbar-light bg-light ">
+          <button style="text-align: center; background: none; border: none;" v-on:click="OverviewPage">
+            <i class="fas fa-map-marker-alt" style="font-size: 40px;"></i><br>
+            Kort
+          </button>
+          <button style="text-align: center; background: none; border: none;" v-on:click="QRPage">
+
+            <i class="fas fa-qrcode" style="font-size: 40px;"></i><br>
+            Scan Cykel
+          </button>
+          <button style="text-align: center; background: none; border: none;" v-on:click="Profile">
+            <i class="fas fa-user-alt" style="font-size: 40px;"></i><br>
+            Profil
+          </button>
+          <button style="text-align: center; background: none; border: none;" v-on:click="Settings">
+            <i class="fas fa-wrench" style="font-size: 40px;"></i><br>
+            Indstillinger
+          </button>
+        </nav>
+
+        <div v-if="overviewPage">
+          <button class="btn btn-success" v-on:click="getAllBikes">Get all bikes</button>
+          <ul id="cyclelist" v-if="cycles.length">
+            <li v-for="cycle in cycles" key="cycle_id">
+              {{ cycle.cycle_name }}
+            </li>
+          </ul>
+          <div v-else>Virker ikke</div>
+        </div>
+
+        <div v-if="QR_ScanPage">
+          <H2>QR-Scanner</H2>
+          <p>Når du ser en rød firkant omkring din QR-kode, så er koden scannet</p>
+          <!--<p>
         Last result: <b>{{ decodedContent }}</b> <b>{{cycle_id}}</b>
         </p>-->
-        <button class="btn btn-success" v-on:click="getOneBike"> Hent cykel</button>
-        <!--<p class="error">
+          <button class="btn btn-success" v-on:click="getOneBike"> Hent cykel</button>
+          <!--<p class="error">
           {{ errorMessage }}
         </p> -->
 
-        <qrcode-stream @decode="onDecode" @init="onInit"></qrcode-stream>
+          <qrcode-stream @decode="onDecode" @init="onInit"></qrcode-stream>
 
-      </div>
+        </div>
 
 
-      <div v-if="cyclePage">
-        <div v-if="cycle_id">
+        <div v-if="cyclePage">
+          <div v-if="cycle_id">
+            <div class="container">
+              <h2>Du har valgt en cykel</h2>
+              <p>Cykel id: {{ cycle_id }} </p>
+              <p>
+                <button class="btn btn-success" id="StatButton" v-on:click="startTrip(); opretTrip();">Start
+                  tur</button>
+                <button class="btn btn-danger" id="SlutButton" v-on:click="slutTrip">Slut tur</button>
+              <h4>Skade på cykel?</h4>
+              <p>
+                <a href="mailto:KU-Bikes@QR.com?subject=Indgiv skade&body=Rappoter skade på cykel:">
+                  <button class="btn btn-primary" id="btnOutlook">Indgiv skade fra outlook app</button>
+                </a>
+              </p>
+
+              <p>Eller send en mail til KU-Bikes@QR.com</p>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div v-if="profilePage">
+          <h2>PROFIL</h2>
+        </div>
+
+        <div v-if="settingsPage">
           <div class="container">
-            <h2>Du har valgt en cykel</h2>
-            <p>Cykel id: {{ cycle_id }} </p>
-            <p>
-              <button class="btn btn-success" id="StatButton" v-on:click="startTrip(); opretTrip();">Start tur</button>
-              <button class="btn btn-success" id="SlutButton" v-on:click="slutTrip">Slut tur</button>
-            <h4>Skade på cykel?</h4>
-            <p>
-              <a href="mailto:KU-Bikes@QR.com?subject=Indgiv skade&body=Rappoter skade på cykel:">
-                <button id="btnOutlook">Indgiv skade fra outlook app</button>
-              </a>
-            </p>
-
-            <p>Eller send en mail til KU-Bikes@QR.com</p>
-            </p>
+            <h2>SETTINGS</h2>
+            <button class="btn btn-warning" v-on:click="logout">Logud</button>
           </div>
         </div>
       </div>
@@ -94,9 +156,9 @@
         <div class="container">
           <h2>Login</h2>
           <div class="form-group" id="login-page-form">
-            <label for="Email">Email</label><br>
+            <label for="Email" class="test-left">Email</label><br>
             <input id="login-email" type="email" class="form-control" v-model="loginEmail" placeholder="Email">
-            <label for="password">Password</label><br>
+            <label for="password" class="text-left">Password</label><br>
             <input id="login-password" type="Password" class="form-control" v-model="loginPassword" name="password"
               placeholder="Password">
             <div class="text-warning">{{ errorMessage }}</div> <br>
@@ -109,18 +171,18 @@
         <div class="container">
           <h2>Opret bruger</h2>
           <div class="form-group" id="opret-page-form">
-            <label for="email">Email</label><br>
+            <label for="email" class="text-left">Email</label><br>
             <input type="email" class="form-control" v-model="addData.user_email" id="opret-email" placeholder="Email">
-            <label for="password">Password</label><br>
+            <label for="password" class="text-left">Password</label><br>
             <input type="Password" class="form-control" v-model="addData.user_password" id="opret-password"
               placeholder="Password">
-            <label for="name">Fornavn</label><br>
+            <label for="name" class="text-left">Fornavn</label><br>
             <input type="text" class="form-control" v-model="addData.user_firstname" id="opret-name"
               placeholder="Fornavn">
-            <label for="lastname">Efternavn</label><br>
+            <label for="lastname" class="text-left">Efternavn</label><br>
             <input type="text" class="form-control" v-model="addData.user_lastname" id="opret-lastname"
               placeholder="Efternavn">
-            <label for="phone">Telefon nummer</label><br>
+            <label for="phone" class="text-left">Telefon nummer</label><br>
             <input type="text" class="form-control" id="opret-phone" v-model="addData.user_mobile" id="phone"
               placeholder="Telefon Nummer">
             <br>
@@ -133,29 +195,14 @@
       </div>
     </div>
 
-    <div v-if="CSPage">
-      <br>
-      <select v-model="selected">
-        <option v-for="cycle in cycles2"> {{cycle.cycle_id}}
-        </option>
-      </select>
-      <span>Selected: {{ selected }}</span>
-      <br>
-      <button class="btn btn-success" id="UnavaliableButton" v-on:click="Unavaliable">Unavaliable</button>
-      <button class="btn btn-success" id="AvaliableButton" v-on:click="Avaliable">Avaliable</button>
-</body>
-</div>
-
-
-
-</div>
-<style>
-  #login-page-form .error,
-  #opret-page-form .error {
-    border-color: red;
-  }
-</style>
-<script src="bundle.js"></script>
+  </div>
+  <style>
+    #login-page-form .error,
+    #opret-page-form .error {
+      border-color: red;
+    }
+  </style>
+  <script src="bundle.js"></script>
 </body>
 
 </html>
