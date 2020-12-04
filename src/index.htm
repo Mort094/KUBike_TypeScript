@@ -36,7 +36,7 @@
             <i class="fas fa-user-alt" style="font-size: 40px;"></i><br>
             Profil
           </button>
-          <button style="text-align: center; background: none; border: none;">
+          <button style="text-align: center; background: none; border: none;" v-on:click="ADMSettingPage">
             <i class="fas fa-wrench" style="font-size: 40px;"></i><br>
             Indstillinger
           </button>
@@ -65,7 +65,10 @@
           <br>
           <button class="btn btn-success" id="AvaliableButton" v-on:click="Avaliable">Avaliable</button>
           <button class="btn btn-warning" id="UnavaliableButton" v-on:click="Unavaliable">Unavaliable</button>
+        </div>
 
+        <div v-if="ADMSettingsPage">
+          <button class="btn btn-warning" v-on:click="logout">Logud</button>
         </div>
       </div>
 

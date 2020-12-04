@@ -56,12 +56,13 @@ new Vue({
         addMessage: "",
         //#endregion
         //#region Pages
-        loginPage: true,
-        loggedIn: false,
+        loginPage: false,
+        loggedIn: true,
         //admin
-        admin: false,
+        admin: true,
         ADMCyclePage: false,
         ADMOverviewPage: false,
+        ADMSettingsPage: true,
         //before login
         createUserPage: false,
         //After login
@@ -161,7 +162,9 @@ new Vue({
         },
         logout() {
             this.loggedIn = false
+            this.loginPage = true
             this.loginEmail = null
+            this.admin = false
         },
         //#endregion
         //#region Pages
@@ -173,10 +176,17 @@ new Vue({
         ADMUOverviewPage() {
             this.ADMOverviewPage = true
             this.ADMCyclePage = false
+            this.ADMSettingsPage = false
         },
         ADMCyclesPage() {
             this.ADMOverviewPage = false
             this.ADMCyclePage = true
+            this.ADMSettingsPage = false
+        },
+        ADMSettingPage(){
+            this.ADMOverviewPage = false
+            this.ADMCyclePage = false
+            this.ADMSettingsPage = true
         },
         OverviewPage() {
             this.settingsPage = false
