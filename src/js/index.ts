@@ -56,10 +56,10 @@ new Vue({
         addMessage: "",
         //#endregion
         //#region Pages
-        loginPage: false,
-        loggedIn: true,
+        loginPage: true,
+        loggedIn: false,
         //admin
-        admin: true,
+        admin: false,
         ADMCyclePage: false,
         ADMOverviewPage: false,
         ADMSettingsPage: true,
