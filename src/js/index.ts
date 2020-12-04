@@ -42,7 +42,7 @@ interface ITrip {
 new Vue({
     el: "#app",
     data: {
-        select: null,
+        select: '',
         _status: null,
         decodedContent: '',
         singleCycle: null,
