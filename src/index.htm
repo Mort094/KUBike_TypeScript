@@ -159,9 +159,9 @@
         <div class="container">
           <h2>Login</h2>
           <div class="form-group" id="login-page-form">
-            <label for="Email" class="test-left">Email</label><br>
+            <label for="Email" class="float-left">Email</label><br>
             <input id="login-email" type="email" class="form-control" v-model="loginEmail" placeholder="Email">
-            <label for="password" class="text-left">Password</label><br>
+            <label for="password" class="float-left">Password</label><br>
             <input id="login-password" type="Password" class="form-control" v-model="loginPassword" name="password"
               placeholder="Password">
             <div class="text-warning">{{ errorMessage }}</div> <br>
@@ -174,25 +174,25 @@
         <div class="container">
           <h2>Opret bruger</h2>
           <div class="form-group" id="opret-page-form">
-            <label for="email" class="text-left">Email</label><br>
+            <label for="email" class="float-left">Email</label><br>
             <input type="email" class="form-control" v-model="addData.user_email" id="opret-email" placeholder="Email">
-            <label for="password" class="text-left">Password</label><br>
+            <label for="password" class="float-left">Password</label><br>
             <input type="Password" class="form-control" v-model="addData.user_password" id="opret-password"
               placeholder="Password">
-            <label for="name" class="text-left">Fornavn</label><br>
+            <label for="name" class="float-left">Fornavn</label><br>
             <input type="text" class="form-control" v-model="addData.user_firstname" id="opret-name"
               placeholder="Fornavn">
-            <label for="lastname" class="text-left">Efternavn</label><br>
+            <label for="lastname" class="float-left">Efternavn</label><br>
             <input type="text" class="form-control" v-model="addData.user_lastname" id="opret-lastname"
               placeholder="Efternavn">
-            <label for="phone" class="text-left">Telefon nummer</label><br>
+            <label for="phone" class="float-left">Telefon nummer</label><br>
             <input type="text" class="form-control" id="opret-phone" v-model="addData.user_mobile" id="phone"
               placeholder="Telefon Nummer">
             <br>
             <p id="demo"></p>
             <div class="text-warning">{{ errorMessage }}</div> <br>
             <button class="btn btn-success" v-on:click="addUser">Opret bruger</button>
-            <button class="btn btn-success" id="login" v-on:click="login">Login</button>
+            <button class="btn btn-warning" id="login" v-on:click="backToLoginPage">Tilbage</button>
           </div>
         </div>
       </div>

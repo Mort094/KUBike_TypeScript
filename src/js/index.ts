@@ -164,6 +164,8 @@ new Vue({
             this.loggedIn = false
             this.loginPage = true
             this.loginEmail = null
+            this.loginPassword = null
+            this.CurrentUserId = null           
             this.admin = false
         },
         //#endregion
@@ -172,6 +174,10 @@ new Vue({
             this.createUserPage = true
             this.loginPage = false
             this.errorMessage = ''
+        },
+        backToLoginPage(){
+            this.createUserPage = false
+            this.loginPage = true
         },
         ADMUOverviewPage() {
             this.ADMOverviewPage = true
