@@ -73,6 +73,7 @@ new Vue({
         settingsPage: false,
         //#endregion
         //#region Arrays
+        currentTripId: 0,
         currentTrip: [],
         cycles: [],
         cycles2: [],
@@ -259,8 +260,7 @@ new Vue({
                         alert(error.message)
                     }
                 )
-                alert("XXX")
-                // this.startTrip()
+                this.startTrip()
         },
 
         TimeFunction: function () {
@@ -269,6 +269,7 @@ new Vue({
         },
 
         slutTrip(_status: 2) {
+            this.getCurrentTrip()
             let urlGet = baseCycleUrl + "slut/" + this.cycle_id
             if (this.activeBikes.indexOf(this.cycle_id)) {
                 axios.put<ICycle>(urlGet)
@@ -277,10 +278,35 @@ new Vue({
                         alert(error.message)
                     })
                 alert("Tur Stoppet")
+                this.EndTripTime()
+                this.GetActiveBikes()
             }
             else {
                 alert("Du er ikke den registrerede bruger af denne cykel")
             }
+        },
+
+        EndTripTime() {
+            let urlGet = baseTripUrl + "slutTrip/" + this.currentTripId
+            this.addTripData.trip_end = this.currentDateWithFormat
+            axios.put<ITrip>(urlGet, this.addTripData)
+            .then((response: AxiosResponse<ITrip>) => {
+                this.currentTrip = response.data
+            })
+            .catch((error: AxiosError) => {
+                alert(error.message);
+            })
+        },
+
+        getCurrentTrip() {
+            let urlGet = baseTripUrl + "getwithuser/" + this.CurrentUserId
+            axios.get<ITrip>(urlGet)
+            .then((response: AxiosResponse<ITrip>) => {
+                this.currentTripId = response.data
+            })
+            .catch((error: AxiosError) => {
+                alert(error.message);
+            })
         },
         //#endregion
         //#region Bruger
