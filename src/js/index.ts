@@ -299,8 +299,8 @@ new Vue({
         EndTripTime() {
             this.TimeFunction()
             let urlGet = baseTripUrl + "slutTrip/" + this.currentTripId
-            this.endTime = this.currentDateWithFormat
-            axios.put(urlGet, this.endTime)
+            this.addTripEnd.trip_end = JSON.stringify(this.currentDateWithFormat)
+            axios.put(urlGet, this.addTripEnd)
             .then(response => {
               console.log(response);
             })
