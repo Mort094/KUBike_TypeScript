@@ -46,7 +46,7 @@ new Vue({
         _status: null,
         decodedContent: '',
         singleCycle: null,
-        endTime: '',
+        endTime: "",
         //#region Id's
         CurrentUserId: null,
         cycle_id: 0,
