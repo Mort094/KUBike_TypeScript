@@ -46,7 +46,7 @@ new Vue({
         _status: null,
         decodedContent: '',
         singleCycle: null,
-        endTime: "",
+        endTime: '',
         //#region Id's
         CurrentUserId: null,
         cycle_id: 0,
@@ -88,7 +88,8 @@ new Vue({
         //#endregion
         //#region Create data
         addData: { user_email: "", user_password: "", user_firstname: "", user_lastname: "", user_mobile: 0 },
-        addTripData: { trip_start: "", trip_end: "", trip_map_json: "", user_id: 0, cycle_id: 0 }
+        addTripData: { trip_start: "", trip_end: "", trip_map_json: "", user_id: 0, cycle_id: 0 },
+        addTripEnd: { trip_end: ""}
         //#endregion
     },
 
@@ -277,7 +278,7 @@ new Vue({
 
         slutTrip(_status: 2) {
             let urlGet = baseCycleUrl + "slut/" + this.cycle_id
-            this.EndTripTime()
+            //this.EndTripTime()
             this.GetActiveBikes()
             if (this.activeBikes.indexOf(this.cycle_id)) {
                 axios.put<ICycle>(urlGet)
@@ -292,20 +293,22 @@ new Vue({
             else {
                 alert("Du er ikke den registrerede bruger af denne cykel")
             }
+
         },
 
         EndTripTime() {
+            this.TimeFunction()
             let urlGet = baseTripUrl + "slutTrip/" + this.currentTripId
             this.endTime = this.currentDateWithFormat
-            axios.put<ITrip>(urlGet, this.endTime)
-            .then((response: AxiosResponse<ITrip>) => {
-                this.currentTrip = response.data
+            axios.put(urlGet, this.endTime)
+            .then(response => {
+              console.log(response);
             })
-            .catch((error: AxiosError) => {
-                alert(error.message);
-            })
+            .catch(error => {
+              console.log(error);
+            });
+            this.slutTrip();
         },
-
         getCurrentTrip() {
             let urlGet = baseTripUrl + "getwithuser/" + this.CurrentUserId + "/" + this.cycle_id
             axios.get<ITrip>(urlGet)
