@@ -46,6 +46,7 @@ new Vue({
         _status: null,
         decodedContent: '',
         singleCycle: null,
+        endTime: "",
         //#region Id's
         CurrentUserId: null,
         cycle_id: 0,
@@ -211,6 +212,12 @@ new Vue({
             this.profilePage = false
             this.GetActiveBikes()
         },
+        SpecificCyclePage() {
+            this.QR_ScanPage = false
+            this.cyclePage = true
+            this.getOneBike()
+            this.getCurrentTrip()
+        },
         Settings() {
             this.settingsPage = true
             this.overviewPage = false
@@ -269,17 +276,18 @@ new Vue({
         },
 
         slutTrip(_status: 2) {
-            this.getCurrentTrip()
             let urlGet = baseCycleUrl + "slut/" + this.cycle_id
+            this.EndTripTime()
+            this.GetActiveBikes()
             if (this.activeBikes.indexOf(this.cycle_id)) {
                 axios.put<ICycle>(urlGet)
-                    .then(r => console.log(r.status))
-                    .catch((error: AxiosError) => {
-                        alert(error.message)
-                    })
+                .then((response: AxiosResponse<ICycle>) => {
+                    console.log(response.data)
+                })
+                .catch((error: AxiosError) => {
+                    alert(error.message);
+                })
                 alert("Tur Stoppet")
-                this.EndTripTime()
-                this.GetActiveBikes()
             }
             else {
                 alert("Du er ikke den registrerede bruger af denne cykel")
@@ -288,8 +296,8 @@ new Vue({
 
         EndTripTime() {
             let urlGet = baseTripUrl + "slutTrip/" + this.currentTripId
-            this.addTripData.trip_end = this.currentDateWithFormat
-            axios.put<ITrip>(urlGet, this.addTripData)
+            this.endTime = this.currentDateWithFormat
+            axios.put<ITrip>(urlGet, this.endTime)
             .then((response: AxiosResponse<ITrip>) => {
                 this.currentTrip = response.data
             })
@@ -299,10 +307,12 @@ new Vue({
         },
 
         getCurrentTrip() {
-            let urlGet = baseTripUrl + "getwithuser/" + this.CurrentUserId
+            let urlGet = baseTripUrl + "getwithuser/" + this.CurrentUserId + "/" + this.cycle_id
             axios.get<ITrip>(urlGet)
+            
             .then((response: AxiosResponse<ITrip>) => {
                 this.currentTripId = response.data
+                alert("XXX")
             })
             .catch((error: AxiosError) => {
                 alert(error.message);
@@ -481,8 +491,6 @@ new Vue({
                         .catch((error: AxiosError) => {
                             alert("Cykel er ikke ledig")
                         })
-                    this.QR_ScanPage = false
-                    this.cyclePage = true
                 }
                 else {
                     alert("ikke en gyldig cykel QR")
