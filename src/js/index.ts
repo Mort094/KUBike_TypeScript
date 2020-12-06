@@ -74,7 +74,7 @@ new Vue({
         settingsPage: false,
         //#endregion
         //#region Arrays
-        currentTripId: 0,
+        currentTripId: null,
         currentTrip: [],
         cycles: [],
         cycles2: [],
@@ -89,7 +89,7 @@ new Vue({
         //#region Create data
         addData: { user_email: "", user_password: "", user_firstname: "", user_lastname: "", user_mobile: 0 },
         addTripData: { trip_start: "", trip_end: "", trip_map_json: "", user_id: 0, cycle_id: 0 },
-        addTripEnd: { trip_end: ""}
+        addTripEnd: { trip_end: "" }
         //#endregion
     },
 
@@ -169,7 +169,7 @@ new Vue({
             this.loginPage = true
             this.loginEmail = null
             this.loginPassword = null
-            this.CurrentUserId = null           
+            this.CurrentUserId = null
             this.admin = false
         },
         //#endregion
@@ -179,7 +179,7 @@ new Vue({
             this.loginPage = false
             this.errorMessage = ''
         },
-        backToLoginPage(){
+        backToLoginPage() {
             this.createUserPage = false
             this.loginPage = true
         },
@@ -193,7 +193,7 @@ new Vue({
             this.ADMCyclePage = true
             this.ADMSettingsPage = false
         },
-        ADMSettingPage(){
+        ADMSettingPage() {
             this.ADMOverviewPage = false
             this.ADMCyclePage = false
             this.ADMSettingsPage = true
@@ -268,7 +268,7 @@ new Vue({
                         alert(error.message)
                     }
                 )
-                this.startTrip()
+            this.startTrip()
         },
 
         TimeFunction: function () {
@@ -277,17 +277,17 @@ new Vue({
         },
 
         slutTrip(_status: 2) {
-            let urlGet = baseCycleUrl + "slut/" + this.cycle_id 
+            let urlGet = baseCycleUrl + "slut/" + this.cycle_id
             //this.EndTripTime()
             this.GetActiveBikes()
             if (this.activeBikes.indexOf(this.cycle_id)) {
                 axios.put<ICycle>(urlGet)
-                .then((response: AxiosResponse<ICycle>) => {
-                    console.log(response.data)
-                })
-                .catch((error: AxiosError) => {
-                    alert(error.message);
-                })
+                    .then((response: AxiosResponse<ICycle>) => {
+                        console.log(response.data)
+                    })
+                    .catch((error: AxiosError) => {
+                        alert(error.message);
+                    })
                 alert("Tur Stoppet")
             }
             else {
@@ -296,33 +296,51 @@ new Vue({
 
         },
 
-        EndTripTime() : void {
+        EndTripTime(): void {
             this.TimeFunction()
             this.endTime = this.currentDateWithFormat
             let urlGet = baseTripUrl + "slutTrip/" + this.currentTripId + "?time=" + this.endTime
             this.addTripEnd.trip_end = this.currentDateWithFormat
             console.log('update' + baseTripUrl)
-            axios.put<string>(urlGet, this.addTripEnd)
-            .then(response => {
-              console.log(response);
-            })
-            .catch(error => {
-              console.log(error);
-            });
-            this.slutTrip();
+            console.log(this.currentTripId)
+            if (this.currentTripId != 0 ) {
+                axios.put<string>(urlGet, this.addTripEnd)
+                    .then(response => {
+                        console.log(response);
+                        this.slutTrip();
+                        alert("afslut registreret")
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+            }
+            else 
+            {
+                    alert("Du har ikke en aktiv rute på denne cykel.")
+            }
         },
 
         getCurrentTrip() {
             let urlGet = baseTripUrl + "getwithuser/" + this.CurrentUserId + "/" + this.cycle_id
             axios.get<ITrip>(urlGet)
-            
-            .then((response: AxiosResponse<ITrip>) => {
-                this.currentTripId = response.data
-                alert("XXX")
-            })
-            .catch((error: AxiosError) => {
-                alert(error.message);
-            })
+                .then((response: AxiosResponse<ITrip>) => {
+                    this.currentTripId = response.data
+                })
+                .catch((error: AxiosError) => {
+                    alert(error.message);
+                })
+        },
+
+        GetFullCurrentTrip() {
+            let urlGet = baseTripUrl + this.currentTripId
+            axios.get<ITrip>(urlGet)
+                .then((response: AxiosResponse<ITrip>) => {
+                    this.currentTrip = response.data
+                    alert("XXX")
+                })
+                .catch((error: AxiosError) => {
+                    alert(error.message);
+                })
         },
         //#endregion
         //#region Bruger
