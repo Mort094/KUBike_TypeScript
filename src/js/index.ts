@@ -214,10 +214,15 @@ new Vue({
             this.GetActiveBikes()
         },
         SpecificCyclePage() {
+            if (this.contentCheck == "http://qr.getbike/") {
             this.QR_ScanPage = false
             this.cyclePage = true
             this.getOneBike()
             this.getCurrentTrip()
+        }
+        else {
+            alert("ikke en gyldig QR")
+        }
         },
         Settings() {
             this.settingsPage = true
