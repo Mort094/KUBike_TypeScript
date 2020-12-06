@@ -277,7 +277,7 @@ new Vue({
         },
 
         slutTrip(_status: 2) {
-            let urlGet = baseCycleUrl + "slut/" + this.cycle_id
+            let urlGet = baseCycleUrl + "slut/" + this.cycle_id 
             //this.EndTripTime()
             this.GetActiveBikes()
             if (this.activeBikes.indexOf(this.cycle_id)) {
@@ -296,11 +296,13 @@ new Vue({
 
         },
 
-        EndTripTime() {
+        EndTripTime() : void {
             this.TimeFunction()
-            let urlGet = baseTripUrl + "slutTrip/" + this.currentTripId
-            this.addTripEnd.trip_end = JSON.stringify(this.currentDateWithFormat)
-            axios.put(urlGet, this.addTripEnd)
+            this.endTime = this.currentDateWithFormat
+            let urlGet = baseTripUrl + "slutTrip/" + this.currentTripId + "?time=" + this.endTime
+            this.addTripEnd.trip_end = this.currentDateWithFormat
+            console.log('update' + baseTripUrl)
+            axios.put<string>(urlGet, this.addTripEnd)
             .then(response => {
               console.log(response);
             })
@@ -309,6 +311,7 @@ new Vue({
             });
             this.slutTrip();
         },
+
         getCurrentTrip() {
             let urlGet = baseTripUrl + "getwithuser/" + this.CurrentUserId + "/" + this.cycle_id
             axios.get<ITrip>(urlGet)
