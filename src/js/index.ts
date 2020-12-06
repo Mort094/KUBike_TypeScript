@@ -80,6 +80,7 @@ new Vue({
         cycles2: [],
         activeBikes: [],
         AllUserTrips: [],
+        CyclesInUse: [],
         //#endregion
         //#region login
         loginEmail: "",
@@ -92,15 +93,13 @@ new Vue({
         addTripEnd: { trip_end: "" }
         //#endregion
     },
-
     created() {
-        // console.log(window.location.search)
-        // this.getOneBike(this.cycle_id)
         this.getAllBikes()
         this.cycles
         this.getAllBikesAdmin()
         this.cycles2
         this.activeBikes
+
     },
     methods: {
         //#region Login
@@ -212,17 +211,22 @@ new Vue({
             this.cyclePage = false
             this.profilePage = false
             this.GetActiveBikes()
+            this.GetActiveBikesFromTrip()
+           // setTimeout(() => this.CheckIfBikeIsAvailable().bind(this), 5)
+
         },
+
         SpecificCyclePage() {
             if (this.contentCheck == "http://qr.getbike/") {
-            this.QR_ScanPage = false
-            this.cyclePage = true
-            this.getOneBike()
-            this.getCurrentTrip()
-        }
-        else {
-            alert("ikke en gyldig QR")
-        }
+                this.QR_ScanPage = false
+                this.getOneBike()
+                this.getCurrentTrip()
+                this.cyclePage = true
+            }
+            else {
+                alert("ikke en gyldig QR")
+            }
+
         },
         Settings() {
             this.settingsPage = true
@@ -308,7 +312,7 @@ new Vue({
             this.addTripEnd.trip_end = this.currentDateWithFormat
             console.log('update' + baseTripUrl)
             console.log(this.currentTripId)
-            if (this.currentTripId != 0 ) {
+            if (this.currentTripId != 0) {
                 axios.put<string>(urlGet, this.addTripEnd)
                     .then(response => {
                         console.log(response);
@@ -319,9 +323,8 @@ new Vue({
                         console.log(error);
                     });
             }
-            else 
-            {
-                    alert("Du har ikke en aktiv rute på denne cykel.")
+            else {
+                alert("Du har ikke en aktiv rute på denne cykel.")
             }
         },
 
@@ -346,6 +349,31 @@ new Vue({
                 .catch((error: AxiosError) => {
                     alert(error.message);
                 })
+        },
+
+        GetActiveBikesFromTrip() {
+            let urlGet = baseTripUrl + "allecyklerfraruter"
+            axios.get<ITrip>(urlGet)
+                .then((response: AxiosResponse<ITrip>) => {
+                    this.CyclesInUse = response.data
+                    alert("cykler hentet")
+                })
+                .catch((error: AxiosError) => {
+                    alert(error.message);
+                })
+        },
+
+        CheckIfBikeIsAvailable() {
+            var x = document.getElementById("StatButton")
+            if (this.CyclesInUse.includes(parseInt(this.cycle_id))) {
+              //  x.style.visibility = "visible";
+              x.style.visibility = "hidden";
+              alert("cykel er i brug")
+            }
+            else {
+                alert("cykel er ledig")
+                this.opretTrip();
+            }
         },
         //#endregion
         //#region Bruger
