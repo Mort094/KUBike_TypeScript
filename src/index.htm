@@ -155,23 +155,27 @@
             <p>Email: {{ CurrentEmail }} </p>
             <p>Telefon: {{ CurrentPhone  }} </p>
           </div>
-          <button class="btn btn-primary" v-on:click="UpdateUser">Rediger oplysninger</button>
+          <button class="btn btn-primary" v-on:click="UpdateUserPage">Rediger oplysninger</button>
         </div>
 
         <div v-if="updateUserPage">
           <h2>Rediger dine oplysninger</h2>
-          <div class="form-group">
+          <div>
             <label style="display: block;" for="updateName">Navn:</label>
-            <input type="text" name="updateName" id="updateName">
+            <input type="text" name="updateName" v-model="updateUser.user_firstname" id="updateName">
+
             <label style="display: block;" for="updateLastname">Efternavn:</label>
-            <input type="text" name="updateLastname" id="updateLastname">
+            <input type="text" name="updateLastname" v-model="updateUser.user_lastname" value="user_lastname" id="updateLastname">
+
             <label style="display: block;" for="updateEmail">Email:</label>
-            <input type="text" name="updateEmail" id="updateEmail">
-            <label style="display: block;" for="updatePass">Kodeord:</label>
-            <input type="text" name="updatePass" id="updatePass">
+            <input type="text" name="updateEmail" v-model="updateUser.user_email" value="user_email" id="updateEmail">
+
             <label style="display: block;" for="updatePhone">Telefon:</label>
-            <input type="text" name="updatePhone" id="updatePhone">
+            <input type="text" name="updatePhone" v-model="updateUser.user_mobile" value="user_phone" id="updatePhone">
           </div>
+          <br>
+          <button class="btn btn-success" v-on:click="updateUser()">Gem</button>
+          <div>{{updateMessage}}</div>
         </div>
 
         <div id="settingsPage" v-if="settingsPage">

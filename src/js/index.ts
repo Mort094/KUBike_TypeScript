@@ -51,17 +51,18 @@ new Vue({
         CurrentUserId: null,
         cycle_id: 0,
         //#region 
-          CurrentUserName: "",
-          CurrentLastName: "", 
-          CurrentEmail: "",
-          CurrentPhone: 0,
+        CurrentUserName: "",
+        CurrentLastName: "",
+        CurrentEmail: "",
+        CurrentPhone: 0,
         //#endregion
-      
+
         //#endregion
         //#region Messages
         errorMessage: '',
         contentCheck: "",
         addMessage: "",
+        updateMessage: "",
         //#endregion
         //#region Pages
         loginPage: false,
@@ -99,7 +100,8 @@ new Vue({
         //#region Create data
         addData: { user_email: "", user_password: "", user_firstname: "", user_lastname: "", user_mobile: 0 },
         addTripData: { trip_start: "", trip_end: "", trip_map_json: "", user_id: 0, cycle_id: 0 },
-        addTripEnd: { trip_end: "" }
+        addTripEnd: { trip_end: "" },
+        updateUserData: { user_firstname: "", user_lastname: "", user_email: "", user_mobile: 0 }
         //#endregion
     },
     created() {
@@ -226,7 +228,7 @@ new Vue({
             this.GetActiveBikes()
             this.GetActiveBikesFromTrip()
             this.updateUserPage = false
-           // setTimeout(() => this.CheckIfBikeIsAvailable().bind(this), 5)
+            // setTimeout(() => this.CheckIfBikeIsAvailable().bind(this), 5)
         },
 
         SpecificCyclePage() {
@@ -262,7 +264,7 @@ new Vue({
             this.updateUserPage = false
             this.HentAltOmEnBruger()
         },
-        UpdateUser(){
+        UpdateUserPage() {
             this.settingsPage = false
             this.overviewPage = false
             this.QR_ScanPage = false
@@ -270,6 +272,11 @@ new Vue({
             this.profilePage = false
             this.Cykellisteside = false
             this.updateUserPage = true
+            let test = (document.getElementById("updateName") as HTMLInputElement).value 
+            test = this.CurrentUserName
+
+
+
         },
         //#endregion
         //#region Trip
@@ -393,8 +400,8 @@ new Vue({
         },
         CheckIfBikeIsAvailableWithoutQR() {
             if (this.CyclesInUse.includes(parseInt(this.cycle_id))) {
-              //  x.style.visibility = "visible";
-              alert("cykel er i brug")
+                //  x.style.visibility = "visible";
+                alert("cykel er i brug")
             }
             else {
                 alert("cykel er ledig")
@@ -405,9 +412,9 @@ new Vue({
         CheckIfBikeIsAvailable() {
             var x = document.getElementById("StatButton")
             if (this.CyclesInUse.includes(parseInt(this.cycle_id))) {
-              //  x.style.visibility = "visible";
-              x.style.visibility = "hidden";
-              alert("cykel er i brug")
+                //  x.style.visibility = "visible";
+                x.style.visibility = "hidden";
+                alert("cykel er i brug")
             }
             else {
                 alert("cykel er ledig")
@@ -428,18 +435,31 @@ new Vue({
                 })
 
         },
-        HentAltOmEnBruger(){
+        HentAltOmEnBruger() {
             let urlGet = baseUserUrl + "user/" + parseInt(this.CurrentUserId)
             axios.get<IUser>(urlGet)
-            .then((response: AxiosResponse<IUser>) => {
-                this.CurrentUserName = response.data.user_firstname
-                this.CurrentLastName = response.data.user_lastname
-                this.CurrentEmail = response.data.user_email
-                this.CurrentPhone = response.data.user_mobile
-            })
-            .catch((error: AxiosError) => {
-                alert(error.message);
-            })
+                .then((response: AxiosResponse<IUser>) => {
+                    this.CurrentUserName = response.data.user_firstname
+                    this.CurrentLastName = response.data.user_lastname
+                    this.CurrentEmail = response.data.user_email
+                    this.CurrentPhone = response.data.user_mobile
+                })
+                .catch((error: AxiosError) => {
+                    alert(error.message);
+                })
+        },
+        updateUser() {
+            let url: string = baseUserUrl + "updateUser/" + parseInt(this.CurrentUserId)
+            axios.put<IUser>(url, this.updateUserData)
+                .then((response: AxiosResponse) => {
+                    let message: string = "response " + response.status + " " + response.statusText
+                    this.updateMessage = message
+                    this.updateUserPage = false
+                    this.profilePage = true
+                })
+                .catch((error: AxiosError) => {
+                    alert(error.message);
+                })
         },
 
         TjekBruger() {
@@ -570,23 +590,23 @@ new Vue({
                 })
         },
         HentCykelIDFraSelect() {
-                this.cycle_id = parseInt(this.select)
-                this.getCurrentTrip()
-                this.CheckIfBikeIsAvailableWithoutQR() 
+            this.cycle_id = parseInt(this.select)
+            this.getCurrentTrip()
+            this.CheckIfBikeIsAvailableWithoutQR()
         },
         HentCykelIDFraSelectEnd() {
             this.cycle_id = parseInt(this.select)
-            setTimeout(this.getCurrentTrip(),300)
+            setTimeout(this.getCurrentTrip(), 300)
             //this.getCurrentTrip()
-            setTimeout(this.EndTripTime(),500)
+            setTimeout(this.EndTripTime(), 500)
             // this.EndTripTime()
-            
+
         },
         HentCykelIDSelect() {
             this.cycle_id = parseInt(this.select)
             //this.getCurrentTrip()
             //this.CheckIfBikeIsAvailableWithoutQR() 
-    },
+        },
         getAllBikesAdmin() {
             let url = baseCycleUrl + "alle-cykler/"
             axios.get<ICycle[]>(url)
