@@ -292,6 +292,7 @@ new Vue({
         },
 
         slutTrip(_status: 2) {
+            this.getCurrentTrip()
             let urlGet = baseCycleUrl + "slut/" + this.cycle_id
             //this.EndTripTime()
             this.GetActiveBikes()
@@ -534,8 +535,21 @@ new Vue({
         HentCykelIDFraSelect() {
                 this.cycle_id = parseInt(this.select)
                 this.getCurrentTrip()
-                
+                this.CheckIfBikeIsAvailableWithoutQR() 
         },
+        HentCykelIDFraSelectEnd() {
+            this.cycle_id = parseInt(this.select)
+            setTimeout(this.getCurrentTrip(),300)
+            //this.getCurrentTrip()
+            setTimeout(this.EndTripTime(),500)
+            // this.EndTripTime()
+            
+        },
+        HentCykelIDSelect() {
+            this.cycle_id = parseInt(this.select)
+            //this.getCurrentTrip()
+            //this.CheckIfBikeIsAvailableWithoutQR() 
+    },
         getAllBikesAdmin() {
             let url = baseCycleUrl + "alle-cykler/"
             axios.get<ICycle[]>(url)

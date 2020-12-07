@@ -94,7 +94,7 @@
 
         <div v-if="Cykellisteside">
           <br>
-          <select v-model="select" id="cykelUdenQR">
+          <select v-model="select" id="cykelUdenQR" v-on:click="HentCykelIDSelect()">
             <option value="" disabled selected>Vælg en Cykel</option>
             <option v-for="cycle in cycles2"> {{cycle.cycle_id}}
             </option>
@@ -102,12 +102,9 @@
           <span>Selected: {{ select }}</span>
           <br>
           <br>
-          <button class="btn btn-success"  v-on:click = "HentCykelIDFraSelect">Vælg cykel</button>
           <br>
-          <br>
-          <br>
-          <button class="btn btn-success" id="StartUdenSkan" v-on:click="CheckIfBikeIsAvailableWithoutQR();">Start</button>
-          <button class="btn btn-warning" id="SlutUdenSkan" v-on:click="EndTripTime();">Slut rute</button>
+          <button class="btn btn-success" id="StartUdenSkan" v-on:click="HentCykelIDFraSelect();">Start</button>
+          <button class="btn btn-warning" id="SlutUdenSkan" v-on:click="HentCykelIDFraSelectEnd();">Slut rute</button>
         </div>
 
         <div v-if="QR_ScanPage">
