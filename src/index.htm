@@ -92,7 +92,7 @@
           </button>
         </nav>
 
-        <div v-if="Cykellisteside">
+        <div id="overviewPage" v-if="Cykellisteside">
           <br>
           <select v-model="select" id="cykelUdenQR" v-on:click="HentCykelIDSelect()">
             <option value="" disabled selected>Vælg en Cykel</option>
@@ -107,13 +107,13 @@
           <button class="btn btn-warning" id="SlutUdenSkan" v-on:click="HentCykelIDFraSelectEnd();">Slut rute</button>
         </div>
 
-        <div v-if="QR_ScanPage">
+        <div id="scanPage" v-if="QR_ScanPage">
           <H2>QR-Scanner</H2>
           <p>Når du ser en rød firkant omkring din QR-kode, så er koden scannet</p>
           <!--<p>
         Last result: <b>{{ decodedContent }}</b> <b>{{cycle_id}}</b>
         </p>-->
-          <button class="btn btn-success" v-on:click="SpecificCyclePage"> Hent cykel</button>
+          <button class="btn btn-success" id="BTNGetbike" v-on:click="SpecificCyclePage"> Hent cykel</button>
           <!--<p class="error">
           {{ errorMessage }}
         </p> -->
@@ -123,7 +123,7 @@
         </div>
 
 
-        <div v-if="cyclePage">
+        <div id="cyclePage" v-if="cyclePage">
           <div v-if="cycle_id">
             <div id="virk" class="container">
               <h2>Du har valgt en cykel</h2>
@@ -145,11 +145,11 @@
           </div>
         </div>
 
-        <div v-if="profilePage">
+        <div id="profilePage" v-if="profilePage">
           <h2>PROFIL</h2>
         </div>
 
-        <div v-if="settingsPage">
+        <div id="settingsPage" v-if="settingsPage">
           <div class="container">
             <h2>SETTINGS</h2>
             <button class="btn btn-warning" v-on:click="logout">Logud</button>
