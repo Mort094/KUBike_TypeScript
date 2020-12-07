@@ -545,6 +545,11 @@ new Vue({
             // this.EndTripTime()
             
         },
+        HentCykelIDSelect() {
+            this.cycle_id = parseInt(this.select)
+            //this.getCurrentTrip()
+            //this.CheckIfBikeIsAvailableWithoutQR() 
+    },
         getAllBikesAdmin() {
             let url = baseCycleUrl + "alle-cykler/"
             axios.get<ICycle[]>(url)

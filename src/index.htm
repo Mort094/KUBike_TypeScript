@@ -95,7 +95,7 @@
 
         <div v-if="Cykellisteside">
           <br>
-          <select v-model="select" id="cykelUdenQR">
+          <select v-model="select" id="cykelUdenQR" v-on:click="HentCykelIDSelect()">
             <option value="" disabled selected>Vælg en Cykel</option>
             <option v-for="cycle in cycles2"> {{cycle.cycle_id}}
             </option>
