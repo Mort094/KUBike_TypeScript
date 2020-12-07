@@ -103,12 +103,9 @@
           <span>Selected: {{ select }}</span>
           <br>
           <br>
-          <button class="btn btn-success"  v-on:click = "HentCykelIDFraSelect">Vælg cykel</button>
           <br>
-          <br>
-          <br>
-          <button class="btn btn-success" id="StartUdenSkan" v-on:click="CheckIfBikeIsAvailableWithoutQR();">Start</button>
-          <button class="btn btn-warning" id="SlutUdenSkan" v-on:click="EndTripTime();">Slut rute</button>
+          <button class="btn btn-success" id="StartUdenSkan" v-on:click="HentCykelIDFraSelect();">Start</button>
+          <button class="btn btn-warning" id="SlutUdenSkan" v-on:click="HentCykelIDFraSelectEnd();">Slut rute</button>
         </div>
 
         <div v-if="QR_ScanPage">
