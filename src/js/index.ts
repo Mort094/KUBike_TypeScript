@@ -14,6 +14,7 @@ var indholder8Tal = /\d\d\d\d\d\d\d\d/;
 let baseCycleUrl: string = "https://mort-rest.azurewebsites.net/api/cycles/"
 let baseUserUrl: string = "https://mort-rest.azurewebsites.net/api/users/"
 let baseTripUrl: string = "https://mort-rest.azurewebsites.net/api/trip/"
+let baseMessageUrl: string = "https://mort-rest.azurewebsites.net/api/messages/"
 
 interface ICycle {
     cycle_id: number
@@ -36,6 +37,14 @@ interface ITrip {
     trip_map_json: string
     fk_cycle_id: number
     fk_user_id: number
+}
+interface IMessage {
+    messages_Id: number
+    user_id: number
+    cycle_id: number
+    Emne: string
+    Besked: string
+    status: number
 }
 
 new Vue({
@@ -64,9 +73,14 @@ new Vue({
         addMessage: "",
         updateMessage: "",
         //#endregion
+        //#region Message for bike 
+        messageSubject: "",
+        Mresponse: null,
+        messageText: "",
+        //#endregion
         //#region Pages
-        loginPage: false,
-        loggedIn: true,
+        loginPage: true,
+        loggedIn: false,
         //admin
         admin: false,
         ADMCyclePage: false,
@@ -75,7 +89,7 @@ new Vue({
         //before login
         createUserPage: false,
         //After login
-        overviewPage: true,
+        overviewPage: false,
         cyclePage: false,
         QR_ScanPage: false,
         profilePage: false,
@@ -101,7 +115,8 @@ new Vue({
         addData: { user_email: "", user_password: "", user_firstname: "", user_lastname: "", user_mobile: 0 },
         addTripData: { trip_start: "", trip_end: "", trip_map_json: "", user_id: 0, cycle_id: 0 },
         addTripEnd: { trip_end: "" },
-        updateUserData: { user_firstname: "", user_lastname: "", user_email: "", user_mobile: 0 }
+        updateUserData: { user_firstname: "", user_lastname: "", user_email: "", user_mobile: 0 },
+        addMessageData: { messages_Id: 0, user_id: 0, cycle_id: 0, Emne: "", Besked: "", status: 0 }
         //#endregion
     },
     created() {
@@ -272,7 +287,7 @@ new Vue({
             this.profilePage = false
             this.Cykellisteside = false
             this.updateUserPage = true
-            let test = (document.getElementById("updateName") as HTMLInputElement).value 
+            let test = (document.getElementById("updateName") as HTMLInputElement).value
             test = this.CurrentUserName
 
 
@@ -711,6 +726,55 @@ new Vue({
                 })
             alert("Avaliable Now")
         },
+        //#endregion
+        //#region Messages
+        opretMessage() {
+            let urlSecond = baseMessageUrl
+            this.addMessageData.user_id = this.CurrentUserId
+            this.addMessageData.cycle_id = parseInt(this.cycle_id)
+            this.addMessageData.Emne = this.messageSubject
+            this.addMessageData.Besked = this.messageText
+            this.addMessageData.status = 1
+            axios.post<IMessage>(urlSecond, this.addMessageData)
+                .then
+                ((response: AxiosResponse) => {
+                    //this.currentTrip[] = response
+                    //sideskift?
+                    this.Mresponse = response.data
+                    alert("Klage oprettet")
+                }
+                )
+                .catch(
+                    (error: AxiosError) => {
+                        alert(error.message)
+                    }
+                )
+        },
+
+        opretStolen() {
+            let urlGet = baseMessageUrl
+            this.addMessageData.user_id = this.CurrentUserId
+            this.addMessageData.cycle_id = parseInt(this.cycle_id)
+            this.addMessageData.Emne = "STOLEN"
+            this.addMessageData.Besked = "STOLEN"
+            this.addMessageData.status = 4
+            axios.post<IMessage>(urlGet, this.addMessageData)
+                .then
+                ((response: AxiosResponse) => {
+                    //this.currentTrip[] = response
+                    //sideskift?
+                    this.Mresponse = response.data
+                    alert("Cykel er meldt væk")
+                    this.startTrip()
+                }
+                )
+                .catch(
+                    (error: AxiosError) => {
+                        alert(error.message)
+                    }
+                )
+        },
+
         //#endregion
     },
 })

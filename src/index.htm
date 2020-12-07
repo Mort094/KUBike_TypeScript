@@ -106,6 +106,18 @@
           <br>
           <button class="btn btn-success" id="StartUdenSkan" v-on:click="HentCykelIDFraSelect();">Start</button>
           <button class="btn btn-warning" id="SlutUdenSkan" v-on:click="HentCykelIDFraSelectEnd();">Slut rute</button>
+          <br>
+          <br>
+          <p>Er der skader på cyklen?</p>
+          <input type="text" v-model="messageSubject" placeholder="Beskriv emne">
+          <input type="text" v-model="messageText" placeholder="Skriv beskrivelse">
+          <br>
+          <button class="btn btn-warning" id="indgivSkadeUdenScan" v-on:click="opretMessage();">Indgiv skade via
+            app</button>
+          <br>
+          <br>
+          <p>Mangler cykel fra placering?</p>
+          <button class="btn btn-danger" id="StolenBike" v-on:click="opretStolen();">Meld manglede cykel</button>
         </div>
 
         <div id="scanPage" v-if="QR_ScanPage">
@@ -139,8 +151,12 @@
                 <a href="mailto:KU-Bikes@QR.com?subject=Indgiv skade&body=Rappoter skade på cykel:">
                   <button class="btn btn-primary" id="btnOutlook">Indgiv skade fra outlook app</button>
                 </a>
-              </p>
-
+              <p>eller brug vores app</p>
+              <input type="text" class="form-control" v-model="messageSubject" placeholder="Beskriv emne">
+              <input type="text" class="form-control" v-model="messageText" placeholder="Skriv beskrivelse">
+              <br>
+              <button class="btn btn-warning" id="indgivSkadeUdenScan" v-on:click="opretMessage();">Indgiv skade via
+                app</button>
               <p>Eller send en mail til KU-Bikes@QR.com</p>
               </p>
             </div>
@@ -156,6 +172,11 @@
             <p>Telefon: {{ CurrentPhone  }} </p>
           </div>
           <button class="btn btn-primary" v-on:click="UpdateUserPage">Rediger oplysninger</button>
+          <br>
+          <br>
+          <a href="mailto:KU-Bikes@QR.com?subject=Indgiv ris eller ros&body=Ris/Ros til KU-bikes:">
+            <button class="btn btn-primary" id="btnOutlook">Send Ris eller Ros fra outlook app</button>
+          </a>
         </div>
 
         <div v-if="updateUserPage">
@@ -165,7 +186,8 @@
             <input type="text" name="updateName" v-model="updateUser.user_firstname" id="updateName">
 
             <label style="display: block;" for="updateLastname">Efternavn:</label>
-            <input type="text" name="updateLastname" v-model="updateUser.user_lastname" value="user_lastname" id="updateLastname">
+            <input type="text" name="updateLastname" v-model="updateUser.user_lastname" value="user_lastname"
+              id="updateLastname">
 
             <label style="display: block;" for="updateEmail">Email:</label>
             <input type="text" name="updateEmail" v-model="updateUser.user_email" value="user_email" id="updateEmail">
