@@ -57,8 +57,8 @@ new Vue({
         addMessage: "",
         //#endregion
         //#region Pages
-        loginPage: true,
-        loggedIn: false,
+        loginPage: false,
+        loggedIn: true,
         //admin
         admin: false,
         ADMCyclePage: false,
@@ -67,7 +67,7 @@ new Vue({
         //before login
         createUserPage: false,
         //After login
-        overviewPage: false,
+        overviewPage: true,
         cyclePage: false,
         QR_ScanPage: false,
         profilePage: false,
