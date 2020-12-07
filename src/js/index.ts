@@ -72,6 +72,7 @@ new Vue({
         QR_ScanPage: false,
         profilePage: false,
         settingsPage: false,
+        Cykellisteside: false,
         //#endregion
         //#region Arrays
         currentTripId: null,
@@ -199,10 +200,12 @@ new Vue({
         },
         OverviewPage() {
             this.settingsPage = false
-            this.overviewPage = true
+            this.Cykellisteside = true
             this.QR_ScanPage = false
             this.cyclePage = false
             this.profilePage = false
+            this.GetActiveBikes()
+            this.GetActiveBikesFromTrip()
         },
         QRPage() {
             this.settingsPage = false
@@ -210,10 +213,10 @@ new Vue({
             this.QR_ScanPage = true
             this.cyclePage = false
             this.profilePage = false
+            this.Cykellisteside = false
             this.GetActiveBikes()
             this.GetActiveBikesFromTrip()
            // setTimeout(() => this.CheckIfBikeIsAvailable().bind(this), 5)
-
         },
 
         SpecificCyclePage() {
@@ -222,6 +225,7 @@ new Vue({
                 this.getOneBike()
                 this.getCurrentTrip()
                 this.cyclePage = true
+                this.Cykellisteside = false
             }
             else {
                 alert("ikke en gyldig QR")
@@ -234,6 +238,7 @@ new Vue({
             this.QR_ScanPage = false
             this.cyclePage = false
             this.profilePage = false
+            this.Cykellisteside = false
         },
         Profile() {
             this.settingsPage = false
@@ -241,6 +246,7 @@ new Vue({
             this.QR_ScanPage = false
             this.cyclePage = false
             this.profilePage = true
+            this.Cykellisteside = false
         },
         //#endregion
         //#region Trip
@@ -310,7 +316,7 @@ new Vue({
             this.endTime = this.currentDateWithFormat
             let urlGet = baseTripUrl + "slutTrip/" + this.currentTripId + "?time=" + this.endTime
             this.addTripEnd.trip_end = this.currentDateWithFormat
-            console.log('update' + baseTripUrl)
+            console.log('update' + urlGet)
             console.log(this.currentTripId)
             if (this.currentTripId != 0) {
                 axios.put<string>(urlGet, this.addTripEnd)
@@ -356,11 +362,20 @@ new Vue({
             axios.get<ITrip>(urlGet)
                 .then((response: AxiosResponse<ITrip>) => {
                     this.CyclesInUse = response.data
-                    alert("cykler hentet")
                 })
                 .catch((error: AxiosError) => {
                     alert(error.message);
                 })
+        },
+        CheckIfBikeIsAvailableWithoutQR() {
+            if (this.CyclesInUse.includes(parseInt(this.cycle_id))) {
+              //  x.style.visibility = "visible";
+              alert("cykel er i brug")
+            }
+            else {
+                alert("cykel er ledig")
+                this.opretTrip();
+            }
         },
 
         CheckIfBikeIsAvailable() {
@@ -515,6 +530,11 @@ new Vue({
                     //this.message = error.message
                     alert(error.message) // https://www.w3schools.com/js/js_popup.asp
                 })
+        },
+        HentCykelIDFraSelect() {
+                this.cycle_id = parseInt(this.select)
+                this.getCurrentTrip()
+                
         },
         getAllBikesAdmin() {
             let url = baseCycleUrl + "alle-cykler/"

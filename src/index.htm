@@ -67,21 +67,6 @@
           <button class="btn btn-warning" id="UnavaliableButton" v-on:click="Unavaliable">Unavaliable</button>
         </div>
 
-        <div v-if="overviewPage">
-          <br>
-          <select v-model="select">
-            <option value="" disabled selected>Vælg en Cykel</option>
-            <option v-for="cycle in cycles">{{</option>
-          </select>
-          <button class="btn btn-success" v-on:click="getAllBikes">Get all bikes</button>
-          <ul id="cyclelist" v-if="cycles.length">
-            <li v-for="cycle in cycles" key="cycle_id">
-              {{ cycle.cycle_name }}
-            </li>
-          </ul>
-          <div v-else>Virker ikke</div>
-        </div>
-
         <div v-if="ADMSettingsPage">
           <button class="btn btn-warning" v-on:click="logout">Logud</button>
         </div>
@@ -107,6 +92,24 @@
             Indstillinger
           </button>
         </nav>
+
+        <div v-if="Cykellisteside">
+          <br>
+          <select v-model="select" id="cykelUdenQR">
+            <option value="" disabled selected>Vælg en Cykel</option>
+            <option v-for="cycle in cycles2"> {{cycle.cycle_id}}
+            </option>
+          </select>
+          <span>Selected: {{ select }}</span>
+          <br>
+          <br>
+          <button class="btn btn-success"  v-on:click = "HentCykelIDFraSelect">Vælg cykel</button>
+          <br>
+          <br>
+          <br>
+          <button class="btn btn-success" id="StartUdenSkan" v-on:click="CheckIfBikeIsAvailableWithoutQR();">Start</button>
+          <button class="btn btn-warning" id="SlutUdenSkan" v-on:click="EndTripTime();">Slut rute</button>
+        </div>
 
         <div v-if="QR_ScanPage">
           <H2>QR-Scanner</H2>
