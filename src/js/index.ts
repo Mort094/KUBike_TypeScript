@@ -50,6 +50,7 @@ new Vue({
         //#region Id's
         CurrentUserId: null,
         cycle_id: 0,
+        CurrentUserName: "",
         //#endregion
         //#region Messages
         errorMessage: '',
@@ -73,6 +74,7 @@ new Vue({
         profilePage: false,
         settingsPage: false,
         Cykellisteside: false,
+        updateUserPage: false,
         //#endregion
         //#region Arrays
         currentTripId: null,
@@ -204,6 +206,7 @@ new Vue({
             this.QR_ScanPage = false
             this.cyclePage = false
             this.profilePage = false
+            this.updateUserPage = false
             this.GetActiveBikes()
             this.GetActiveBikesFromTrip()
         },
@@ -216,6 +219,7 @@ new Vue({
             this.Cykellisteside = false
             this.GetActiveBikes()
             this.GetActiveBikesFromTrip()
+            this.updateUserPage = false
            // setTimeout(() => this.CheckIfBikeIsAvailable().bind(this), 5)
         },
 
@@ -226,6 +230,7 @@ new Vue({
                 this.getCurrentTrip()
                 this.cyclePage = true
                 this.Cykellisteside = false
+                this.updateUserPage = false
             }
             else {
                 alert("ikke en gyldig QR")
@@ -239,6 +244,7 @@ new Vue({
             this.cyclePage = false
             this.profilePage = false
             this.Cykellisteside = false
+            this.updateUserPage = false
         },
         Profile() {
             this.settingsPage = false
@@ -247,6 +253,16 @@ new Vue({
             this.cyclePage = false
             this.profilePage = true
             this.Cykellisteside = false
+            this.updateUserPage = false
+        },
+        UpdateUser(){
+            this.settingsPage = false
+            this.overviewPage = false
+            this.QR_ScanPage = false
+            this.cyclePage = false
+            this.profilePage = false
+            this.Cykellisteside = false
+            this.updateUserPage = true
         },
         //#endregion
         //#region Trip

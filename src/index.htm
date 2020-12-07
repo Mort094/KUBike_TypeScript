@@ -27,7 +27,7 @@
             Brugere
           </button>
 
-          <button style="text-align: center; background: none; border: none;" v-on:click="ADMCyclesPage" >
+          <button style="text-align: center; background: none; border: none;" v-on:click="ADMCyclesPage">
             <i class="fas fa-bicycle" style="font-size: 40px;"></i><br>
             Cykler
           </button>
@@ -74,7 +74,8 @@
 
       <div v-else>
         <nav class="navbar fixed-bottom navbar-expand-lg navbar-light bg-light ">
-          <button style="text-align: center; background: none; border: none;" id="NAVOverview" v-on:click="OverviewPage">
+          <button style="text-align: center; background: none; border: none;" id="NAVOverview"
+            v-on:click="OverviewPage">
             <i class="fas fa-map-marker-alt" style="font-size: 40px;"></i><br>
             Kort
           </button>
@@ -129,7 +130,8 @@
               <h2>Du har valgt en cykel</h2>
               <p>Cykel id: {{ cycle_id }} </p>
               <p>
-                <button name="START" id="StatButton" style="visibility: visible;" class="btn btn-success"  v-on:click="CheckIfBikeIsAvailable();">Start
+                <button name="START" id="StatButton" style="visibility: visible;" class="btn btn-success"
+                  v-on:click="CheckIfBikeIsAvailable();">Start
                   tur</button>
                 <button class="btn btn-danger" id="SlutButton" v-on:click="EndTripTime();">Slut tur</button>
               <h4>Skade på cykel?</h4>
@@ -147,12 +149,36 @@
 
         <div id="profilePage" v-if="profilePage">
           <h2>PROFIL</h2>
+          <div class="container">
+            <p>ID: {{ CurrentUserId }}</p>
+            <p>Navn: {{  }} {{  }}</p>
+            <p>Email: {{  }} </p>
+            <p>Telefon: {{   }} </p>
+          </div>
+          <button class="btn btn-primary" v-on:click="UpdateUser">Rediger oplysninger</button>
+        </div>
+
+        <div v-if="updateUserPage">
+          <h2>Rediger dine oplysninger</h2>
+          <div class="form-group">
+            <label style="display: block;" for="updateName">Navn:</label>
+            <input type="text" name="updateName" id="updateName">
+            <label style="display: block;" for="updateLastname">Efternavn:</label>
+            <input type="text" name="updateLastname" id="updateLastname">
+            <label style="display: block;" for="updateEmail">Email:</label>
+            <input type="text" name="updateEmail" id="updateEmail">
+            <label style="display: block;" for="updatePass">Kodeord:</label>
+            <input type="text" name="updatePass" id="updatePass">
+            <label style="display: block;" for="updatePhone">Telefon:</label>
+            <input type="text" name="updatePhone" id="updatePhone">
+          </div>
         </div>
 
         <div id="settingsPage" v-if="settingsPage">
-          <div class="container">
-            <h2>SETTINGS</h2>
+          <h2>SETTINGS</h2>
+          <div class="container myMargin">
             <button class="btn btn-warning" v-on:click="logout">Logud</button>
+            <button class="btn btn-danger">Slet bruger</button>
           </div>
         </div>
       </div>
@@ -207,6 +233,11 @@
     #login-page-form .error,
     #opret-page-form .error {
       border-color: red;
+    }
+
+    .myMargin button {
+      margin: 15px auto;
+      display: block;
     }
   </style>
   <script src="bundle.js"></script>
