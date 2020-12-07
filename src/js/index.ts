@@ -50,7 +50,13 @@ new Vue({
         //#region Id's
         CurrentUserId: null,
         cycle_id: 0,
-        CurrentUserName: "",
+        //#region 
+          CurrentUserName: "",
+          CurrentLastName: "", 
+          CurrentEmail: "",
+          CurrentPhone: 0,
+        //#endregion
+      
         //#endregion
         //#region Messages
         errorMessage: '',
@@ -254,6 +260,7 @@ new Vue({
             this.profilePage = true
             this.Cykellisteside = false
             this.updateUserPage = false
+            this.HentAltOmEnBruger()
         },
         UpdateUser(){
             this.settingsPage = false
@@ -414,11 +421,25 @@ new Vue({
             axios.get<IUser>(urlGet)
                 .then((response: AxiosResponse<IUser>) => {
                     this.CurrentUserId = response.data
+                    console.log(urlGet)
                 })
                 .catch((error: AxiosError) => {
                     alert(error.message);
                 })
 
+        },
+        HentAltOmEnBruger(){
+            let urlGet = baseUserUrl + "user/" + parseInt(this.CurrentUserId)
+            axios.get<IUser>(urlGet)
+            .then((response: AxiosResponse<IUser>) => {
+                this.CurrentUserName = response.data.user_firstname
+                this.CurrentLastName = response.data.user_lastname
+                this.CurrentEmail = response.data.user_email
+                this.CurrentPhone = response.data.user_mobile
+            })
+            .catch((error: AxiosError) => {
+                alert(error.message);
+            })
         },
 
         TjekBruger() {

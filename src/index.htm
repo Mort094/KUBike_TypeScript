@@ -151,9 +151,9 @@
           <h2>PROFIL</h2>
           <div class="container">
             <p>ID: {{ CurrentUserId }}</p>
-            <p>Navn: {{  }} {{  }}</p>
-            <p>Email: {{  }} </p>
-            <p>Telefon: {{   }} </p>
+            <p>Navn: {{ CurrentUserName }} {{ CurrentLastName }}</p>
+            <p>Email: {{ CurrentEmail }} </p>
+            <p>Telefon: {{ CurrentPhone  }} </p>
           </div>
           <button class="btn btn-primary" v-on:click="UpdateUser">Rediger oplysninger</button>
         </div>
