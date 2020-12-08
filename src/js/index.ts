@@ -822,7 +822,7 @@ new Vue({
         ADMPrintBeskeder() {
             var liste = '';
             this.AllMessagesBike.forEach(function(Message: IMessage) {
-                liste += '<li>' + Message + '</li>';
+                liste += '<li>' + Message.messages_Id + ',' + Message.cycle_id + ',' + Message.user_id + ',' + Message.Emne + ',' + Message.Besked + ',' + Message.status + '</li>';
               });
             document.getElementById("CykelBeskedListe").innerHTML = '<ul>' + liste + '</ul>'
         },
