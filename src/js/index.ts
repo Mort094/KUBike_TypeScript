@@ -40,11 +40,11 @@ interface ITrip {
 }
 interface IMessage {
     messages_Id: number
-    user_id: number
-    cycle_id: number
-    Emne: string
-    Besked: string
-    status: number
+    messages_user_id: number
+    messages_cycle_id: number
+    messages_emne: string
+    messages_besked: string
+    messages_status: number
 }
 
 new Vue({
@@ -740,11 +740,11 @@ new Vue({
         //#region Messages
         opretMessage() {
             let urlSecond = baseMessageUrl
-            this.addMessageData.user_id = this.CurrentUserId
-            this.addMessageData.cycle_id = parseInt(this.cycle_id)
-            this.addMessageData.Emne = this.messageSubject
-            this.addMessageData.Besked = this.messageText
-            this.addMessageData.status = 1
+            this.addMessageData.messages_Id = this.CurrentUserId
+            this.addMessageData.messages_cycle_id = parseInt(this.cycle_id)
+            this.addMessageData.messages_emne = this.messageSubject
+            this.addMessageData.messages_besked = this.messageText
+            this.addMessageData.messages_status = 1
             axios.post<IMessage>(urlSecond, this.addMessageData)
                 .then
                 ((response: AxiosResponse) => {
@@ -763,11 +763,11 @@ new Vue({
 
         opretStolen() {
             let urlGet = baseMessageUrl
-            this.addMessageData.user_id = this.CurrentUserId
-            this.addMessageData.cycle_id = parseInt(this.cycle_id)
-            this.addMessageData.Emne = "STOLEN"
-            this.addMessageData.Besked = "STOLEN"
-            this.addMessageData.status = 4
+            this.addMessageData.messages_Id = this.CurrentUserId
+            this.addMessageData.messages_cycle_id = parseInt(this.cycle_id)
+            this.addMessageData.messages_emne = "STOLEN"
+            this.addMessageData.messages_besked = "STOLEN"
+            this.addMessageData.messages_status = 4
             axios.post<IMessage>(urlGet, this.addMessageData)
                 .then
                 ((response: AxiosResponse) => {
@@ -788,47 +788,36 @@ new Vue({
         ADMHentBeskeder() {
             let urlGet = baseMessageUrl
             axios.get<IMessage>(urlGet)
-            .then
-            ((response: AxiosResponse) => {
-                this.AllMessages = response.data
-                alert("Beskeder hentet")
-            })
-            .catch(
-                (error: AxiosError) => {
-                    alert(error.message)
-                }
-            )
+                .then
+                ((response: AxiosResponse) => {
+                    this.AllMessages = response.data
+                    alert("Beskeder hentet")
+                })
+                .catch(
+                    (error: AxiosError) => {
+                        alert(error.message)
+                    }
+                )
         },
 
         ADMHentBeskederCykel() {
-            let urlGet = baseMessageUrl + "cykel/" + this.cycle_id
+            let urlGet = baseMessageUrl + "cykel/" + parseInt(this.select)
             axios.get<IMessage[]>(urlGet)
-            .then
-            ((response: AxiosResponse<IMessage[]>) => {
-                this.AllMessagesBike = response.data
-                alert("Beskeder hentet")
-                this.ADMPrintBeskeder() 
-                alert("c")
-            })
-            .catch(
-                (error: AxiosError) => {
-                    alert(error.message)
-                }
-            )
+                .then
+                ((response: AxiosResponse<IMessage[]>) => {
+                    this.AllMessagesBike = response.data
+                    console.log(urlGet)
+                })
+                .catch(
+                    (error: AxiosError) => {
+                        alert(error.message)
+                    }
+                )
 
-        },
-
-        ADMPrintBeskeder() {
-            var liste = '';
-            this.AllMessagesBike.forEach(function(Message: IMessage) {
-                liste += '<li>' + Message.messages_Id + ',' + Message.cycle_id + ',' + Message.user_id + ',' + Message.Emne + ',' + Message.Besked + ',' + Message.status + '</li>';
-              });
-            document.getElementById("CykelBeskedListe").innerHTML = '<ul>' + liste + '</ul>'
         },
 
         ADMHentCykelIDFraSelect() {
             this.cycle_id = parseInt(this.select)
-            this.ADMHentBeskederCykel()
         },
 
         //#endregion

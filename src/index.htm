@@ -60,7 +60,7 @@
         <div v-if="ADMCyclePage">
           <br>
           <select v-model="select">
-            <option value="" v-on:click="ADMHentCykelIDFraSelect()" disabled selected>Select a bike</option>
+            <option value=""  disabled selected>Select a bike</option>
             <option v-for="cycle in cycles2"> {{cycle.cycle_id}}
             </option>
           </select>
@@ -69,8 +69,13 @@
           <br>
           <button class="btn btn-success" id="AvaliableButton" v-on:click="Avaliable">Avaliable</button>
           <button class="btn btn-warning" id="UnavaliableButton" v-on:click="Unavaliable">Unavaliable</button>
-          <button class="btn btn-primary" id="HentCykelBesked" v-on:click="ADMHentCykelIDFraSelect()">Hent Beskeder</button>
-          <div id="CykelBeskedListe"></div>
+          <button class="btn btn-primary" id="HentCykelBesked" v-on:click="ADMHentBeskederCykel()">Hent Beskeder</button>
+          <ol id="CykelBeskedListe" v-if="AllMessagesBike.length">
+            <li v-for="XX in AllMessagesBike">
+              id: {{XX.messages_Id}} user: {{XX.messages_user_id}} cykel: {{XX.messages_cycle_id}} emne: {{XX.messages_emne}} beskeder: {{XX.messages_besked}} status: {{XX.messages_status}}
+            </li>
+          </ol>
+          <div v-else>Ingen Beskeder</div>
         </div>
 
         <div v-if="ADMSettingsPage">
