@@ -86,6 +86,7 @@ new Vue({
         ADMCyclePage: false,
         ADMOverviewPage: false,
         ADMSettingsPage: true,
+        ADMMessagesPage: false,
         //before login
         createUserPage: false,
         //After login
@@ -105,6 +106,8 @@ new Vue({
         activeBikes: [],
         AllUserTrips: [],
         CyclesInUse: [],
+        AllMessages: [],
+        AllMessagesBike: [],
         //#endregion
         //#region login
         loginEmail: "",
@@ -199,6 +202,14 @@ new Vue({
         },
         //#endregion
         //#region Pages
+        ADMMessagesPageCall() {
+            this.ADMHentBeskeder()
+            this.ADMOverviewPage = false
+            this.ADMCyclePage = false
+            this.ADMSettingsPage = false
+            this.ADMMessagesPage = true
+        },
+
         createPage() {
             this.createUserPage = true
             this.loginPage = false
@@ -773,6 +784,52 @@ new Vue({
                         alert(error.message)
                     }
                 )
+        },
+
+        ADMHentBeskeder() {
+            let urlGet = baseMessageUrl
+            axios.get<IMessage>(urlGet)
+            .then
+            ((response: AxiosResponse) => {
+                this.AllMessages = response.data
+                alert("Beskeder hentet")
+            })
+            .catch(
+                (error: AxiosError) => {
+                    alert(error.message)
+                }
+            )
+        },
+
+        ADMHentBeskederCykel() {
+            let urlGet = baseMessageUrl + "cykel/" + this.cycle_id
+            axios.get<IMessage[]>(urlGet)
+            .then
+            ((response: AxiosResponse<IMessage[]>) => {
+                this.AllMessagesBike = response.data
+                alert("Beskeder hentet")
+                this.ADMPrintBeskeder() 
+                alert("c")
+            })
+            .catch(
+                (error: AxiosError) => {
+                    alert(error.message)
+                }
+            )
+
+        },
+
+        ADMPrintBeskeder() {
+            var liste = '';
+            this.AllMessagesBike.forEach(function(Message: IMessage) {
+                liste += '<li>' + Message + '</li>';
+              });
+            document.getElementById("CykelBeskedListe").innerHTML = '<ul>' + liste + '</ul>'
+        },
+
+        ADMHentCykelIDFraSelect() {
+            this.cycle_id = parseInt(this.select)
+            this.ADMHentBeskederCykel()
         },
 
         //#endregion

@@ -32,9 +32,9 @@
             Cykler
           </button>
 
-          <button style="text-align: center; background: none; border: none;">
+          <button style="text-align: center; background: none; border: none;"v-on:click="ADMMessagesPageCall">
             <i class="fas fa-user-alt" style="font-size: 40px;"></i><br>
-            Profil
+            Beskeder
           </button>
           <button style="text-align: center; background: none; border: none;" v-on:click="ADMSettingPage">
             <i class="fas fa-wrench" style="font-size: 40px;"></i><br>
@@ -53,10 +53,14 @@
           <div v-else>Virker ikke</div>
         </div>
 
+        <div v-if="ADMMessagesPage">
+
+        </div>
+
         <div v-if="ADMCyclePage">
           <br>
           <select v-model="select">
-            <option value="" disabled selected>Select a bike</option>
+            <option value="" v-on:click="ADMHentCykelIDFraSelect()" disabled selected>Select a bike</option>
             <option v-for="cycle in cycles2"> {{cycle.cycle_id}}
             </option>
           </select>
@@ -65,6 +69,8 @@
           <br>
           <button class="btn btn-success" id="AvaliableButton" v-on:click="Avaliable">Avaliable</button>
           <button class="btn btn-warning" id="UnavaliableButton" v-on:click="Unavaliable">Unavaliable</button>
+          <button class="btn btn-primary" id="HentCykelBesked" v-on:click="ADMHentCykelIDFraSelect()">Hent Beskeder</button>
+          <div id="CykelBeskedListe"></div>
         </div>
 
         <div v-if="ADMSettingsPage">
