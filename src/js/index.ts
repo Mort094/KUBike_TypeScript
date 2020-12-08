@@ -59,7 +59,7 @@ new Vue({
         //#region Id's
         CurrentUserId: null,
         cycle_id: 0,
-        //#region 
+        //#region CurrentUser
         CurrentUserName: "",
         CurrentLastName: "",
         CurrentEmail: "",
@@ -298,8 +298,7 @@ new Vue({
             this.profilePage = false
             this.Cykellisteside = false
             this.updateUserPage = true
-            let test = (document.getElementById("updateName") as HTMLInputElement).value
-            test = this.CurrentUserName
+            this.CurrentUserName = this.updateUserData.user_firstname
 
 
 
