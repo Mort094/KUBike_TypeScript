@@ -65,8 +65,6 @@ new Vue({
         CurrentEmail: "",
         CurrentPhone: 0,
         //#endregion
-
-        //#endregion
         //#region Messages
         errorMessage: '',
         contentCheck: "",
@@ -78,6 +76,7 @@ new Vue({
         Mresponse: null,
         messageText: "",
         //#endregion
+        NewCycleName: "",
         //#region Pages
         loginPage: true,
         loggedIn: false,
@@ -119,7 +118,8 @@ new Vue({
         addTripData: { trip_start: "", trip_end: "", trip_map_json: "", user_id: 0, cycle_id: 0 },
         addTripEnd: { trip_end: "" },
         updateUserData: { user_firstname: "", user_lastname: "", user_email: "", user_mobile: 0 },
-        addMessageData: { messages_Id: 0, user_id: 0, cycle_id: 0, Emne: "", Besked: "", status: 0 }
+        addMessageData: { messages_Id: 0, user_id: 0, cycle_id: 0, Emne: "", Besked: "", status: 0 },
+        addCycleData: { cycle_name: "", cycle_coordinates: "" }
         //#endregion
     },
     created() {
@@ -683,6 +683,26 @@ new Vue({
                     alert(error.message);
                 })
         },
+        ADMAddBike() {
+            let urlGet = baseCycleUrl
+            this.addCycleData.cycle_name = this.NewCycleName
+            this.addCycleData.cycle_coordinates = "New Coordinates"
+            axios.post<IMessage>(urlGet, this.addMessageData)
+                .then
+                ((response: AxiosResponse) => {
+                    //this.currentTrip[] = response
+                    //sideskift?
+                    this.Mresponse = response.data
+                    alert("Klage oprettet")
+                }
+                )
+                .catch(
+                    (error: AxiosError) => {
+                        alert(error.message)
+                    }
+                )
+        }
+
         //#endregion  
         //#region QR code
         onDecode(content: any) {
