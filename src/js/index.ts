@@ -299,7 +299,7 @@ new Vue({
             this.profilePage = false
             this.Cykellisteside = false
             this.updateUserPage = true
-            this.CurrentUserName = this.updateUserData.user_firstname
+            this.Test()
 
 
 
@@ -461,6 +461,22 @@ new Vue({
                 })
 
         },
+        deactivateUser() {
+            let urlPut = baseUserUrl + "deactivate/" + parseInt(this.CurrentUserId)
+            axios.put<IUser>(urlPut)
+            .then((response: AxiosResponse) =>
+            {
+                console.log("")
+                this.CurrentUserId = response.data
+                this.loggedIn = false
+                this.loginPage = true
+                
+            })
+            .catch((error: AxiosError) =>
+            {
+                alert(error.message)
+            })
+        },
         HentAltOmEnBruger() {
             let urlGet = baseUserUrl + "user/" + parseInt(this.CurrentUserId)
             axios.get<IUser>(urlGet)
@@ -474,6 +490,13 @@ new Vue({
                     alert(error.message);
                 })
         },
+        Test(){
+            this.HentAltOmEnBruger()
+            this.updateUserData.user_firstname = this.CurrentUserName
+            this.updateUserData.user_lastname = this.CurrentLastName
+            this.updateUserData.user_email = this.CurrentEmail
+            this.updateUserData.user_mobile = this.CurrentPhone
+        },
         updateUser() {
             let url: string = baseUserUrl + "updateUser/" + parseInt(this.CurrentUserId)
             axios.put<IUser>(url, this.updateUserData)
@@ -482,6 +505,7 @@ new Vue({
                     this.updateMessage = message
                     this.updateUserPage = false
                     this.profilePage = true
+                    this.HentAltOmEnBruger()
                 })
                 .catch((error: AxiosError) => {
                     alert(error.message);
@@ -706,22 +730,22 @@ new Vue({
         },
 
         ADMDeleteBike() {
-            if(confirm("Do you really want to delete?")) {
-            let urlGet = baseCycleUrl + "/" + this.cycle_id
-            axios.delete<ICycle>(urlGet)
-            .then
-            ((response: AxiosResponse) => {
-                //this.currentTrip[] = response
-                //sideskift?
-                this.Mresponse = response.data
-                alert("Cykel slettet")
-            }
-            )
-            .catch(
-                (error: AxiosError) => {
-                    alert(error.message)
-                }
-            )
+            if (confirm("Do you really want to delete?")) {
+                let urlGet = baseCycleUrl + "/" + this.cycle_id
+                axios.delete<ICycle>(urlGet)
+                    .then
+                    ((response: AxiosResponse) => {
+                        //this.currentTrip[] = response
+                        //sideskift?
+                        this.Mresponse = response.data
+                        alert("Cykel slettet")
+                    }
+                    )
+                    .catch(
+                        (error: AxiosError) => {
+                            alert(error.message)
+                        }
+                    )
             }
         },
 

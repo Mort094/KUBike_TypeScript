@@ -205,17 +205,17 @@
           <div>
             
             <label style="display: block;" for="updateName">Navn:</label>
-            <input type="text" name="updateName" v-model="updateUser.user_firstname" id="updateName">
+            <input type="text" name="updateName" v-model="updateUserData.user_firstname" v-on:input="" id="updateName">
 
             <label style="display: block;" for="updateLastname">Efternavn:</label>
-            <input type="text" name="updateLastname" v-model="updateUser.user_lastname" value="CurrentLastName"
+            <input type="text" name="updateLastname" v-model="updateUserData.user_lastname" value="CurrentLastName"
               id="updateLastname">
 
             <label style="display: block;" for="updateEmail">Email:</label>
-            <input type="text" name="updateEmail" v-model="updateUser.user_email" value="user_email" id="updateEmail">
+            <input type="text" name="updateEmail" v-model="updateUserData.user_email" value="user_email" id="updateEmail">
 
             <label style="display: block;" for="updatePhone">Telefon:</label>
-            <input type="text" name="updatePhone" v-model="updateUser.user_mobile" value="user_phone" id="updatePhone">
+            <input type="text" name="updatePhone" v-model="updateUserData.user_mobile" value="user_phone" id="updatePhone">
           </div>
           <br>
           <button class="btn btn-success" v-on:click="updateUser()">Gem</button>
@@ -226,7 +226,7 @@
           <h2>SETTINGS</h2>
           <div class="container myMargin">
             <button class="btn btn-warning" v-on:click="logout">Logud</button>
-            <button class="btn btn-danger">Slet bruger</button>
+            <button class="btn btn-danger" v-on:click="deactivateUser"  >Slet bruger</button>
           </div>
         </div>
       </div>
