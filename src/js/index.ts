@@ -113,6 +113,7 @@ new Vue({
         loginPassword: "",
         ResponseTrip: null,
         //#endregion
+        cycle_name: "",
         //#region Create data
         addData: { user_email: "", user_password: "", user_firstname: "", user_lastname: "", user_mobile: 0 },
         addTripData: { trip_start: "", trip_end: "", trip_map_json: "", user_id: 0, cycle_id: 0 },
@@ -683,6 +684,7 @@ new Vue({
                     alert(error.message);
                 })
         },
+
         ADMAddBike() {
             let urlGet = baseCycleUrl
             this.addCycleData.cycle_name = this.NewCycleName
@@ -693,7 +695,7 @@ new Vue({
                     //this.currentTrip[] = response
                     //sideskift?
                     this.Mresponse = response.data
-                    alert("Klage oprettet")
+                    alert("Cykel tilføjet")
                 }
                 )
                 .catch(
@@ -701,7 +703,27 @@ new Vue({
                         alert(error.message)
                     }
                 )
-        }
+        },
+
+        ADMDeleteBike() {
+            if(confirm("Do you really want to delete?")) {
+            let urlGet = baseCycleUrl + "/" + this.cycle_id
+            axios.delete<ICycle>(urlGet)
+            .then
+            ((response: AxiosResponse) => {
+                //this.currentTrip[] = response
+                //sideskift?
+                this.Mresponse = response.data
+                alert("Cykel slettet")
+            }
+            )
+            .catch(
+                (error: AxiosError) => {
+                    alert(error.message)
+                }
+            )
+            }
+        },
 
         //#endregion  
         //#region QR code
