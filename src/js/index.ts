@@ -130,7 +130,7 @@ new Vue({
         addTripData: { trip_start: "", trip_end: "", trip_map_json: "", user_id: 0, cycle_id: 0 },
         addTripEnd: { trip_end: "" },
         updateUserData: { User_firstname: "", User_lastname: "", User_email: "", User_mobile: 0 },
-        addMessageData: { messages_Id: 0, user_id: 0, cycle_id: 0, Emne: "", Besked: "", status: 0 },
+        addMessageData: { messages_Id: 0, messages_user_id: 0, cycle_id: 0, Emne: "", Besked: "", status: 0 },
         addCycleData: { cycle_name: "", cycle_coordinates: "" }
         //#endregion
     },
@@ -528,10 +528,10 @@ new Vue({
             let urlGet = baseUserUrl + "user/" + parseInt(this.CurrentUserId)
             axios.get<IUser>(urlGet)
                 .then((response: AxiosResponse<IUser>) => {
-                    this.CurrentUserName = response.data.user_firstname
-                    this.CurrentLastName = response.data.user_lastname
-                    this.CurrentEmail = response.data.user_email
-                    this.CurrentPhone = response.data.user_mobile
+                    this.CurrentUserName = response.data.User_firstname
+                    this.CurrentLastName = response.data.User_lastname
+                    this.CurrentEmail = response.data.User_email
+                    this.CurrentPhone = response.data.User_mobile
                 })
                 .catch((error: AxiosError) => {
                     alert(error.message);
@@ -573,36 +573,36 @@ new Vue({
 
             var noError = true
             try {
-                if (this.addData.user_email == '') throw 'emptyEmail';
-                if (this.addData.user_password == '') throw 'emptyPassword';
-                if (this.addData.user_firstname == '') throw 'emptyFirstName';
-                if (this.addData.user_lastname == '') throw 'emptylastName';
-                if (this.addData.user_mobile == '') throw 'emptyMobil';
-                if (indholderTal.test(this.addData.user_password)) { }
+                if (this.addData.User_email == '') throw 'emptyEmail';
+                if (this.addData.User_password == '') throw 'emptyPassword';
+                if (this.addData.User_firstname == '') throw 'emptyFirstName';
+                if (this.addData.User_lastname == '') throw 'emptylastName';
+                if (this.addData.User_mobile == '') throw 'emptyMobil';
+                if (indholderTal.test(this.addData.User_password)) { }
                 else { throw 'nullIntPassword'; }
-                if (indholdeStoreBogstaver.test(this.addData.user_password)) { }
+                if (indholdeStoreBogstaver.test(this.addData.User_password)) { }
                 else { throw 'bigStrPassword'; }
-                if (indholder8Tal.test(this.addData.user_mobile)) { }
+                if (indholder8Tal.test(this.addData.User_mobile)) { }
                 else { throw '8xIntMobile'; }
-                if (testfortegn.test(this.addData.user_password)) { }
+                if (testfortegn.test(this.addData.User_password)) { }
                 else { throw 'passwordNullSymbol'; }
-                if (lengthPasswordvalid.test(this.addData.user_password)) {
+                if (lengthPasswordvalid.test(this.addData.User_password)) {
                 }
                 else {
                     throw 'passwordLength';
                 }
-                if (indholderBogstaver.test(this.addData.user_firstname)) {
+                if (indholderBogstaver.test(this.addData.User_firstname)) {
                 }
                 else {
                     throw 'smallStrFirstName';
                 }
-                if (indholderBogstaver.test(this.addData.user_lastname)) { }
+                if (indholderBogstaver.test(this.addData.User_lastname)) { }
                 else {
                     throw 'smallStrLastName';
                 }
-                if (mailformat.test(this.addData.user_email)) { }
+                if (mailformat.test(this.addData.User_email)) { }
                 else { throw 'kuMail'; }
-                if (this.addData.user_question_one == '') {
+                if (this.addData.User_question_one == '') {
                     alert("no question one data")
                 }
             }
