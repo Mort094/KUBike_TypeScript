@@ -266,8 +266,26 @@
             <input type="text" class="form-control" v-model="addData.user_lastname" id="opret-lastname"
               placeholder="Efternavn">
             <label for="phone" class="float-left">Telefon nummer</label><br>
-            <input type="text" class="form-control" id="opret-phone" v-model="addData.user_mobile" id="phone"
+            <input type="number" class="form-control" id="opret-phone" v-model.number="addData.user_mobile" id="phone"
               placeholder="Telefon Nummer">
+              <label for="QuestionOne" class="float-left">Sikekrheds spørgsmål 1</label><br>
+            <input type="text" class="form-control" id="opret-sikkerhedEt" v-model="addData.user_question_one" 
+              placeholder="Sikkerheds spørgsmål 1">
+              <label for="AnswerOne" class="float-left">Svar til sikekrheds spørgsmål 1</label><br>
+            <input type="text" class="form-control" id="opret-svarEt" v-model="addData.user_answer_one" 
+              placeholder="Svar til sikkerheds spørgsmål 1">
+              <label for="QuestionTwo" class="float-left">Sikekrheds spørgsmål 2</label><br>
+            <input type="text" class="form-control" id="opret-sikkerhedTo" v-model="addData.user_question_two" 
+              placeholder="Sikkerheds spørgsmål 2">
+              <label for="AnswerOne" class="float-left">Svar til sikekrheds spørgsmål 2</label><br>
+            <input type="text" class="form-control" id="opret-svarTo" v-model="addData.user_answer_two" 
+              placeholder="Svar til sikkerheds spørgsmål 2">
+              <label for="QuestionOne" class="float-left">Sikekrheds spørgsmål 3</label><br>
+            <input type="text" class="form-control" id="opret-sikkerhedTre" v-model="addData.user_question_three" 
+              placeholder="Sikkerheds spørgsmål 3">
+              <label for="AnswerOne" class="float-left">Svar til sikekrheds spørgsmål 3</label><br>
+            <input type="text" class="form-control" id="opret-svarTre" v-model="addData.user_answer_three" 
+              placeholder="Svar til sikkerheds spørgsmål 3">
             <br>
             <p id="demo"></p>
             <div class="text-warning">{{ errorMessage }}</div> <br>

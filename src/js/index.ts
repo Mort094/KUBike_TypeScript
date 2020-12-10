@@ -34,6 +34,12 @@ interface IUser {
     user_lastname: string
     user_mobile: number
     fk_account_status_id: number
+    user_question_one: string
+    user_answer_one: string
+    user_question_two: string
+    user_answer_two: string
+    user_question_three: string
+    user_answer_three: string
 }
 interface ITrip {
     trip_start: string
@@ -120,7 +126,7 @@ new Vue({
         //#endregion
         cycle_name: "",
         //#region Create data
-        addData: { user_email: "", user_password: "", user_firstname: "", user_lastname: "", user_mobile: 0 },
+        addData: { user_email: "", user_password: "", user_firstname: "", user_lastname: "", user_mobile: 0, user_question_one: "", user_answer_one: "", user_question_two:"", user_answer_two:"", user_question_three: "", user_answer_three: "" },
         addTripData: { trip_start: "", trip_end: "", trip_map_json: "", user_id: 0, cycle_id: 0 },
         addTripEnd: { trip_end: "" },
         updateUserData: { user_firstname: "", user_lastname: "", user_email: "", user_mobile: 0 },
@@ -596,6 +602,9 @@ new Vue({
                 }
                 if (mailformat.test(this.addData.user_email)) { }
                 else { throw 'kuMail'; }
+                if (this.addData.user_question_one == '') {
+                    alert("no question one data")
+                }
             }
             catch (err) {
                 var errorNumber = err
@@ -609,14 +618,20 @@ new Vue({
                             (response: AxiosResponse) => {
                                 let message: string = "response " + response.status + " " + response.statusText
                                 console.log(message)
-                                this.addMessage = null
-                                this.loginPage = true
-                                this.createUserPage = false
                                 document.getElementById('opret-email').className = "form-control";
                                 document.getElementById('opret-password').className = "form-control";
                                 document.getElementById('opret-name').className = "form-control";
                                 document.getElementById('opret-lastname').className = "form-control";
-                                document.getElementById('opret-phone').className = "form-control";
+                                parseInt(document.getElementById('opret-phone').className = "form-control");
+                                document.getElementById('opret-sikkerhedEt');
+                                document.getElementById('opret-svarEt');
+                                document.getElementById('opret-sikkerhedTo');
+                                document.getElementById('opret-svarTo');
+                                document.getElementById('opret-sikkerhedTre');
+                                document.getElementById('opret-svartre');
+                                this.addMessage = null
+                                this.loginPage = true
+                                this.createUserPage = false
                             }
                         )
                         .catch(
