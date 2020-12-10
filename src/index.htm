@@ -44,13 +44,15 @@
         <h1>HELLO BOSS MAN</h1>
 
         <div v-if="ADMOverviewPage">
-          <button class="btn btn-success" v-on:click="getAllBikes">Get all bikes</button>
-          <ul id="cyclelist" v-if="cycles.length">
-            <li v-for="cycle in cycles" key="cycle_id">
-              {{ cycle.cycle_name }}
-            </li>
-          </ul>
-          <div v-else>Virker ikke</div>
+          <select v-model="select" v-on:click="ADMHentUserIDFraSelect()">
+            <option value=""  disabled selected>Select a user</option>
+            <option v-for="user in users"> {{user.user_id}} . Fornavn: {{user.user_firstname}} efternavn: {{user.user_lastname}} email: {{user.user_email} telefon: {{user.user_mobile}}
+            </option>
+          </select>
+          <span>Selected: {{ select }}</span>
+          <br>
+          <br>
+          <button class="btn btn-danger" id="DeleteUserAdmin" v-on:click="ADMDeleteUser">Slet User</button>
         </div>
 
         <div v-if="ADMMessagesPage">

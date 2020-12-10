@@ -107,6 +107,7 @@ new Vue({
         CyclesInUse: [],
         AllMessages: [],
         AllMessagesBike: [],
+        users: [],
         //#endregion
         //#region login
         loginEmail: "",
@@ -124,6 +125,7 @@ new Vue({
         //#endregion
     },
     created() {
+        this.getAllUsers()
         this.getAllBikes()
         this.cycles
         this.getAllBikesAdmin()
@@ -449,6 +451,41 @@ new Vue({
         },
         //#endregion
         //#region Bruger
+
+        getAllUsers(){
+            axios.get<IUser[]>(baseUserUrl)
+                .then((response: AxiosResponse<IUser[]>) => {
+                    this.users = response.data
+                })
+                .catch((error: AxiosError) => {
+                    //this.message = error.message
+                    alert(error.message) // https://www.w3schools.com/js/js_popup.asp
+                })
+        },
+        ADMHentUserIDFraSelect() {
+            this.user_id = parseInt(this.select)
+        },
+        ADMDeleteUser() {
+            if(confirm("Do you really want to delete?")) {
+            let urlGetUser = baseUserUrl + "delete/"+ parseInt(this.user_id)
+            axios.delete<IUser>(urlGetUser)
+            .then
+            ((response: AxiosResponse) => {
+                
+                this.Mresponse = response.data
+                alert("User slettet")
+                this.getAllUsers()
+            }
+            )
+            .catch(
+                (error: AxiosError) => {
+                    alert(error.message)
+                }
+            )
+            }
+        },
+
+
         HentBruger() {
             let urlGet = baseUserUrl + this.loginEmail
             axios.get<IUser>(urlGet)
