@@ -456,7 +456,7 @@ new Vue({
         //#endregion
         //#region Bruger
 
-        getAllUsers(){
+        getAllUsers() {
             axios.get<IUser[]>(baseUserUrl)
                 .then((response: AxiosResponse<IUser[]>) => {
                     this.users = response.data
@@ -470,22 +470,22 @@ new Vue({
             this.user_id = parseInt(this.select)
         },
         ADMDeleteUser() {
-            if(confirm("Do you really want to delete?")) {
-            let urlGetUser = baseUserUrl + "delete/"+ parseInt(this.user_id)
-            axios.delete<IUser>(urlGetUser)
-            .then
-            ((response: AxiosResponse) => {
-                
-                this.Mresponse = response.data
-                alert("User slettet")
-                this.getAllUsers()
-            }
-            )
-            .catch(
-                (error: AxiosError) => {
-                    alert(error.message)
-                }
-            )
+            if (confirm("Do you really want to delete?")) {
+                let urlGetUser = baseUserUrl + "delete/" + parseInt(this.user_id)
+                axios.delete<IUser>(urlGetUser)
+                    .then
+                    ((response: AxiosResponse) => {
+
+                        this.Mresponse = response.data
+                        alert("User slettet")
+                        this.getAllUsers()
+                    }
+                    )
+                    .catch(
+                        (error: AxiosError) => {
+                            alert(error.message)
+                        }
+                    )
             }
         },
 
@@ -503,21 +503,20 @@ new Vue({
 
         },
         deactivateUser() {
-            if(confirm("Er du sikker på at du vil slette din bruger?")){
-            let urlPut = baseUserUrl + "deactivate/" + parseInt(this.CurrentUserId)
-            axios.put<IUser>(urlPut)
-            .then((response: AxiosResponse) =>
-            {
-                console.log("")
-                this.CurrentUserId = response.data
-                this.loggedIn = false
-                this.loginPage = true
+            if (confirm("Er du sikker på at du vil slette din bruger?")) {
+                let urlPut = baseUserUrl + "deactivate/" + parseInt(this.CurrentUserId)
+                axios.put<IUser>(urlPut)
+                    .then((response: AxiosResponse) => {
+                        console.log("")
+                        this.CurrentUserId = response.data
+                        this.loggedIn = false
+                        this.loginPage = true
 
-            })
-            .catch((error: AxiosError) =>
-            {
-                alert(error.message)
-            })}
+                    })
+                    .catch((error: AxiosError) => {
+                        alert(error.message)
+                    })
+            }
         },
         HentAltOmEnBruger() {
             let urlGet = baseUserUrl + "user/" + parseInt(this.CurrentUserId)
@@ -532,7 +531,7 @@ new Vue({
                     alert(error.message);
                 })
         },
-        InputFilled(){
+        InputFilled() {
             this.HentAltOmEnBruger()
             this.updateUserData.user_firstname = this.CurrentUserName
             this.updateUserData.user_lastname = this.CurrentLastName
@@ -573,46 +572,30 @@ new Vue({
                 if (this.addData.user_firstname == '') throw 'emptyFirstName';
                 if (this.addData.user_lastname == '') throw 'emptylastName';
                 if (this.addData.user_mobile == '') throw 'emptyMobil';
-                if (indholderTal.test(this.addData.user_password))
-                {}
-                else {throw 'nullIntPassword';}
-                if (indholdeStoreBogstaver.test(this.addData.user_password))
-                {}
-                else {throw 'bigStrPassword';}
-                
-                if (indholder8Tal.test(this.addData.user_mobile))
-                {}
-                else {throw '8xIntMobile';}
-                
-                if (testfortegn.test(this.addData.user_password))
-                {}
-                else {throw 'passwordNullSymbol';}
-
-               if (lengthPasswordvalid.test(this.addData.user_password))
-               { 
-                  
-               }
-               else{
-                   throw 'passwordLength';
-               }
-
-                if (indholderBogstaver.test(this.addData.user_firstname))
-                { 
-                   
+                if (indholderTal.test(this.addData.user_password)) { }
+                else { throw 'nullIntPassword'; }
+                if (indholdeStoreBogstaver.test(this.addData.user_password)) { }
+                else { throw 'bigStrPassword'; }
+                if (indholder8Tal.test(this.addData.user_mobile)) { }
+                else { throw '8xIntMobile'; }
+                if (testfortegn.test(this.addData.user_password)) { }
+                else { throw 'passwordNullSymbol'; }
+                if (lengthPasswordvalid.test(this.addData.user_password)) {
                 }
-                else{
+                else {
+                    throw 'passwordLength';
+                }
+                if (indholderBogstaver.test(this.addData.user_firstname)) {
+                }
+                else {
                     throw 'smallStrFirstName';
                 }
-
-                if (indholderBogstaver.test(this.addData.user_lastname))
-                {}
-                else{
+                if (indholderBogstaver.test(this.addData.user_lastname)) { }
+                else {
                     throw 'smallStrLastName';
                 }
-
-                if (mailformat.test(this.addData.user_email))
-                {}
-                else {throw 'kuMail';}
+                if (mailformat.test(this.addData.user_email)) { }
+                else { throw 'kuMail'; }
             }
             catch (err) {
                 var errorNumber = err
@@ -626,9 +609,14 @@ new Vue({
                             (response: AxiosResponse) => {
                                 let message: string = "response " + response.status + " " + response.statusText
                                 console.log(message)
-                                this.addMessage = message
+                                this.addMessage = null
                                 this.loginPage = true
                                 this.createUserPage = false
+                                document.getElementById('opret-email').className = "form-control";
+                                document.getElementById('opret-password').className = "form-control";
+                                document.getElementById('opret-name').className = "form-control";
+                                document.getElementById('opret-lastname').className = "form-control";
+                                document.getElementById('opret-phone').className = "form-control";
                             }
                         )
                         .catch(
@@ -710,7 +698,7 @@ new Vue({
                         document.getElementById('opret-password').className = "form-control error";
                     }
                     else {
-                       
+
                         console.log(errorNumber)
                     }
                 }
@@ -820,23 +808,23 @@ new Vue({
         },
 
         ADMDeleteBike() {
-            if(confirm("Do you really want to delete?")) {
-            let urlGet = baseCycleUrl + parseInt(this.cycle_id)
-            axios.delete<ICycle>(urlGet)
-            .then
-            ((response: AxiosResponse) => {
-                //this.currentTrip[] = response
-                //sideskift?
-                this.Mresponse = response.data
-                alert("Cykel slettet")
-                this.getAllBikesAdmin()
-            }
-            )
-            .catch(
-                (error: AxiosError) => {
-                    alert(error.message)
-                }
-            )
+            if (confirm("Do you really want to delete?")) {
+                let urlGet = baseCycleUrl + parseInt(this.cycle_id)
+                axios.delete<ICycle>(urlGet)
+                    .then
+                    ((response: AxiosResponse) => {
+                        //this.currentTrip[] = response
+                        //sideskift?
+                        this.Mresponse = response.data
+                        alert("Cykel slettet")
+                        this.getAllBikesAdmin()
+                    }
+                    )
+                    .catch(
+                        (error: AxiosError) => {
+                            alert(error.message)
+                        }
+                    )
             }
         },
 
