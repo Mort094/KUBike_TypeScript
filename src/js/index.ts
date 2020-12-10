@@ -299,7 +299,7 @@ new Vue({
             this.profilePage = false
             this.Cykellisteside = false
             this.updateUserPage = true
-            this.Test()
+            this.InputFilled()
 
 
 
@@ -462,6 +462,7 @@ new Vue({
 
         },
         deactivateUser() {
+            if(confirm("Er du sikker på at du vil slette din bruger?")){
             let urlPut = baseUserUrl + "deactivate/" + parseInt(this.CurrentUserId)
             axios.put<IUser>(urlPut)
             .then((response: AxiosResponse) =>
@@ -475,7 +476,7 @@ new Vue({
             .catch((error: AxiosError) =>
             {
                 alert(error.message)
-            })
+            })}
         },
         HentAltOmEnBruger() {
             let urlGet = baseUserUrl + "user/" + parseInt(this.CurrentUserId)
@@ -490,7 +491,7 @@ new Vue({
                     alert(error.message);
                 })
         },
-        Test(){
+        InputFilled(){
             this.HentAltOmEnBruger()
             this.updateUserData.user_firstname = this.CurrentUserName
             this.updateUserData.user_lastname = this.CurrentLastName

@@ -201,18 +201,18 @@
 
         <div v-if="updateUserPage">
           <h2>Rediger dine oplysninger</h2>
-          <button class="btn btn-primary" v-on:click="HentAltOmEnBruger">load test</button>
+    
           <div>
-            
+               <label style="display: block;" for="updateEmail">Email:</label>
+            <p>{{ CurrentEmail }}</p>
+          <!-- <input type="text" name="updateEmail" v-model="updateUserData.user_email" value="user_email" id="updateEmail"> -->
+
             <label style="display: block;" for="updateName">Navn:</label>
-            <input type="text" name="updateName" v-model="updateUserData.user_firstname" v-on:input="" id="updateName">
+            <input type="text" name="updateName" v-model="updateUserData.user_firstname" id="updateName">
 
             <label style="display: block;" for="updateLastname">Efternavn:</label>
             <input type="text" name="updateLastname" v-model="updateUserData.user_lastname" value="CurrentLastName"
               id="updateLastname">
-
-            <label style="display: block;" for="updateEmail">Email:</label>
-            <input type="text" name="updateEmail" v-model="updateUserData.user_email" value="user_email" id="updateEmail">
 
             <label style="display: block;" for="updatePhone">Telefon:</label>
             <input type="text" name="updatePhone" v-model="updateUserData.user_mobile" value="user_phone" id="updatePhone">
