@@ -27,13 +27,13 @@ interface ICycle {
     fk_cycle_status_id: number
 }
 interface IUser {
-    user_id: number
-    user_email: string
-    user_password: string
-    user_firstname: string
-    user_lastname: string
-    user_mobile: number
-    fk_account_status_id: number
+    User_id: number
+    User_email: string
+    User_password: string
+    User_firstname: string
+    User_lastname: string
+    User_mobile: number
+    Account_status_id: number
     UserQuestionOne: string
     UserAnswerOne: string
     UserQuestionTwo: string
@@ -126,10 +126,10 @@ new Vue({
         //#endregion
         cycle_name: "",
         //#region Create data
-        addData: { user_id:0, user_firstname: "", user_lastname: "", user_email: "", user_password: "",  user_mobile: 0, fk_account_status_id:1, UserQuestionOne: "", UserAnswerOne: "", UserQuestionTwo:"", UserAnswerTwo:"", UserQuestionThree: "", UserAnswerThree: "" },
+        addData: { User_id:0, User_firstname: "", User_lastname: "", User_email: "", User_password: "",  User_mobile: 0, Account_status_id: 0, UserQuestionOne: "", UserAnswerOne: "", UserQuestionTwo:"", UserAnswerTwo:"", UserQuestionThree: "", UserAnswerThree: "" },
         addTripData: { trip_start: "", trip_end: "", trip_map_json: "", user_id: 0, cycle_id: 0 },
         addTripEnd: { trip_end: "" },
-        updateUserData: { user_firstname: "", user_lastname: "", user_email: "", user_mobile: 0 },
+        updateUserData: { User_firstname: "", User_lastname: "", User_email: "", User_mobile: 0 },
         addMessageData: { messages_Id: 0, user_id: 0, cycle_id: 0, Emne: "", Besked: "", status: 0 },
         addCycleData: { cycle_name: "", cycle_coordinates: "" }
         //#endregion
@@ -189,12 +189,12 @@ new Vue({
                 .then((response: AxiosResponse<IUser[]>) => {
                     this.loggedIn = response.data
                     if (this.loggedIn == true) {
-                        this.user_email = this.loginEmail
+                        this.User_email = this.loginEmail
                         this.loggedIn = response.data
                         if (this.loginEmail == "adm@ku.dk") {
                             this.admin = true
                         }
-                        console.log(`Denne bruger email er blevet logget ind "${this.user_email}" `)
+                        console.log(`Denne bruger email er blevet logget ind "${this.User_email}" `)
                     }
                     this.errorMessage = "Forkert Email eller Password"
                     //document.getElementById('opret-email').className = "green";

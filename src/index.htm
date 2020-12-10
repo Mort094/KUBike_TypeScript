@@ -210,14 +210,14 @@
           <!-- <input type="text" name="updateEmail" v-model="updateUserData.user_email" value="user_email" id="updateEmail"> -->
 
             <label style="display: block;" for="updateName">Navn:</label>
-            <input type="text" name="updateName" v-model="updateUserData.user_firstname" id="updateName">
+            <input type="text" name="updateName" v-model="updateUserData.User_firstname" id="updateName">
 
             <label style="display: block;" for="updateLastname">Efternavn:</label>
-            <input type="text" name="updateLastname" v-model="updateUserData.user_lastname" value="CurrentLastName"
+            <input type="text" name="updateLastname" v-model="updateUserData.User_lastname" value="CurrentLastName"
               id="updateLastname">
 
             <label style="display: block;" for="updatePhone">Telefon:</label>
-            <input type="text" name="updatePhone" v-model="updateUserData.user_mobile" value="user_phone" id="updatePhone">
+            <input type="text" name="updatePhone" v-model="updateUserData.User_mobile" value="user_phone" id="updatePhone">
           </div>
           <br>
           <button class="btn btn-success" v-on:click="updateUser()">Gem</button>
@@ -269,22 +269,22 @@
             <input type="number" class="form-control" id="opret-phone" v-model.number="addData.user_mobile" id="phone"
               placeholder="Telefon Nummer">
               <label for="QuestionOne" class="float-left">Sikekrheds spørgsmål 1</label><br>
-            <input type="text" class="form-control" id="opret-sikkerhedEt" v-model="addData.user_question_one" 
+            <input type="text" class="form-control" id="opret-sikkerhedEt" v-model="addData.UserQuestionOne" 
               placeholder="Sikkerheds spørgsmål 1">
               <label for="AnswerOne" class="float-left">Svar til sikekrheds spørgsmål 1</label><br>
-            <input type="text" class="form-control" id="opret-svarEt" v-model="addData.user_answer_one" 
+            <input type="text" class="form-control" id="opret-svarEt" v-model="addData.UserAnswerOne" 
               placeholder="Svar til sikkerheds spørgsmål 1">
               <label for="QuestionTwo" class="float-left">Sikekrheds spørgsmål 2</label><br>
-            <input type="text" class="form-control" id="opret-sikkerhedTo" v-model="addData.user_question_two" 
+            <input type="text" class="form-control" id="opret-sikkerhedTo" v-model="addData.UserQuestionTwo" 
               placeholder="Sikkerheds spørgsmål 2">
               <label for="AnswerOne" class="float-left">Svar til sikekrheds spørgsmål 2</label><br>
-            <input type="text" class="form-control" id="opret-svarTo" v-model="addData.user_answer_two" 
+            <input type="text" class="form-control" id="opret-svarTo" v-model="addData.UserAnswerTwo" 
               placeholder="Svar til sikkerheds spørgsmål 2">
               <label for="QuestionOne" class="float-left">Sikekrheds spørgsmål 3</label><br>
-            <input type="text" class="form-control" id="opret-sikkerhedTre" v-model="addData.user_question_three" 
+            <input type="text" class="form-control" id="opret-sikkerhedTre" v-model="addData.UserQuestionThree" 
               placeholder="Sikkerheds spørgsmål 3">
               <label for="AnswerOne" class="float-left">Svar til sikekrheds spørgsmål 3</label><br>
-            <input type="text" class="form-control" id="opret-svarTre" v-model="addData.user_answer_three" 
+            <input type="text" class="form-control" id="opret-svarTre" v-model="addData.UserAnswerThree" 
               placeholder="Svar til sikkerheds spørgsmål 3">
             <br>
             <p id="demo"></p>
