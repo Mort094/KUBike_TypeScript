@@ -470,7 +470,7 @@ new Vue({
                 this.CurrentUserId = response.data
                 this.loggedIn = false
                 this.loginPage = true
-                
+
             })
             .catch((error: AxiosError) =>
             {
@@ -730,22 +730,22 @@ new Vue({
         },
 
         ADMDeleteBike() {
-            if (confirm("Do you really want to delete?")) {
-                let urlGet = baseCycleUrl + "/" + this.cycle_id
-                axios.delete<ICycle>(urlGet)
-                    .then
-                    ((response: AxiosResponse) => {
-                        //this.currentTrip[] = response
-                        //sideskift?
-                        this.Mresponse = response.data
-                        alert("Cykel slettet")
-                    }
-                    )
-                    .catch(
-                        (error: AxiosError) => {
-                            alert(error.message)
-                        }
-                    )
+            if(confirm("Do you really want to delete?")) {
+            let urlGet = baseCycleUrl + parseInt(this.cycle_id)
+            axios.delete<ICycle>(urlGet)
+            .then
+            ((response: AxiosResponse) => {
+                //this.currentTrip[] = response
+                //sideskift?
+                this.Mresponse = response.data
+                alert("Cykel slettet")
+            }
+            )
+            .catch(
+                (error: AxiosError) => {
+                    alert(error.message)
+                }
+            )
             }
         },
 
