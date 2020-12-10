@@ -46,7 +46,7 @@
         <div v-if="ADMOverviewPage">
           <select v-model="select" v-on:click="ADMHentUserIDFraSelect()">
             <option value=""  disabled selected>Select a user</option>
-            <option v-for="user in users"> {{user.user_id}} . Fornavn: {{user.user_firstname}} efternavn: {{user.user_lastname}} email: {{user.user_email} telefon: {{user.user_mobile}}
+            <option v-for="user in users"> {{user.user_id}} . Fornavn: {{user.user_firstname}} Efternavn: {{user.user_lastname}} Email: {{user.user_email} 
             </option>
           </select>
           <span>Selected: {{ select }}</span>
