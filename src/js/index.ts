@@ -142,6 +142,7 @@ new Vue({
         login() {
             this.createUserPage = false
             this.loginPage = true
+            this.errorMessage = ''
             document.getElementById('login-email').className = "form-control";
         },
         loginTry(vendor: string) {
@@ -507,7 +508,6 @@ new Vue({
                 let urlPut = baseUserUrl + "deactivate/" + parseInt(this.CurrentUserId)
                 axios.put<IUser>(urlPut)
                     .then((response: AxiosResponse) => {
-                        console.log("")
                         this.CurrentUserId = response.data
                         this.loggedIn = false
                         this.loginPage = true
