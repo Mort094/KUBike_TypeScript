@@ -59,7 +59,7 @@
 
         <div v-if="ADMCyclePage">
           <br>
-          <select v-model="select">
+          <select v-model="select" v-on:click="ADMHentCykelIDFraSelect()">
             <option value=""  disabled selected>Select a bike</option>
             <option v-for="cycle in cycles2"> {{cycle.cycle_id}}
             </option>

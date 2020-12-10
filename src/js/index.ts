@@ -707,7 +707,7 @@ new Vue({
 
         ADMDeleteBike() {
             if(confirm("Do you really want to delete?")) {
-            let urlGet = baseCycleUrl + "/" + this.cycle_id
+            let urlGet = baseCycleUrl + parseInt(this.cycle_id)
             axios.delete<ICycle>(urlGet)
             .then
             ((response: AxiosResponse) => {
