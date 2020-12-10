@@ -34,12 +34,12 @@ interface IUser {
     user_lastname: string
     user_mobile: number
     fk_account_status_id: number
-    user_question_one: string
-    user_answer_one: string
-    user_question_two: string
-    user_answer_two: string
-    user_question_three: string
-    user_answer_three: string
+    UserQuestionOne: string
+    UserAnswerOne: string
+    UserQuestionTwo: string
+    UserAnswerTwo: string
+    UserQuestionThree: string
+    UserAnswerThree: string
 }
 interface ITrip {
     trip_start: string
@@ -126,7 +126,7 @@ new Vue({
         //#endregion
         cycle_name: "",
         //#region Create data
-        addData: { user_email: "", user_password: "", user_firstname: "", user_lastname: "", user_mobile: 0, user_question_one: "", user_answer_one: "", user_question_two:"", user_answer_two:"", user_question_three: "", user_answer_three: "" },
+        addData: { user_id:0, user_firstname: "", user_lastname: "", user_email: "", user_password: "",  user_mobile: 0, fk_account_status_id:1, UserQuestionOne: "", UserAnswerOne: "", UserQuestionTwo:"", UserAnswerTwo:"", UserQuestionThree: "", UserAnswerThree: "" },
         addTripData: { trip_start: "", trip_end: "", trip_map_json: "", user_id: 0, cycle_id: 0 },
         addTripEnd: { trip_end: "" },
         updateUserData: { user_firstname: "", user_lastname: "", user_email: "", user_mobile: 0 },
