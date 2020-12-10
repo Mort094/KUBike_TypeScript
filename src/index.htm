@@ -44,13 +44,15 @@
         <h1>HELLO BOSS MAN</h1>
 
         <div v-if="ADMOverviewPage">
-          <button class="btn btn-success" v-on:click="getAllBikes">Get all bikes</button>
-          <ul id="cyclelist" v-if="cycles.length">
-            <li v-for="cycle in cycles" key="cycle_id">
-              {{ cycle.cycle_name }}
-            </li>
-          </ul>
-          <div v-else>Virker ikke</div>
+          <select v-model="select" v-on:click="ADMHentUserIDFraSelect()">
+            <option value=""  disabled selected>Select a user</option>
+            <option v-for="user in users"> {{user.user_id}} . Fornavn: {{user.user_firstname}} Efternavn: {{user.user_lastname}} Email: {{user.user_email} tel: {{user.user_phone}
+            </option>
+          </select>
+          <span>Selected: {{ select }}</span>
+          <br>
+          <br>
+          <button class="btn btn-danger" id="DeleteUserAdmin" v-on:click="ADMDeleteUser">Slet User</button>
         </div>
 
         <div v-if="ADMMessagesPage">
@@ -59,7 +61,7 @@
 
         <div v-if="ADMCyclePage">
           <br>
-          <select v-model="select">
+          <select v-model="select" v-on:click="ADMHentCykelIDFraSelect()">
             <option value=""  disabled selected>Select a bike</option>
             <option v-for="cycle in cycles2"> {{cycle.cycle_id}}
             </option>
@@ -83,7 +85,7 @@
           <br>
           <br>
           <label for="Cykel Navn" class="float-left">Cykel navn:</label><br>
-          <input id="cycle_name" class="form-control" v-model="cycle_name" placeholder="Cykelens navn">
+          <input id="cycle_new_name" class="form-control" v-model="cycle_name" placeholder="Cykelens navn">
           <button class="btn btn-primary" id="OpretNyCykel" v-on:click="ADMAddBike()">Opret cykel i database</button>
         </div>
 
@@ -201,21 +203,21 @@
 
         <div v-if="updateUserPage">
           <h2>Rediger dine oplysninger</h2>
-          <button class="btn btn-primary" v-on:click="HentAltOmEnBruger">load test</button>
+    
           <div>
-            
+               <label style="display: block;" for="updateEmail">Email:</label>
+            <p>{{ CurrentEmail }}</p>
+          <!-- <input type="text" name="updateEmail" v-model="updateUserData.user_email" value="user_email" id="updateEmail"> -->
+
             <label style="display: block;" for="updateName">Navn:</label>
-            <input type="text" name="updateName" v-model="updateUser.user_firstname" id="updateName">
+            <input type="text" name="updateName" v-model="updateUserData.user_firstname" id="updateName">
 
             <label style="display: block;" for="updateLastname">Efternavn:</label>
-            <input type="text" name="updateLastname" v-model="updateUser.user_lastname" value="CurrentLastName"
+            <input type="text" name="updateLastname" v-model="updateUserData.user_lastname" value="CurrentLastName"
               id="updateLastname">
 
-            <label style="display: block;" for="updateEmail">Email:</label>
-            <input type="text" name="updateEmail" v-model="updateUser.user_email" value="user_email" id="updateEmail">
-
             <label style="display: block;" for="updatePhone">Telefon:</label>
-            <input type="text" name="updatePhone" v-model="updateUser.user_mobile" value="user_phone" id="updatePhone">
+            <input type="text" name="updatePhone" v-model="updateUserData.user_mobile" value="user_phone" id="updatePhone">
           </div>
           <br>
           <button class="btn btn-success" v-on:click="updateUser()">Gem</button>
@@ -226,7 +228,7 @@
           <h2>SETTINGS</h2>
           <div class="container myMargin">
             <button class="btn btn-warning" v-on:click="logout">Logud</button>
-            <button class="btn btn-danger">Slet bruger</button>
+            <button class="btn btn-danger" v-on:click="deactivateUser"  >Slet bruger</button>
           </div>
         </div>
       </div>

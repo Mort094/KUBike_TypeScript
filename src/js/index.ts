@@ -111,6 +111,7 @@ new Vue({
         CyclesInUse: [],
         AllMessages: [],
         AllMessagesBike: [],
+        users: [],
         //#endregion
         //#region login
         loginEmail: "",
@@ -128,6 +129,7 @@ new Vue({
         //#endregion
     },
     created() {
+        this.getAllUsers()
         this.getAllBikes()
         this.cycles
         this.getAllBikesAdmin()
@@ -303,7 +305,7 @@ new Vue({
             this.profilePage = false
             this.Cykellisteside = false
             this.updateUserPage = true
-            this.CurrentUserName = this.updateUserData.user_firstname
+            this.InputFilled()
 
 
 
@@ -453,6 +455,41 @@ new Vue({
         },
         //#endregion
         //#region Bruger
+
+        getAllUsers(){
+            axios.get<IUser[]>(baseUserUrl)
+                .then((response: AxiosResponse<IUser[]>) => {
+                    this.users = response.data
+                })
+                .catch((error: AxiosError) => {
+                    //this.message = error.message
+                    alert(error.message) // https://www.w3schools.com/js/js_popup.asp
+                })
+        },
+        ADMHentUserIDFraSelect() {
+            this.user_id = parseInt(this.select)
+        },
+        ADMDeleteUser() {
+            if(confirm("Do you really want to delete?")) {
+            let urlGetUser = baseUserUrl + "delete/"+ parseInt(this.user_id)
+            axios.delete<IUser>(urlGetUser)
+            .then
+            ((response: AxiosResponse) => {
+                
+                this.Mresponse = response.data
+                alert("User slettet")
+                this.getAllUsers()
+            }
+            )
+            .catch(
+                (error: AxiosError) => {
+                    alert(error.message)
+                }
+            )
+            }
+        },
+
+
         HentBruger() {
             let urlGet = baseUserUrl + this.loginEmail
             axios.get<IUser>(urlGet)
@@ -464,6 +501,23 @@ new Vue({
                     alert(error.message);
                 })
 
+        },
+        deactivateUser() {
+            if(confirm("Er du sikker på at du vil slette din bruger?")){
+            let urlPut = baseUserUrl + "deactivate/" + parseInt(this.CurrentUserId)
+            axios.put<IUser>(urlPut)
+            .then((response: AxiosResponse) =>
+            {
+                console.log("")
+                this.CurrentUserId = response.data
+                this.loggedIn = false
+                this.loginPage = true
+
+            })
+            .catch((error: AxiosError) =>
+            {
+                alert(error.message)
+            })}
         },
         HentAltOmEnBruger() {
             let urlGet = baseUserUrl + "user/" + parseInt(this.CurrentUserId)
@@ -478,6 +532,13 @@ new Vue({
                     alert(error.message);
                 })
         },
+        InputFilled(){
+            this.HentAltOmEnBruger()
+            this.updateUserData.user_firstname = this.CurrentUserName
+            this.updateUserData.user_lastname = this.CurrentLastName
+            this.updateUserData.user_email = this.CurrentEmail
+            this.updateUserData.user_mobile = this.CurrentPhone
+        },
         updateUser() {
             let url: string = baseUserUrl + "updateUser/" + parseInt(this.CurrentUserId)
             axios.put<IUser>(url, this.updateUserData)
@@ -486,6 +547,7 @@ new Vue({
                     this.updateMessage = message
                     this.updateUserPage = false
                     this.profilePage = true
+                    this.HentAltOmEnBruger()
                 })
                 .catch((error: AxiosError) => {
                     alert(error.message);
@@ -740,14 +802,13 @@ new Vue({
 
         ADMAddBike() {
             let urlGet = baseCycleUrl
-            this.addCycleData.cycle_name = this.NewCycleName
+            this.addCycleData.cycle_name = this.cycle_name
             this.addCycleData.cycle_coordinates = "New Coordinates"
-            axios.post<IMessage>(urlGet, this.addMessageData)
+            axios.post<IMessage>(urlGet, this.addCycleData)
                 .then
                 ((response: AxiosResponse) => {
                     //this.currentTrip[] = response
                     //sideskift?
-                    this.Mresponse = response.data
                     alert("Cykel tilføjet")
                 }
                 )
@@ -760,7 +821,7 @@ new Vue({
 
         ADMDeleteBike() {
             if(confirm("Do you really want to delete?")) {
-            let urlGet = baseCycleUrl + "/" + this.cycle_id
+            let urlGet = baseCycleUrl + parseInt(this.cycle_id)
             axios.delete<ICycle>(urlGet)
             .then
             ((response: AxiosResponse) => {
@@ -768,6 +829,7 @@ new Vue({
                 //sideskift?
                 this.Mresponse = response.data
                 alert("Cykel slettet")
+                this.getAllBikesAdmin()
             }
             )
             .catch(
