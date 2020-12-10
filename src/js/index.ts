@@ -712,14 +712,13 @@ new Vue({
 
         ADMAddBike() {
             let urlGet = baseCycleUrl
-            this.addCycleData.cycle_name = this.NewCycleName
+            this.addCycleData.cycle_name = this.cycle_name
             this.addCycleData.cycle_coordinates = "New Coordinates"
-            axios.post<IMessage>(urlGet, this.addMessageData)
+            axios.post<IMessage>(urlGet, this.addCycleData)
                 .then
                 ((response: AxiosResponse) => {
                     //this.currentTrip[] = response
                     //sideskift?
-                    this.Mresponse = response.data
                     alert("Cykel tilføjet")
                 }
                 )
@@ -740,6 +739,7 @@ new Vue({
                 //sideskift?
                 this.Mresponse = response.data
                 alert("Cykel slettet")
+                this.getAllBikesAdmin()
             }
             )
             .catch(
