@@ -38,7 +38,7 @@
     }
   </script>
   <script async defer 
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBPkmyaHzcC6pG5t7b0OJqPsCP6Zdb-eQM&callback=initMap&libraries=&v=weekly"
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC88_81IEqbeUIX9EcF-eDt3LRQujgMMKc&callback=initMap&libraries=&v=weekly"
 ></script>
   <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
  
@@ -74,15 +74,17 @@
         <h1>HELLO BOSS MAN</h1>
 
         <div v-if="ADMOverviewPage">
-          <select v-model="select" v-on:click="ADMHentUserIDFraSelect()">
+          <div class="container">
+          <select v-model="select" v-on:click="ADMHentUserIDFraSelect()" style="max-width: 80%;">
             <option value=""  disabled selected>Select a user</option>
-            <option v-for="user in users"> {{user.user_id}} . Fornavn: {{user.user_firstname}} Efternavn: {{user.user_lastname}} Email: {{user.user_email} tel: {{user.user_phone}
+            <option style="max-width: 80%;" v-for="user in users"> {{user.User_id}}. Fornavn: {{user.User_firstname}} <br> Email: {{user.User_email}} 
             </option>
           </select>
           <span>Selected: {{ select }}</span>
           <br>
           <br>
           <button class="btn btn-danger" id="DeleteUserAdmin" v-on:click="ADMDeleteUser">Slet User</button>
+        </div>
         </div>
 
         <div v-if="ADMMessagesPage">
@@ -244,11 +246,11 @@
             <input type="text" name="updateName" v-model="updateUserData.User_firstname" id="updateName">
 
             <label style="display: block;" for="updateLastname">Efternavn:</label>
-            <input type="text" name="updateLastname" v-model="updateUserData.User_lastname" value="CurrentLastName"
+            <input type="text" name="updateLastname" v-model="updateUserData.User_lastname" 
               id="updateLastname">
 
             <label style="display: block;" for="updatePhone">Telefon:</label>
-            <input type="text" name="updatePhone" v-model="updateUserData.User_mobile" value="user_phone" id="updatePhone">
+            <input type="text" name="updatePhone" v-model="updateUserData.User_mobile" id="updatePhone">
           </div>
           <br>
           <button class="btn btn-success" v-on:click="updateUser()">Gem</button>

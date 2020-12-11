@@ -68,6 +68,7 @@ new Vue({
         //#region Id's
         CurrentUserId: null,
         cycle_id: 0,
+        //#endregion
         //#region CurrentUser
         CurrentUserName: "",
         CurrentLastName: "",
@@ -125,7 +126,7 @@ new Vue({
         //#endregion
         cycle_name: "",
         //#region Create data
-        addData: { user_email: "", user_password: "", user_firstname: "", user_lastname: "", user_mobile: 0, user_question_one: "", user_answer_one: "", user_question_two: "", user_answer_two: "", user_question_three: "", user_answer_three: "" },
+        addData: { User_email: "", User_password: "", User_firstname: "", User_lastname: "", User_mobile: 0, UserQuestionOne: "", UserAnswerOne: "", UserQuestionTwo: "", UserAnswerTwo: "", UserQuestionThree: "", UserAnswerThree: "" },
         addTripData: { trip_start: "", trip_end: "", trip_map_json: "", user_id: 0, cycle_id: 0 },
         addTripEnd: { trip_end: "" },
         updateUserData: { User_firstname: "", User_lastname: "", User_email: "", User_mobile: 0 },
@@ -335,7 +336,7 @@ new Vue({
         opretTrip() {
             let urlSecond = baseTripUrl
             this.TimeFunction()
-            this.addTripData.user_id = this.CurrentUserId
+            this.addTripData.User_id = this.CurrentUserId
             this.addTripData.cycle_id = this.cycle_id
             this.addTripData.trip_map_json = "some map stuff"
             this.addTripData.trip_start = this.currentDateWithFormat
@@ -475,11 +476,11 @@ new Vue({
                 })
         },
         ADMHentUserIDFraSelect() {
-            this.user_id = parseInt(this.select)
+            this.User_id = parseInt(this.select)
         },
         ADMDeleteUser() {
             if (confirm("Do you really want to delete?")) {
-                let urlGetUser = baseUserUrl + "delete/" + parseInt(this.user_id)
+                let urlGetUser = baseUserUrl + "delete/" + parseInt(this.User_id)
                 axios.delete<IUser>(urlGetUser)
                     .then
                     ((response: AxiosResponse) => {
@@ -540,10 +541,10 @@ new Vue({
         },
         InputFilled() {
             this.HentAltOmEnBruger()
-            this.updateUserData.user_firstname = this.CurrentUserName
-            this.updateUserData.user_lastname = this.CurrentLastName
-            this.updateUserData.user_email = this.CurrentEmail
-            this.updateUserData.user_mobile = this.CurrentPhone
+            this.updateUserData.User_firstname = this.CurrentUserName
+            this.updateUserData.User_lastname = this.CurrentLastName
+            this.updateUserData.User_email = this.CurrentEmail
+            this.updateUserData.User_mobile = this.CurrentPhone
         },
         updateUser() {
             let url: string = baseUserUrl + "updateUser/" + parseInt(this.CurrentUserId)
