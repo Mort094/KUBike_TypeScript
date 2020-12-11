@@ -125,11 +125,7 @@ new Vue({
         //#endregion
         cycle_name: "",
         //#region Create data
-<<<<<<< Updated upstream
-        addData: { User_id:0, User_firstname: "", User_lastname: "", User_email: "", User_password: "",  User_mobile: 0, Account_status_id: 0, UserQuestionOne: "", UserAnswerOne: "", UserQuestionTwo:"", UserAnswerTwo:"", UserQuestionThree: "", UserAnswerThree: "" },
-=======
         addData: { user_email: "", user_password: "", user_firstname: "", user_lastname: "", user_mobile: 0, user_question_one: "", user_answer_one: "", user_question_two: "", user_answer_two: "", user_question_three: "", user_answer_three: "" },
->>>>>>> Stashed changes
         addTripData: { trip_start: "", trip_end: "", trip_map_json: "", user_id: 0, cycle_id: 0 },
         addTripEnd: { trip_end: "" },
         updateUserData: { User_firstname: "", User_lastname: "", User_email: "", User_mobile: 0 },
