@@ -12,6 +12,7 @@
   "author": "Ebbe Vang, evang.dk, Anders Børjesson, anbo-easj.dk",
   "license": "ISC",
   "devDependencies": {
+    "@types/googlemaps": "^3.40.4",
     "browser-sync": "^2.26.12",
     "browser-sync-webpack-plugin": "^2.2.2",
     "css-loader": "^4.2.2",

@@ -3,8 +3,6 @@ import axios, {
     AxiosError
 } from "../../node_modules/axios/index";
 
-// https://regex101.com/
-// (Regular expression)
 var mailformat = /^[a-zA-Z0-9.!#$%&'*+=?^_`{|}~-]+@+k+u+\.+d+k/;
 var indholderTal = /[^\D]/;
 var indholderBogstaver = /^[a-zA-Z]+$/;
@@ -56,6 +54,7 @@ interface IMessage {
     messages_besked: string
     messages_status: number
 }
+
 //#endregion
 new Vue({
     el: "#app",
@@ -94,7 +93,7 @@ new Vue({
         admin: false,
         ADMCyclePage: false,
         ADMOverviewPage: false,
-        ADMSettingsPage: true,
+        ADMSettingsPage: false,
         ADMMessagesPage: false,
         //before login
         createUserPage: false,
@@ -126,13 +125,18 @@ new Vue({
         //#endregion
         cycle_name: "",
         //#region Create data
+<<<<<<< Updated upstream
         addData: { User_id:0, User_firstname: "", User_lastname: "", User_email: "", User_password: "",  User_mobile: 0, Account_status_id: 0, UserQuestionOne: "", UserAnswerOne: "", UserQuestionTwo:"", UserAnswerTwo:"", UserQuestionThree: "", UserAnswerThree: "" },
+=======
+        addData: { user_email: "", user_password: "", user_firstname: "", user_lastname: "", user_mobile: 0, user_question_one: "", user_answer_one: "", user_question_two: "", user_answer_two: "", user_question_three: "", user_answer_three: "" },
+>>>>>>> Stashed changes
         addTripData: { trip_start: "", trip_end: "", trip_map_json: "", user_id: 0, cycle_id: 0 },
         addTripEnd: { trip_end: "" },
         updateUserData: { User_firstname: "", User_lastname: "", User_email: "", User_mobile: 0 },
         addMessageData: { messages_Id: 0, messages_user_id: 0, cycle_id: 0, Emne: "", Besked: "", status: 0 },
         addCycleData: { cycle_name: "", cycle_coordinates: "" }
         //#endregion
+
     },
     created() {
         this.getAllUsers()
@@ -144,6 +148,7 @@ new Vue({
 
     },
     methods: {
+     
         //#region Login
         login() {
             this.createUserPage = false
@@ -217,7 +222,7 @@ new Vue({
         //#endregion
         //#region Pages
         ADMMessagesPageCall() {
-            this.ADMHentBeskeder()
+           
             this.ADMOverviewPage = false
             this.ADMCyclePage = false
             this.ADMSettingsPage = false
@@ -842,6 +847,7 @@ new Vue({
                     )
             }
         },
+
 
         //#endregion  
         //#region QR code
