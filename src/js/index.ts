@@ -24,6 +24,13 @@ interface ICycle {
     cycle_coordinates: string
     fk_cycle_status_id: number
 }
+interface IUser2 {
+    user_id: number
+    user_email:string
+    user_firstname: string
+    user_lastname: string
+    user_mobile: number
+}
 interface IUser {
     User_id: number
     User_email: string
@@ -70,9 +77,9 @@ new Vue({
         cycle_id: 0,
         //#endregion
         //#region CurrentUser
-        CurrentUserName: "",
-        CurrentLastName: "",
-        CurrentEmail: "",
+        CurrentUserName: '',
+        CurrentLastName: '',
+        CurrentEmail: '',
         CurrentPhone: 0,
         //#endregion
         //#region Messages
@@ -126,7 +133,7 @@ new Vue({
         //#endregion
         cycle_name: "",
         //#region Create data
-        addData: { User_email: "", User_password: "", User_firstname: "", User_lastname: "", User_mobile: 0, UserQuestionOne: "", UserAnswerOne: "", UserQuestionTwo: "", UserAnswerTwo: "", UserQuestionThree: "", UserAnswerThree: "" },
+        addData: { User_email: "", User_password: "", user_firstname: "", User_lastname: "", User_mobile: 0, UserQuestionOne: "", UserAnswerOne: "", UserQuestionTwo: "", UserAnswerTwo: "", UserQuestionThree: "", UserAnswerThree: "" },
         addTripData: { trip_start: "", trip_end: "", trip_map_json: "", user_id: 0, cycle_id: 0 },
         addTripEnd: { trip_end: "" },
         updateUserData: { User_firstname: "", User_lastname: "", User_email: "", User_mobile: 0 },
@@ -528,12 +535,13 @@ new Vue({
         },
         HentAltOmEnBruger() {
             let urlGet = baseUserUrl + "user/" + parseInt(this.CurrentUserId)
-            axios.get<IUser>(urlGet)
-                .then((response: AxiosResponse<IUser>) => {
-                    this.CurrentUserName = response.data.User_firstname
-                    this.CurrentLastName = response.data.User_lastname
-                    this.CurrentEmail = response.data.User_email
-                    this.CurrentPhone = response.data.User_mobile
+            axios.get<IUser2>(urlGet)
+                .then((response: AxiosResponse<IUser2>) => {
+                    this.CurrentUserName = response.data.user_firstname
+                    this.CurrentLastName = response.data.user_lastname
+                    this.CurrentEmail = response.data.user_email
+                    this.CurrentPhone = response.data.user_mobile
+                    
                 })
                 .catch((error: AxiosError) => {
                     alert(error.message);
