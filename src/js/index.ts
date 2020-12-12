@@ -750,10 +750,8 @@ new Vue({
         },
         HentCykelIDFraSelectEnd() {
             this.cycle_id = parseInt(this.select)
-            setTimeout(this.getCurrentTrip(), 300)
-            //this.getCurrentTrip()
-            setTimeout(this.EndTripTime(), 500)
-            // this.EndTripTime()
+            this.getCurrentTrip()
+            this.EndTripTime()
 
         },
         HentCykelIDSelect() {
@@ -911,7 +909,7 @@ new Vue({
         //#region Messages
         opretMessage() {
             let urlSecond = baseMessageUrl
-            this.addMessageData.messages_Id = this.CurrentUserId
+            this.addMessageData.messages_user_id = this.CurrentUserId
             this.addMessageData.messages_cycle_id = parseInt(this.cycle_id)
             this.addMessageData.messages_emne = this.messageSubject
             this.addMessageData.messages_besked = this.messageText
