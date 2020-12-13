@@ -101,7 +101,7 @@
             </option>
           </select>
           <span>Selected: {{ select }}</span>
-          <button v-model="cycleDetails" class="btn btn-primary"id="SeDetaljerKnap" v-on:click="ADMSeCykelDetails">Se yderligere Detaljer</button>
+          <button class="btn btn-primary"id="SeDetaljerKnap" v-on:click="ADMSeCykelDetails">Se yderligere Detaljer</button>
           <p>{{ cycleDetails }}</p>
           <br>
           <br>
@@ -206,7 +206,7 @@
                 <button name="START" id="StatButton" style="visibility: visible;" class="btn btn-success"
                   v-on:click="CheckIfBikeIsAvailable();">Start
                   tur</button>
-                <button class="btn btn-danger" id="SlutButton" v-on:click="EndTripTime();">Slut tur</button>
+                <button class="btn btn-danger" id="SlutButton" v-on:click="HentCykelIDFraSelectEnd()">Slut tur</button>
               <h4>Skade på cykel?</h4>
               <p>
                 <a href="mailto:KU-Bikes@QR.com?subject=Indgiv skade&body=Rappoter skade på cykel:">

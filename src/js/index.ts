@@ -66,6 +66,7 @@ interface IMessage {
 new Vue({
     el: "#app",
     data: {
+        helperSelecter: "",
         currentDateWithFormat: "",
         select: '',
         _status: null,
@@ -383,7 +384,7 @@ new Vue({
             let urlGet = baseCycleUrl + "slut/" + this.cycle_id
             //this.EndTripTime()
             this.GetActiveBikes()
-            if (this.activeBikes.indexOf(this.cycle_id)) {
+            if (this.activeBikes.includes(this.cycle_id)) {
                 axios.put<ICycle>(urlGet)
                     .then((response: AxiosResponse<ICycle>) => {
                         console.log(response.data)
@@ -391,7 +392,6 @@ new Vue({
                     .catch((error: AxiosError) => {
                         alert(error.message);
                     })
-                alert("Tur Stoppet")
             }
             else {
                 alert("Du er ikke den registrerede bruger af denne cykel")
@@ -437,12 +437,35 @@ new Vue({
             axios.get<ITrip>(urlGet)
                 .then((response: AxiosResponse<ITrip>) => {
                     this.currentTripId = response.data
-                    this.EndTripTime()
+                    this.EndTripTimehelper()
+                    
                 })
                 .catch((error: AxiosError) => {
                     alert(error.message);
                     alert("du er ikke den registrerede bruger af denne cykel")
                 })
+        },
+        EndTripTimehelper(): void {
+            this.TimeFunction()
+            this.endTime = this.currentDateWithFormat
+            let urlGet = baseTripUrl + "slutTrip/" + this.currentTripId + "?time=" + this.endTime
+            this.addTripEnd.trip_end = this.currentDateWithFormat
+            console.log('update' + urlGet)
+            console.log(this.currentTripId)
+            if (this.currentTripId != 0) {
+                axios.put<string>(urlGet, this.addTripEnd)
+                    .then(response => {
+                        console.log(response);
+                        alert("afslut registreret")
+                        this.slutTrip()
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+            }
+            else {
+                alert("Du har ikke en aktiv rute på denne cykel.")
+            }
         },
 
 
@@ -786,9 +809,23 @@ new Vue({
                 })
         },
         HentCykelIDFraSelect() {
-            this.cycle_id = parseInt(this.select)
-            this.getCurrentTrip()
-            this.CheckIfBikeIsAvailableWithoutQR()
+            this.helperSelecter = this.select
+            this.SelectHelper()
+        },
+        SelectHelper() {
+            this.cycle_id = parseInt(this.helperSelecter)
+            this.getCurrentTripSelect()
+        },
+        getCurrentTripSelect() {
+            let urlGet = baseTripUrl + "getwithuser/" + this.CurrentUserId + "/" + this.cycle_id
+            axios.get<ITrip>(urlGet)
+                .then((response: AxiosResponse<ITrip>) => {
+                    this.currentTripId = response.data
+                    this.opretTrip()
+                })
+                .catch((error: AxiosError) => {
+                    alert(error.message);
+                })
         },
         HentCykelIDFraSelectEnd() {
             this.currentTripId = 0
