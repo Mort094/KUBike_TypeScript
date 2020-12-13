@@ -26,25 +26,25 @@ interface ICycle {
 }
 interface IUser2 {
     user_id: number
-    user_email:string
+    user_email: string
     user_firstname: string
     user_lastname: string
     user_mobile: number
 }
 interface IUser {
-    User_id: number
-    User_email: string
-    User_password: string
-    User_firstname: string
-    User_lastname: string
-    User_mobile: number
-    Account_status_id: number
-    UserQuestionOne: string
-    UserAnswerOne: string
-    UserQuestionTwo: string
-    UserAnswerTwo: string
-    UserQuestionThree: string
-    UserAnswerThree: string
+    user_id: number
+    user_email: string
+    user_password: string
+    user_firstname: string
+    user_lastname: string
+    user_mobile: number
+    account_status_id: number
+    userQuestionOne: string
+    userAnswerOne: string
+    userQuestionTwo: string
+    userAnswerTwo: string
+    userQuestionThree: string
+    userAnswerThree: string
 }
 interface ITrip {
     trip_start: string
@@ -72,9 +72,17 @@ new Vue({
         decodedContent: '',
         singleCycle: null,
         endTime: "",
+        selectedUser: "",
+        NewCycleName: "",
         //#region Id's
         CurrentUserId: null,
+        SelectedCycle: 0,
+        helperCycle: "",
         cycle_id: 0,
+        //#endregion
+        //#region adm User
+        ChosenUserId: 0,
+        helperstring: "",
         //#endregion
         //#region CurrentUser
         CurrentUserName: '',
@@ -93,7 +101,6 @@ new Vue({
         Mresponse: null,
         messageText: "",
         //#endregion
-        NewCycleName: "",
         //#region Pages
         loginPage: true,
         loggedIn: false,
@@ -103,6 +110,7 @@ new Vue({
         ADMOverviewPage: false,
         ADMSettingsPage: false,
         ADMMessagesPage: false,
+        BikeDetailsPage: false,
         //before login
         createUserPage: false,
         //After login
@@ -115,7 +123,8 @@ new Vue({
         updateUserPage: false,
         //#endregion
         //#region Arrays
-        currentTripId: null,
+        cycleDetails: "",
+        currentTripId: 0,
         currentTrip: [],
         cycles: [],
         cycles2: [],
@@ -133,7 +142,7 @@ new Vue({
         //#endregion
         cycle_name: "",
         //#region Create data
-        addData: { User_email: "", User_password: "", user_firstname: "", User_lastname: "", User_mobile: 0, UserQuestionOne: "", UserAnswerOne: "", UserQuestionTwo: "", UserAnswerTwo: "", UserQuestionThree: "", UserAnswerThree: "" },
+        addData: { user_email: "", user_password: "", user_firstname: "", user_lastname: "", user_mobile: 0, userQuestionOne: "", userAnswerOne: "", userQuestionTwo: "", userAnswerTwo: "", userQuestionThree: "", userAnswerThree: "" },
         addTripData: { trip_start: "", trip_end: "", trip_map_json: "", user_id: 0, cycle_id: 0 },
         addTripEnd: { trip_end: "" },
         updateUserData: { User_firstname: "", User_lastname: "", User_email: "", User_mobile: 0 },
@@ -143,7 +152,6 @@ new Vue({
 
     },
     created() {
-        this.getAllUsers()
         this.getAllBikes()
         this.cycles
         this.getAllBikesAdmin()
@@ -152,7 +160,7 @@ new Vue({
 
     },
     methods: {
-     
+
         //#region Login
         login() {
             this.createUserPage = false
@@ -226,7 +234,7 @@ new Vue({
         //#endregion
         //#region Pages
         ADMMessagesPageCall() {
-           
+
             this.ADMOverviewPage = false
             this.ADMCyclePage = false
             this.ADMSettingsPage = false
@@ -246,6 +254,7 @@ new Vue({
             this.ADMOverviewPage = true
             this.ADMCyclePage = false
             this.ADMSettingsPage = false
+            this.getAllUsers()
         },
         ADMCyclesPage() {
             this.ADMOverviewPage = false
@@ -280,11 +289,11 @@ new Vue({
             // setTimeout(() => this.CheckIfBikeIsAvailable().bind(this), 5)
         },
 
+
         SpecificCyclePage() {
             if (this.contentCheck == "http://qr.getbike/") {
                 this.QR_ScanPage = false
                 this.getOneBike()
-                this.getCurrentTrip()
                 this.cyclePage = true
                 this.Cykellisteside = false
                 this.updateUserPage = false
@@ -390,6 +399,7 @@ new Vue({
 
         },
 
+
         EndTripTime(): void {
             this.TimeFunction()
             this.endTime = this.currentDateWithFormat
@@ -401,7 +411,6 @@ new Vue({
                 axios.put<string>(urlGet, this.addTripEnd)
                     .then(response => {
                         console.log(response);
-                        this.slutTrip();
                         alert("afslut registreret")
                     })
                     .catch(error => {
@@ -423,6 +432,20 @@ new Vue({
                     alert(error.message);
                 })
         },
+        getCurrentTripEnd() {
+            let urlGet = baseTripUrl + "getwithuser/" + this.CurrentUserId + "/" + this.cycle_id
+            axios.get<ITrip>(urlGet)
+                .then((response: AxiosResponse<ITrip>) => {
+                    this.currentTripId = response.data
+                    this.EndTripTime()
+                })
+                .catch((error: AxiosError) => {
+                    alert(error.message);
+                    alert("du er ikke den registrerede bruger af denne cykel")
+                })
+        },
+
+
 
         GetFullCurrentTrip() {
             let urlGet = baseTripUrl + this.currentTripId
@@ -483,11 +506,16 @@ new Vue({
                 })
         },
         ADMHentUserIDFraSelect() {
-            this.User_id = parseInt(this.select)
+            this.helperstring = this.selectedUser
+            this.ADMHelperID()
+        },
+        ADMHelperID() {
+            this.ChosenUserId = parseInt(this.helperstring.split(".", 1))
+            this.ADMDeleteUser()
         },
         ADMDeleteUser() {
             if (confirm("Do you really want to delete?")) {
-                let urlGetUser = baseUserUrl + "delete/" + parseInt(this.User_id)
+                let urlGetUser = baseUserUrl + "delete/" + this.ChosenUserId
                 axios.delete<IUser>(urlGetUser)
                     .then
                     ((response: AxiosResponse) => {
@@ -541,11 +569,25 @@ new Vue({
                     this.CurrentLastName = response.data.user_lastname
                     this.CurrentEmail = response.data.user_email
                     this.CurrentPhone = response.data.user_mobile
-                    
+
                 })
                 .catch((error: AxiosError) => {
                     alert(error.message);
                 })
+        },
+
+        ADMHentBruger() {
+            let urlGet = baseUserUrl + "user/" + this.ChosenUserId
+            axios.get<IUser>(urlGet)
+                .then((response: AxiosResponse<IUser>) => {
+                    this.User_id = response.data.user_id
+                    this.User_firstname = response.data.user_firstname
+                    this.User_email = response.data.user_email
+                })
+                .catch((error: AxiosError) => {
+                    alert(error.message);
+                })
+
         },
         InputFilled() {
             this.HentAltOmEnBruger()
@@ -583,36 +625,36 @@ new Vue({
 
             var noError = true
             try {
-                if (this.addData.User_email == '') throw 'emptyEmail';
-                if (this.addData.User_password == '') throw 'emptyPassword';
-                if (this.addData.User_firstname == '') throw 'emptyFirstName';
-                if (this.addData.User_lastname == '') throw 'emptylastName';
-                if (this.addData.User_mobile == '') throw 'emptyMobil';
-                if (indholderTal.test(this.addData.User_password)) { }
+                if (this.addData.user_email == '') throw 'emptyEmail';
+                if (this.addData.user_password == '') throw 'emptyPassword';
+                if (this.addData.user_firstname == '') throw 'emptyFirstName';
+                if (this.addData.user_lastname == '') throw 'emptylastName';
+                if (this.addData.user_mobile == '') throw 'emptyMobil';
+                if (indholderTal.test(this.addData.user_password)) { }
                 else { throw 'nullIntPassword'; }
-                if (indholdeStoreBogstaver.test(this.addData.User_password)) { }
+                if (indholdeStoreBogstaver.test(this.addData.user_password)) { }
                 else { throw 'bigStrPassword'; }
-                if (indholder8Tal.test(this.addData.User_mobile)) { }
+                if (indholder8Tal.test(this.addData.user_mobile)) { }
                 else { throw '8xIntMobile'; }
-                if (testfortegn.test(this.addData.User_password)) { }
+                if (testfortegn.test(this.addData.user_password)) { }
                 else { throw 'passwordNullSymbol'; }
-                if (lengthPasswordvalid.test(this.addData.User_password)) {
+                if (lengthPasswordvalid.test(this.addData.user_password)) {
                 }
                 else {
                     throw 'passwordLength';
                 }
-                if (indholderBogstaver.test(this.addData.User_firstname)) {
+                if (indholderBogstaver.test(this.addData.user_firstname)) {
                 }
                 else {
                     throw 'smallStrFirstName';
                 }
-                if (indholderBogstaver.test(this.addData.User_lastname)) { }
+                if (indholderBogstaver.test(this.addData.user_lastname)) { }
                 else {
                     throw 'smallStrLastName';
                 }
-                if (mailformat.test(this.addData.User_email)) { }
+                if (mailformat.test(this.addData.user_email)) { }
                 else { throw 'kuMail'; }
-                if (this.addData.User_question_one == '') {
+                if (this.addData.user_question_one == '') {
                     alert("no question one data")
                 }
             }
@@ -749,15 +791,25 @@ new Vue({
             this.CheckIfBikeIsAvailableWithoutQR()
         },
         HentCykelIDFraSelectEnd() {
-            this.cycle_id = parseInt(this.select)
-            this.getCurrentTrip()
-            this.EndTripTime()
+            this.currentTripId = 0
+            this.helperCycle = this.select
+            this.EndHelper()
+        },
+        EndHelper() {
+            this.cycle_id = parseInt(this.helperCycle)
+            this.getCurrentTripEnd()
 
         },
         HentCykelIDSelect() {
-            this.cycle_id = parseInt(this.select)
+            this.currentTripId = 0
+            this.helperCycle = this.select
+            this.getIdHelper()
+
             //this.getCurrentTrip()
             //this.CheckIfBikeIsAvailableWithoutQR() 
+        },
+        getIdHelper() {
+            this.cycle_id = parseInt(this.helperCycle)
         },
         getAllBikesAdmin() {
             let url = baseCycleUrl + "alle-cykler/"
@@ -813,7 +865,7 @@ new Vue({
 
         ADMAddBike() {
             let urlGet = baseCycleUrl
-            this.addCycleData.cycle_name = this.cycle_name
+            this.addCycleData.cycle_name = this.NewCycleName
             this.addCycleData.cycle_coordinates = "New Coordinates"
             axios.post<IMessage>(urlGet, this.addCycleData)
                 .then
@@ -821,6 +873,7 @@ new Vue({
                     //this.currentTrip[] = response
                     //sideskift?
                     alert("Cykel tilføjet")
+                    this.getAllBikesAdmin()
                 }
                 )
                 .catch(
@@ -832,7 +885,7 @@ new Vue({
 
         ADMDeleteBike() {
             if (confirm("Do you really want to delete?")) {
-                let urlGet = baseCycleUrl + parseInt(this.cycle_id)
+                let urlGet = baseCycleUrl + parseInt(this.SelectedCycle)
                 axios.delete<ICycle>(urlGet)
                     .then
                     ((response: AxiosResponse) => {
@@ -944,7 +997,7 @@ new Vue({
                     //sideskift?
                     this.Mresponse = response.data
                     alert("Cykel er meldt væk")
-                    this.startTrip()
+                    this.StolenHelper()
                 }
                 )
                 .catch(
@@ -952,6 +1005,17 @@ new Vue({
                         alert(error.message)
                     }
                 )
+        },
+        StolenHelper(_status: 1) {
+            let urlGet = baseCycleUrl + "start/" + this.select
+            // this.opretTrip()
+            axios.put<ICycle>(urlGet)
+                .then((response: AxiosResponse<ICycle>) => {
+                    this.select = response.data
+                })
+                .catch((error: AxiosError) => {
+                    alert(error.message)
+                })
         },
 
         ADMHentBeskeder() {
@@ -984,10 +1048,34 @@ new Vue({
                 )
 
         },
+        ADMSeCykelDetails() {
+            this.helperCycle = this.select
+            this.AdmHelperCycleSelectDetails()
+        },
+        AdmHelperCycleSelectDetails() {
+            this.SelectedCycle = parseInt(this.helperCycle)
+            this.GetDetails()
+        },
+        GetDetails() {
+            let url = this.baseCycleUrl + this.SelectedCycle
+            axios.get<ICycle>(url)
+                .then((response: AxiosResponse<ICycle>) => {
+                    this.cycleDetails = response.data
+                })
+                .catch((error: AxiosError) => {
+                    alert(error.message)
+                })
+        },
 
         ADMHentCykelIDFraSelect() {
-            this.cycle_id = parseInt(this.select)
+            this.helperCycle = this.select
+            this.AdmHelperCycleSelectDelete()
+
         },
+        AdmHelperCycleSelectDelete() {
+            this.SelectedCycle = parseInt(this.helperCycle)
+            this.ADMDeleteBike()
+        }
 
         //#endregion
     },
