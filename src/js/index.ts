@@ -124,7 +124,7 @@ new Vue({
         updateUserPage: false,
         //#endregion
         //#region Arrays
-        cycleDetails: "",
+        cycleDetails: [],
         currentTripId: 0,
         currentTrip: [],
         cycles: [],
@@ -157,7 +157,8 @@ new Vue({
         this.cycles
         this.getAllBikesAdmin()
         this.cycles2
-        this.activeBikes
+        this.GetActiveBikesFromTrip()
+        this.CyclesInUse
 
     },
     methods: {
@@ -256,6 +257,8 @@ new Vue({
             this.ADMCyclePage = false
             this.ADMSettingsPage = false
             this.getAllUsers()
+            this.GetActiveBikes()
+            this.activeBikes
         },
         ADMCyclesPage() {
             this.ADMOverviewPage = false
@@ -275,7 +278,8 @@ new Vue({
             this.profilePage = false
             this.updateUserPage = false
             this.GetActiveBikes()
-            this.GetActiveBikesFromTrip()
+            this.activeBikes
+            
         },
         QRPage() {
             this.settingsPage = false
@@ -285,6 +289,7 @@ new Vue({
             this.profilePage = false
             this.Cykellisteside = false
             this.GetActiveBikes()
+            this.activeBikes
             this.GetActiveBikesFromTrip()
             this.updateUserPage = false
             // setTimeout(() => this.CheckIfBikeIsAvailable().bind(this), 5)
@@ -298,6 +303,8 @@ new Vue({
                 this.cyclePage = true
                 this.Cykellisteside = false
                 this.updateUserPage = false
+                this.GetActiveBikes()
+                this.activeBikes
             }
             else {
                 alert("ikke en gyldig QR")
@@ -383,8 +390,7 @@ new Vue({
             this.getCurrentTrip()
             let urlGet = baseCycleUrl + "slut/" + this.cycle_id
             //this.EndTripTime()
-            this.GetActiveBikes()
-            if (this.activeBikes.includes(this.cycle_id)) {
+            if (this.activeBikes.includes(parseInt(this.cycle_id))) {
                 axios.put<ICycle>(urlGet)
                     .then((response: AxiosResponse<ICycle>) => {
                         console.log(response.data)
@@ -442,7 +448,7 @@ new Vue({
                 })
                 .catch((error: AxiosError) => {
                     alert(error.message);
-                    alert("du er ikke den registrerede bruger af denne cykel")
+
                 })
         },
         EndTripTimehelper(): void {
@@ -814,7 +820,21 @@ new Vue({
         },
         SelectHelper() {
             this.cycle_id = parseInt(this.helperSelecter)
-            this.getCurrentTripSelect()
+            this.CheckIfBikeIsAvailablewithOutscan()
+        },
+        CheckIfBikeIsAvailablewithOutscan() {
+            var x = document.getElementById("StartUdenSkan")
+            if (this.CyclesInUse.includes(parseInt(this.cycle_id))) {
+                //  x.style.visibility = "visible";
+                x.style.visibility = "hidden";
+                alert("cykel er i brug")
+
+            }
+            else {
+                alert("cykel er ledig")
+                this.getCurrentTripSelect();
+
+            }
         },
         getCurrentTripSelect() {
             let urlGet = baseTripUrl + "getwithuser/" + this.CurrentUserId + "/" + this.cycle_id
@@ -829,14 +849,10 @@ new Vue({
         },
         HentCykelIDFraSelectEnd() {
             this.currentTripId = 0
-            this.helperCycle = this.select
-            this.EndHelper()
-        },
-        EndHelper() {
-            this.cycle_id = parseInt(this.helperCycle)
             this.getCurrentTripEnd()
-
         },
+
+
         HentCykelIDSelect() {
             this.currentTripId = 0
             this.helperCycle = this.select
@@ -845,6 +861,8 @@ new Vue({
             //this.getCurrentTrip()
             //this.CheckIfBikeIsAvailableWithoutQR() 
         },
+
+        
         getIdHelper() {
             this.cycle_id = parseInt(this.helperCycle)
         },
@@ -1011,6 +1029,7 @@ new Vue({
                     //sideskift?
                     this.Mresponse = response.data
                     alert("Klage oprettet")
+                    this.StolenHelper2()
                 }
                 )
                 .catch(
@@ -1018,6 +1037,17 @@ new Vue({
                         alert(error.message)
                     }
                 )
+        },
+        StolenHelper2(_status: 1) {
+            let urlGet = baseCycleUrl + "start/" + this.cycle_id
+            // this.opretTrip()
+            axios.put<ICycle>(urlGet)
+                .then((response: AxiosResponse<ICycle>) => {
+                    this.select = response.data
+                })
+                .catch((error: AxiosError) => {
+                    alert(error.message)
+                })
         },
 
         opretStolen() {
@@ -1094,9 +1124,9 @@ new Vue({
             this.GetDetails()
         },
         GetDetails() {
-            let url = this.baseCycleUrl + this.SelectedCycle
-            axios.get<ICycle>(url)
-                .then((response: AxiosResponse<ICycle>) => {
+            let urlGet = this.baseCycleUrl + this.SelectedCycle
+            axios.get<ICycle[]>(urlGet)
+                .then((response: AxiosResponse<ICycle[]>) => {
                     this.cycleDetails = response.data
                 })
                 .catch((error: AxiosError) => {
