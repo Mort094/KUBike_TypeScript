@@ -66,6 +66,13 @@ interface IMessage {
 new Vue({
     el: "#app",
     data: {
+        center:{ 
+            lat: 40.730610, 
+            lng: -73.935242
+            },
+            platform: null,
+            apikey: "YRiO3eCm-Zmx_JN3qpZmRtYI1mpaM_eSb6osTJ_zsww",
+            // You can get the API KEY from developer.here.com
         helperSelecter: "",
         currentDateWithFormat: "",
         select: '',
@@ -148,9 +155,16 @@ new Vue({
         addTripEnd: { trip_end: "" },
         updateUserData: { User_firstname: "", User_lastname: "", User_email: "", User_mobile: 0 },
         addMessageData: { messages_Id: 0, messages_user_id: 0, cycle_id: 0, Emne: "", Besked: "", status: 0 },
-        addCycleData: { cycle_name: "", cycle_coordinates: "" }
+        addCycleData: { cycle_name: "", cycle_coordinates: "" },
         //#endregion
-
+        async mounted() {
+            // Initialize the platform object:
+            const platform = new window.H.service.Platform({
+              apikey: this.apikey
+            });
+            this.platform = platform;
+            this.initializeHereMap();
+          }
     },
     created() {
         this.getAllBikes()
@@ -162,7 +176,29 @@ new Vue({
 
     },
     methods: {
+        initializeHereMap() { // rendering map
 
+            const mapContainer = this.$refs.hereMap;
+            const H = window.H;
+            // Obtain the default map types from the platform object
+            var maptypes = this.platform.createDefaultLayers();
+      
+            // Instantiate (and display) a map object:
+            var map = new H.Map(mapContainer, maptypes.vector.normal.map, {
+              zoom: 10,
+              center: this.center
+              // center object { lat: 40.730610, lng: -73.935242 }
+            });
+      
+            addEventListener("resize", () => map.getViewPort().resize());
+      
+            // add behavior control
+            new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+      
+            // add UI
+            H.ui.UI.createDefault(map, maptypes);
+            // End rendering the initial map
+          },
         //#region Login
         login() {
             this.createUserPage = false
@@ -1146,4 +1182,6 @@ new Vue({
 
         //#endregion
     },
+    
 })
+
