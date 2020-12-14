@@ -12,14 +12,8 @@
   <script src="https://kit.fontawesome.com/0729182226.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script src="https://unpkg.com/vue-qrcode-reader@2.3.15/dist/VueQrcodeReader.umd.min.js"></script>
-  <script type="text/javascript" charset="UTF-8" src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
-  <script type="text/javascript" charset="UTF-8" src="https://js.api.here.com/v3/3.1/mapsjs-service.js"></script>
-  <script type="text/javascript" charset="UTF-8" src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
-  <script type="text/javascript" charset="UTF-8" src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"></script>
-  <script type="text/javascript" charset="UTF-8" src="https://js.api.here.com/v3/3.1/mapsjs-clustering.js"></script>
-  <script type="text/javascript" charset="UTF-8" src="https://js.api.here.com/v3/3.1/mapsjs-data.js"></script>
-  <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
-  <!-- <script>
+
+ <!-- <script>
     let map;
     function initMap(){
       
@@ -47,7 +41,7 @@
   src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC88_81IEqbeUIX9EcF-eDt3LRQujgMMKc&callback=initMap&libraries=&v=weekly"
 ></script>
   <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script> -->
-
+ 
 
 
   <title>app</title>
@@ -68,7 +62,7 @@
             Cykler
           </button>
 
-          <button style="text-align: center; background: none; border: none;" v-on:click="ADMMessagesPageCall">
+          <button style="text-align: center; background: none; border: none;"v-on:click="ADMMessagesPageCall">
             <i class="fas fa-user-alt" style="font-size: 40px;"></i><br>
             Beskeder
           </button>
@@ -81,19 +75,18 @@
 
         <div v-if="ADMOverviewPage">
           <div class="container">
-            <select v-model="selectedUser" style="max-width: 80%;">
-              <option value="" disabled selected>Select a user</option>
-              <option style="max-width: 80%;" v-for="user in users"> {{user.user_id}}. Fornavn: {{user.user_firstname}}
-                <br> Email: {{user.user_email}}
-              </option>
-            </select>
-            <br>
-            <br>
-            <div>Selected: {{ selectedUser }}</div>
-            <br>
-            <br>
-            <button class="btn btn-danger" id="DeleteUserAdmin" v-on:click="ADMHentUserIDFraSelect()">Slet User</button>
-          </div>
+          <select v-model="selectedUser" style="max-width: 80%;">
+            <option value=""  disabled selected>Select a user</option>
+            <option style="max-width: 80%;" v-for="user in users" > {{user.user_id}}. Fornavn: {{user.user_firstname}} <br> Email: {{user.user_email}} 
+            </option>
+          </select>
+          <br>
+          <br>
+          <div>Selected: {{ selectedUser }}</div>
+          <br>
+          <br>
+          <button class="btn btn-danger" id="DeleteUserAdmin" v-on:click="ADMHentUserIDFraSelect()">Slet User</button>
+        </div>
         </div>
 
         <div v-if="ADMMessagesPage">
@@ -103,9 +96,8 @@
         <div v-if="ADMCyclePage">
           <br>
           <select v-model="select">
-            <option value="" disabled selected>Select a bike</option>
-            <option style="max-width: 80 px;" v-for="cycle in cycles2"> {{cycle.cycle_id}} {{cycle.cycle_name}}
-              {{cycle.cycle_coordinates}} {{cycle.cycle_status_id}}
+            <option value=""  disabled selected>Select a bike</option>
+            <option style="max-width: 80 px;"v-for="cycle in cycles2"> {{cycle.cycle_id}} {{cycle.cycle_name}} {{cycle.cycle_coordinates}} {{cycle.cycle_status_id}}
             </option>
           </select>
           <br>
@@ -114,16 +106,14 @@
           <br>
           <button class="btn btn-success" id="AvaliableButton" v-on:click="Avaliable">Avaliable</button>
           <button class="btn btn-warning" id="UnavaliableButton" v-on:click="Unavaliable">Unavaliable</button>
-          <button class="btn btn-primary" id="HentCykelBesked" v-on:click="ADMHentBeskederCykel()">Hent
-            Beskeder</button>
+          <button class="btn btn-primary" id="HentCykelBesked" v-on:click="ADMHentBeskederCykel()">Hent Beskeder</button>
           <br>
           <button class="btn btn-danger" id="DeleteCycleAdmin" v-on:click="ADMHentCykelIDFraSelect">Slet cykel</button>
           <br>
           <br>
           <ol id="CykelBeskedListe" v-if="AllMessagesBike.length">
             <li v-for="XX in AllMessagesBike">
-              id: {{XX.messages_Id}} user: {{XX.messages_user_id}} cykel: {{XX.messages_cycle_id}} emne:
-              {{XX.messages_emne}} beskeder: {{XX.messages_besked}} status: {{XX.messages_status}}
+              id: {{XX.messages_Id}} user: {{XX.messages_user_id}} cykel: {{XX.messages_cycle_id}} emne: {{XX.messages_emne}} beskeder: {{XX.messages_besked}} status: {{XX.messages_status}}
             </li>
           </ol>
           <div v-else>Ingen Beskeder</div>
@@ -161,11 +151,6 @@
         </nav>
 
         <div id="overviewPage" v-if="Cykellisteside">
-          <br>
-          <div id="map">
-            <!--In the following div the HERE Map will render-->
-            <div id="mapContainer" style="height:600px;width:100%" ref="hereMap"></div>
-          </div>
           <br>
           <select v-model="select" id="cykelUdenQR" v-on:click="HentCykelIDSelect()">
             <option value="" disabled selected>Vælg en Cykel</option>
@@ -243,7 +228,7 @@
             <p>ID: {{ CurrentUserId }}</p>
             <p>Navn: {{ CurrentUserName }} {{ CurrentLastName }}</p>
             <p>Email: {{ CurrentEmail }} </p>
-            <p>Telefon: {{ CurrentPhone }} </p>
+            <p>Telefon: {{ CurrentPhone  }} </p>
           </div>
           <button class="btn btn-primary" v-on:click="UpdateUserPage">Rediger oplysninger</button>
           <br>
@@ -255,17 +240,18 @@
 
         <div v-if="updateUserPage">
           <h2>Rediger dine oplysninger</h2>
-
+    
           <div>
-            <label style="display: block;" for="updateEmail">Email:</label>
+               <label style="display: block;" for="updateEmail">Email:</label>
             <p>{{ CurrentEmail }}</p>
-            <!-- <input type="text" name="updateEmail" v-model="updateUserData.user_email" value="user_email" id="updateEmail"> -->
+          <!-- <input type="text" name="updateEmail" v-model="updateUserData.user_email" value="user_email" id="updateEmail"> -->
 
             <label style="display: block;" for="updateName">Navn:</label>
             <input type="text" name="updateName" v-model="updateUserData.User_firstname" id="updateName">
 
             <label style="display: block;" for="updateLastname">Efternavn:</label>
-            <input type="text" name="updateLastname" v-model="updateUserData.User_lastname" id="updateLastname">
+            <input type="text" name="updateLastname" v-model="updateUserData.User_lastname" 
+              id="updateLastname">
 
             <label style="display: block;" for="updatePhone">Telefon:</label>
             <input type="text" name="updatePhone" v-model="updateUserData.User_mobile" id="updatePhone">
@@ -279,7 +265,7 @@
           <h2>SETTINGS</h2>
           <div class="container myMargin">
             <button class="btn btn-warning" v-on:click="logout">Logud</button>
-            <button class="btn btn-danger" v-on:click="deactivateUser">Slet bruger</button>
+            <button class="btn btn-danger" v-on:click="deactivateUser"  >Slet bruger</button>
           </div>
         </div>
       </div>
@@ -319,23 +305,23 @@
             <label for="phone" class="float-left">Telefon nummer</label><br>
             <input type="number" class="form-control" id="opret-phone" v-model.number="addData.user_mobile" id="phone"
               placeholder="Telefon Nummer">
-            <label for="QuestionOne" class="float-left">Sikekrheds spørgsmål 1</label><br>
-            <input type="text" class="form-control" id="opret-sikkerhedEt" v-model="addData.userQuestionOne"
+              <label for="QuestionOne" class="float-left">Sikekrheds spørgsmål 1</label><br>
+            <input type="text" class="form-control" id="opret-sikkerhedEt" v-model="addData.userQuestionOne" 
               placeholder="Sikkerheds spørgsmål 1">
-            <label for="AnswerOne" class="float-left">Svar til sikekrheds spørgsmål 1</label><br>
-            <input type="text" class="form-control" id="opret-svarEt" v-model="addData.userAnswerOne"
+              <label for="AnswerOne" class="float-left">Svar til sikekrheds spørgsmål 1</label><br>
+            <input type="text" class="form-control" id="opret-svarEt" v-model="addData.userAnswerOne" 
               placeholder="Svar til sikkerheds spørgsmål 1">
-            <label for="QuestionTwo" class="float-left">Sikekrheds spørgsmål 2</label><br>
-            <input type="text" class="form-control" id="opret-sikkerhedTo" v-model="addData.userQuestionTwo"
+              <label for="QuestionTwo" class="float-left">Sikekrheds spørgsmål 2</label><br>
+            <input type="text" class="form-control" id="opret-sikkerhedTo" v-model="addData.userQuestionTwo" 
               placeholder="Sikkerheds spørgsmål 2">
-            <label for="AnswerOne" class="float-left">Svar til sikekrheds spørgsmål 2</label><br>
-            <input type="text" class="form-control" id="opret-svarTo" v-model="addData.userAnswerTwo"
+              <label for="AnswerOne" class="float-left">Svar til sikekrheds spørgsmål 2</label><br>
+            <input type="text" class="form-control" id="opret-svarTo" v-model="addData.userAnswerTwo" 
               placeholder="Svar til sikkerheds spørgsmål 2">
-            <label for="QuestionOne" class="float-left">Sikekrheds spørgsmål 3</label><br>
-            <input type="text" class="form-control" id="opret-sikkerhedTre" v-model="addData.userQuestionThree"
+              <label for="QuestionOne" class="float-left">Sikekrheds spørgsmål 3</label><br>
+            <input type="text" class="form-control" id="opret-sikkerhedTre" v-model="addData.userQuestionThree" 
               placeholder="Sikkerheds spørgsmål 3">
-            <label for="AnswerOne" class="float-left">Svar til sikekrheds spørgsmål 3</label><br>
-            <input type="text" class="form-control" id="opret-svarTre" v-model="addData.userAnswerThree"
+              <label for="AnswerOne" class="float-left">Svar til sikekrheds spørgsmål 3</label><br>
+            <input type="text" class="form-control" id="opret-svarTre" v-model="addData.userAnswerThree" 
               placeholder="Svar til sikkerheds spørgsmål 3">
             <br>
             <p id="demo"></p>
@@ -348,7 +334,7 @@
     </div>
 
   </div>
-
+ 
   <style>
     #login-page-form .error,
     #opret-page-form .error {
@@ -358,19 +344,13 @@
     .myMargin button {
       margin: 15px auto;
       display: block;
+    }
 
-    }
-    #map {
-      width: 60vw;
-      min-width: 360px;
-      text-align: center;
-      margin: 5% auto;
-      background-color: #ccc;
-    }
   </style>
 
   <script src="bundle.js"></script>
 
+ 
 </body>
 
 </html>
