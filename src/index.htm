@@ -97,12 +97,11 @@
           <br>
           <select v-model="select">
             <option value=""  disabled selected>Select a bike</option>
-            <option v-for="cycle in cycles2"> {{cycle.cycle_id}}
+            <option style="max-width: 80 px;"v-for="cycle in cycles2"> {{cycle.cycle_id}} {{cycle.cycle_name}} {{cycle.cycle_coordinates}} {{cycle.cycle_status_id}}
             </option>
           </select>
+          <br>
           <span>Selected: {{ select }}</span>
-          <button class="btn btn-primary"id="SeDetaljerKnap" v-on:click="ADMSeCykelDetails">Se yderligere Detaljer</button>
-          <p>{{ cycleDetails }}</p>
           <br>
           <br>
           <button class="btn btn-success" id="AvaliableButton" v-on:click="Avaliable">Avaliable</button>
@@ -204,8 +203,7 @@
               <p>Cykel id: {{ cycle_id }} </p>
               <p>
                 <button name="START" id="StatButton" style="visibility: visible;" class="btn btn-success"
-                  v-on:click="CheckIfBikeIsAvailable();">Start
-                  tur</button>
+                  v-on:click="CheckIfBikeIsAvailable();">Start tur</button>
                 <button class="btn btn-danger" id="SlutButton" v-on:click="HentCykelIDFraSelectEnd()">Slut tur</button>
               <h4>Skade på cykel?</h4>
               <p>
