@@ -513,7 +513,7 @@ new Vue({
                     alert(error.message);
                 })
         },
-        //This method gets all active bikes
+        //This method gets all active bikes 
         GetActiveBikesFromTrip() {
             let urlGet = baseTripUrl + "allecyklerfraruter"
             axios.get<ITrip>(urlGet)
