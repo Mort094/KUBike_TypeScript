@@ -191,7 +191,6 @@ new Vue({
         this.CyclesInUse
 
     },
-
     methods: {
         initializeHereMap() { // rendering map
             declare const window: any;
