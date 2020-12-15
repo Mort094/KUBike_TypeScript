@@ -2,36 +2,28 @@ import axios, {
     AxiosResponse,
     AxiosError
 } from "../../node_modules/axios/index";
-//#region Var for validation of login
+
 var mailformat = /^[a-zA-Z0-9.!#$%&'*+=?^_`{|}~-]+@+k+u+\.+d+k/;
 var indholderTal = /[^\D]/;
 var indholderBogstaver = /^[a-zA-Z]+$/;
 var lengthPasswordvalid = /.{8,}/;
 var indholdeStoreBogstaver = /[A-Z]/;
+
 var testfortegn = /[@$!%*#?&]/
+
 var indholder8Tal = /^[0-9]{8}$/;
-//#endregion
 
-//#region Base urls used to get information from database through REST and Axios
-//The base url for cycles
 let baseCycleUrl: string = "https://mort-rest.azurewebsites.net/api/cycles/"
-//The base url for users
 let baseUserUrl: string = "https://mort-rest.azurewebsites.net/api/users/"
-//the base url for trips
 let baseTripUrl: string = "https://mort-rest.azurewebsites.net/api/trip/"
-//the base url for messages
 let baseMessageUrl: string = "https://mort-rest.azurewebsites.net/api/messages/"
-//#endregion
-
-//#region Interfaces 
-//Used to create objects, so they can be read by the REST. Used for CRUD
+//#region Interface
 interface ICycle {
     cycle_id: number
     cycle_name: string
     cycle_coordinates: string
     fk_cycle_status_id: number
 }
-//This interface is used for the profile page, where we use get to show and Put to update a user
 interface IUser2 {
     user_id: number
     user_email: string
@@ -74,7 +66,13 @@ interface IMessage {
 new Vue({
     el: "#app",
     data: {
-        //#region Random data, used for different things. 
+        center:{ 
+            lat: 40.730610, 
+            lng: -73.935242
+            },
+            platform: null,
+            apikey: "YRiO3eCm-Zmx_JN3qpZmRtYI1mpaM_eSb6osTJ_zsww",
+            // You can get the API KEY from developer.here.com
         helperSelecter: "",
         currentDateWithFormat: "",
         select: '',
@@ -84,7 +82,6 @@ new Vue({
         endTime: "",
         selectedUser: "",
         NewCycleName: "",
-        //#endregion
         //#region Id's
         CurrentUserId: null,
         SelectedCycle: 0,
@@ -96,14 +93,12 @@ new Vue({
         helperstring: "",
         //#endregion
         //#region CurrentUser
-        //Current These are used to show data on which user is logged in. 
         CurrentUserName: '',
         CurrentLastName: '',
         CurrentEmail: '',
         CurrentPhone: 0,
         //#endregion
         //#region Messages
-        //These messages are used to show messages to user, like when they create a user and they are missing something in the password
         errorMessage: '',
         contentCheck: "",
         addMessage: "",
@@ -115,7 +110,6 @@ new Vue({
         messageText: "",
         //#endregion
         //#region Pages
-        //The are pages. If a page is true, it is shown otherwise it is not
         loginPage: true,
         loggedIn: false,
         //admin
@@ -137,7 +131,6 @@ new Vue({
         updateUserPage: false,
         //#endregion
         //#region Arrays
-        //Used to pull out data about stuff in arrays, so they can be show
         cycleDetails: [],
         currentTripId: 0,
         currentTrip: [],
@@ -151,24 +144,29 @@ new Vue({
         users: [],
         //#endregion
         //#region login
-        //Used for the login
         loginEmail: "",
         loginPassword: "",
         ResponseTrip: null,
         //#endregion
         cycle_name: "",
         //#region Create data
-        //These are used when you create and update a thing
         addData: { user_email: "", user_password: "", user_firstname: "", user_lastname: "", user_mobile: 0, userQuestionOne: "", userAnswerOne: "", userQuestionTwo: "", userAnswerTwo: "", userQuestionThree: "", userAnswerThree: "" },
         addTripData: { trip_start: "", trip_end: "", trip_map_json: "", user_id: 0, cycle_id: 0 },
         addTripEnd: { trip_end: "" },
         updateUserData: { User_firstname: "", User_lastname: "", User_email: "", User_mobile: 0 },
         addMessageData: { messages_Id: 0, messages_user_id: 0, cycle_id: 0, Emne: "", Besked: "", status: 0 },
-        addCycleData: { cycle_name: "", cycle_coordinates: "" }
+        addCycleData: { cycle_name: "", cycle_coordinates: "" },
         //#endregion
-
+        async mounted() {
+            declare const window: any;
+            // Initialize the platform object:
+            const platform = new window.H.service.Platform({
+              apikey: this.apikey
+            });
+            this.platform = platform;
+            this.initializeHereMap();
+          }
     },
-    //Created() is a funtion that runs stuff on pageload. So if a method is placed here, it is run on page load
     created() {
         this.getAllBikes()
         this.cycles
@@ -178,47 +176,63 @@ new Vue({
         this.CyclesInUse
 
     },
+    
     methods: {
-
+        initializeHereMap() { // rendering map
+            declare const window: any;
+            const mapContainer = this.$refs.hereMap;
+            const H = window.H;
+            // Obtain the default map types from the platform object
+            var maptypes = this.platform.createDefaultLayers();
+      
+            // Instantiate (and display) a map object:
+            var map = new H.Map(mapContainer, maptypes.vector.normal.map, {
+              zoom: 10,
+              center: this.center
+              // center object { lat: 40.730610, lng: -73.935242 }
+            });
+      
+            addEventListener("resize", () => map.getViewPort().resize());
+      
+            // add behavior control
+            new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+      
+            // add UI
+            H.ui.UI.createDefault(map, maptypes);
+            // End rendering the initial map
+          },
         //#region Login
-        //All these methods in this region helps to login or out 
         login() {
             this.createUserPage = false
             this.loginPage = true
             this.errorMessage = ''
             document.getElementById('login-email').className = "form-control";
         },
-        //This method is testing if the login fields are filled corretly. 
         loginTry(vendor: string) {
             // https://regex101.com/r/h7oSha/1
-            //Login both fields must not be empty
             if (this.loginPassword == '' && this.loginEmail == '') {
                 this.errorMessage = "Du skal skrive dit password og din email";
                 document.getElementById('login-password').className = "form-control error";
                 document.getElementById('login-email').className = "form-control error";
             }
-            else //Password must be filled
-             {
+            else {
                 if (this.loginPassword == '') {
                     this.errorMessage = "Du skal skrive et password";
                     document.getElementById('login-password').className = "form-control error";
                     document.getElementById('login-email').className = "form-control";
 
-                } // email must be written
+                }
                 else if (this.loginEmail == '') {
                     this.errorMessage = "Du skal skrive et en email";
                     document.getElementById('login-password').className = "form-control";
                     document.getElementById('login-email').className = "form-control error";
                 }
-                else 
-                {
-                    //Uses the loginHelpAndShow method and HentBruger to login
+                else {
                     if (this.loginEmail.match(mailformat)) {
                         this.LoginHelpAndShow(baseUserUrl + this.loginEmail + '/' + this.loginPassword)
                         this.HentBruger()
                     }
-                    else //Email must be a @ku.dk email
-                    {
+                    else {
                         this.errorMessage = "Din mail skal hedde @ku.dk";
                         document.getElementById('login-email').className = "form-control error";
                         document.getElementById('login-password').className = "form-control";
@@ -227,16 +241,13 @@ new Vue({
             }
 
         },
-        //This method gets the information from the Database, and set loggedin = true
-        LoginHelpAndShow(url: string) { 
+        LoginHelpAndShow(url: string) { // helper metode: getAllCar + getByVendor are very similar
             axios.get<IUser[]>(url)
                 .then((response: AxiosResponse<IUser[]>) => {
                     this.loggedIn = response.data
                     if (this.loggedIn == true) {
                         this.User_email = this.loginEmail
                         this.loggedIn = response.data
-                        this.overviewPage = true
-                        //Test if the email is adm@ku.dk, and if it is, it sets admin = true, so an admin is logged in
                         if (this.loginEmail == "adm@ku.dk") {
                             this.admin = true
                         }
@@ -252,7 +263,6 @@ new Vue({
                     alert(error.message) // https://www.w3schools.com/js/js_popup.asp
                 })
         },
-        //When user press logout, it set currentuser id = null, and shows the login page
         logout() {
             this.loggedIn = false
             this.loginPage = true
@@ -263,13 +273,14 @@ new Vue({
         },
         //#endregion
         //#region Pages
-        //These methods are used to show the different pages. They are placed on buttons or in other methods to navigate around
         ADMMessagesPageCall() {
+
             this.ADMOverviewPage = false
             this.ADMCyclePage = false
             this.ADMSettingsPage = false
             this.ADMMessagesPage = true
         },
+
         createPage() {
             this.createUserPage = true
             this.loginPage = false
@@ -372,67 +383,88 @@ new Vue({
         },
         //#endregion
         //#region Trip
-        //When you start a trip, this method updates the cycle status to 1, so it is being used
         startTrip(_status: 1) {
+            //Url request 
             let urlGet = baseCycleUrl + "start/" + this.cycle_id
+            //Indsæt PUT-metode 
             axios.put<ICycle>(urlGet)
+            //response kaldt
                 .then((response: AxiosResponse<ICycle>) => {
                     this.singleCycle = response.data
                 })
+            //Catch tjekke om der er errors
                 .catch((error: AxiosError) => {
                     alert(error.message)
                 })
+            //Den her alert er kaldt, hvis alt går godt
             alert("Tur startet")
         },
-        //This Method use post, to create a trip, with the information needed
+
         opretTrip() {
+            //Url request 
             let urlSecond = baseTripUrl
+            //Metoden kaldt til at fremkalde times
             this.TimeFunction()
+            //Parameter tilføjelse
             this.addTripData.User_id = this.CurrentUserId
             this.addTripData.cycle_id = this.cycle_id
             this.addTripData.trip_map_json = "some map stuff"
             this.addTripData.trip_start = this.currentDateWithFormat
             this.addTripData.trip_end = "Awaiting end"
+            //Indsæt POST-metode 
             axios.post<ITrip>(urlSecond, this.addTripData)
-                .then
+            //response kaldt
+            .then
                 ((response: AxiosResponse) => {
                     //this.currentTrip[] = response
                     //sideskift?
                     this.responseTrip = response.data
                 }
                 )
+            //Catch tjekke om der er errors
                 .catch(
                     (error: AxiosError) => {
                         alert(error.message)
                     }
                 )
+            //Metode kaldt, hvis alt gør godt.
             this.startTrip()
         },
-        //This function get the date of today
+
+        //Tidsfunktion
         TimeFunction: function () {
+            //Varaibler tilføjet igennem en date tostring()
             this.currentDateWithFormat = new Date().toString()
             console.log(this.currentDateWithFormat);
         },
-        //This method updates the cycle status to 2, so it is free
+
         slutTrip(_status: 2) {
+            //getCurrentTrip gør at man kan får fat på den nuværende trip
             this.getCurrentTrip()
+            //Url request 
             let urlGet = baseCycleUrl + "slut/" + this.cycle_id
             //this.EndTripTime()
+            //If statement der tjekker om cycle_id er i Active Bikes
             if (this.activeBikes.includes(parseInt(this.cycle_id))) {
+                //Indsæt PUT-metode 
                 axios.put<ICycle>(urlGet)
+                //response kaldt
                     .then((response: AxiosResponse<ICycle>) => {
                         console.log(response.data)
                     })
+                //Catch tjekke om der er errors på respond
                     .catch((error: AxiosError) => {
                         alert(error.message);
                     })
             }
+            //Catch error
             else {
                 alert("Du er ikke den registrerede bruger af denne cykel")
             }
 
         },
-        //This function ...
+
+
         EndTripTime(): void {
             this.TimeFunction()
             this.endTime = this.currentDateWithFormat
@@ -454,7 +486,7 @@ new Vue({
                 alert("Du har ikke en aktiv rute på denne cykel.")
             }
         },
-        //This method gets a trip, for a current user
+
         getCurrentTrip() {
             let urlGet = baseTripUrl + "getwithuser/" + this.CurrentUserId + "/" + this.cycle_id
             axios.get<ITrip>(urlGet)
@@ -465,7 +497,6 @@ new Vue({
                     alert(error.message);
                 })
         },
-
         getCurrentTripEnd() {
             let urlGet = baseTripUrl + "getwithuser/" + this.CurrentUserId + "/" + this.cycle_id
             axios.get<ITrip>(urlGet)
@@ -501,7 +532,9 @@ new Vue({
                 alert("Du har ikke en aktiv rute på denne cykel.")
             }
         },
-        //This method gets the full current trip, on a current user
+
+
+
         GetFullCurrentTrip() {
             let urlGet = baseTripUrl + this.currentTripId
             axios.get<ITrip>(urlGet)
@@ -513,7 +546,7 @@ new Vue({
                     alert(error.message);
                 })
         },
-        //This method gets all active bikes 
+
         GetActiveBikesFromTrip() {
             let urlGet = baseTripUrl + "allecyklerfraruter"
             axios.get<ITrip>(urlGet)
@@ -524,7 +557,6 @@ new Vue({
                     alert(error.message);
                 })
         },
-        //This method is used ot check, if a cycle is in use without the qr code 
         CheckIfBikeIsAvailableWithoutQR() {
             if (this.CyclesInUse.includes(parseInt(this.cycle_id))) {
                 //  x.style.visibility = "visible";
@@ -535,7 +567,7 @@ new Vue({
                 this.opretTrip();
             }
         },
-        //This method checks if the cycle is available or not
+
         CheckIfBikeIsAvailable() {
             var x = document.getElementById("StatButton")
             if (this.CyclesInUse.includes(parseInt(this.cycle_id))) {
@@ -550,7 +582,7 @@ new Vue({
         },
         //#endregion
         //#region Bruger
-        //This method gets all user. Used to show them all
+
         getAllUsers() {
             axios.get<IUser[]>(baseUserUrl)
                 .then((response: AxiosResponse<IUser[]>) => {
@@ -561,20 +593,6 @@ new Vue({
                     alert(error.message) // https://www.w3schools.com/js/js_popup.asp
                 })
         },
-        //This method is used to get a singler user by their id
-        ADMHentBruger() {
-            let urlGet = baseUserUrl + "user/" + this.ChosenUserId
-            axios.get<IUser>(urlGet)
-                .then((response: AxiosResponse<IUser>) => {
-                    this.User_id = response.data.user_id
-                    this.User_firstname = response.data.user_firstname
-                    this.User_email = response.data.user_email
-                })
-                .catch((error: AxiosError) => {
-                    alert(error.message);
-                })
-        },
-        //This method is used to determain which id is selected
         ADMHentUserIDFraSelect() {
             this.helperstring = this.selectedUser
             this.ADMHelperID()
@@ -583,7 +601,6 @@ new Vue({
             this.ChosenUserId = parseInt(this.helperstring.split(".", 1))
             this.ADMDeleteUser()
         },
-        //This method use the chosen user id to delete, but makes an alart to ask if you are sure
         ADMDeleteUser() {
             if (confirm("Do you really want to delete?")) {
                 let urlGetUser = baseUserUrl + "delete/" + this.ChosenUserId
@@ -603,7 +620,8 @@ new Vue({
                     )
             }
         },
-        //This method is used to get one user, depending on the login email. Then then set currentuserid to the id matching the email
+
+
         HentBruger() {
             let urlGet = baseUserUrl + this.loginEmail
             axios.get<IUser>(urlGet)
@@ -616,7 +634,6 @@ new Vue({
                 })
 
         },
-        //This method updates a user status, so the user cant login
         deactivateUser() {
             if (confirm("Er du sikker på at du vil slette din bruger?")) {
                 let urlPut = baseUserUrl + "deactivate/" + parseInt(this.CurrentUserId)
@@ -632,7 +649,6 @@ new Vue({
                     })
             }
         },
-        //This method is used to the neccesary information about a user, to show on profile page
         HentAltOmEnBruger() {
             let urlGet = baseUserUrl + "user/" + parseInt(this.CurrentUserId)
             axios.get<IUser2>(urlGet)
@@ -647,7 +663,20 @@ new Vue({
                     alert(error.message);
                 })
         },
-        //This method is used to fill in the information in the input frields the user uses to update his information
+
+        ADMHentBruger() {
+            let urlGet = baseUserUrl + "user/" + this.ChosenUserId
+            axios.get<IUser>(urlGet)
+                .then((response: AxiosResponse<IUser>) => {
+                    this.User_id = response.data.user_id
+                    this.User_firstname = response.data.user_firstname
+                    this.User_email = response.data.user_email
+                })
+                .catch((error: AxiosError) => {
+                    alert(error.message);
+                })
+
+        },
         InputFilled() {
             this.HentAltOmEnBruger()
             this.updateUserData.User_firstname = this.CurrentUserName
@@ -655,7 +684,6 @@ new Vue({
             this.updateUserData.User_email = this.CurrentEmail
             this.updateUserData.User_mobile = this.CurrentPhone
         },
-        //This method is used to update a user information
         updateUser() {
             let url: string = baseUserUrl + "updateUser/" + parseInt(this.CurrentUserId)
             axios.put<IUser>(url, this.updateUserData)
@@ -670,7 +698,7 @@ new Vue({
                     alert(error.message);
                 })
         },
-        //This method is used
+
         TjekBruger() {
             let urlGet = baseTripUrl + "allusertrips/" + this.CurrentUserId
             axios.get<ITrip[]>(urlGet)
@@ -681,8 +709,8 @@ new Vue({
                     alert(error.message);
                 })
         },
-        //This method is used to create a user. It throws error messages if the criterias arent met
         addUser() {
+
             var noError = true
             try {
                 if (this.addData.user_email == '') throw 'emptyEmail';
@@ -835,7 +863,6 @@ new Vue({
         },
         //#endregion
         //#region Bikes
-        //This method is gettin all data about all bikes
         helperGetAndShow(url: string) {
             axios.get<ICycle[]>(url)
                 .then((response: AxiosResponse<ICycle[]>) => {
@@ -846,7 +873,6 @@ new Vue({
                     alert(error.message) // https://www.w3schools.com/js/js_popup.asp
                 })
         },
-        //This method get a bike id from a select
         HentCykelIDFraSelect() {
             this.helperSelecter = this.select
             this.SelectHelper()
@@ -855,7 +881,6 @@ new Vue({
             this.cycle_id = parseInt(this.helperSelecter)
             this.CheckIfBikeIsAvailablewithOutscan()
         },
-        //This method is checking if a bike is available without having scanned the qr code
         CheckIfBikeIsAvailablewithOutscan() {
             var x = document.getElementById("StartUdenSkan")
             if (this.CyclesInUse.includes(parseInt(this.cycle_id))) {
@@ -870,7 +895,6 @@ new Vue({
 
             }
         },
-        //This method gets current trip from a current user and a selected bike
         getCurrentTripSelect() {
             let urlGet = baseTripUrl + "getwithuser/" + this.CurrentUserId + "/" + this.cycle_id
             axios.get<ITrip>(urlGet)
@@ -886,7 +910,8 @@ new Vue({
             this.currentTripId = 0
             this.getCurrentTripEnd()
         },
-        //This method get a bikes id from a select
+
+
         HentCykelIDSelect() {
             this.currentTripId = 0
             this.helperCycle = this.select
@@ -895,11 +920,11 @@ new Vue({
             //this.getCurrentTrip()
             //this.CheckIfBikeIsAvailableWithoutQR() 
         },
-        //
+
+        
         getIdHelper() {
             this.cycle_id = parseInt(this.helperCycle)
         },
-        //This method is used on admin, to show every bike and information about them
         getAllBikesAdmin() {
             let url = baseCycleUrl + "alle-cykler/"
             axios.get<ICycle[]>(url)
@@ -910,11 +935,9 @@ new Vue({
                     alert(error.message)
                 })
         },
-        //This method uses the helperGetAndShow to get all bikes
         getAllBikes() {
             this.helperGetAndShow(baseCycleUrl)
         },
-        //This method is getting one bike through the qr code
         getOneBike() {
             if (this.contentCheck == "http://qr.getbike/") {
                 let urlGet = baseCycleUrl + this.cycle_id
@@ -943,7 +966,6 @@ new Vue({
                 alert("Ikke en gyldig Cykel QR.");
             }
         },
-        //This method is showing all bikes that are being used + the id of the user
         GetActiveBikes() {
             let url = baseTripUrl + "allusertrips/" + this.CurrentUserId
             axios.get<ITrip[]>(url)
@@ -954,7 +976,7 @@ new Vue({
                     alert(error.message);
                 })
         },
-        //This method adds a new bike to the database
+
         ADMAddBike() {
             let urlGet = baseCycleUrl
             this.addCycleData.cycle_name = this.NewCycleName
@@ -974,7 +996,7 @@ new Vue({
                     }
                 )
         },
-        //This method is deleting a a bike
+
         ADMDeleteBike() {
             if (confirm("Do you really want to delete?")) {
                 let urlGet = baseCycleUrl + parseInt(this.SelectedCycle)
@@ -999,13 +1021,12 @@ new Vue({
 
         //#endregion  
         //#region QR code
-        //This method is used by the qr reader, and decodes the qr code
         onDecode(content: any) {
             this.decodedContent = content
             this.contentCheck = content.substr(0, 18)
             this.cycle_id = content.slice(18)
         },
-        //This method is initializing the qr reader
+
         onInit(promise: any) {
             promise.then(() => {
                 console.log('Successfully initilized! Ready for scanning now!')
@@ -1027,8 +1048,7 @@ new Vue({
                 })
         },
         //#endregion
-        //#region Bike available/not by admin
-        //This method updates the bike status to one, so it in use
+        //#region Bike available/not
         Unavaliable(_status: 1) {
             let urlGet = baseCycleUrl + "start/" + this.select
             // this.opretTrip()
@@ -1041,7 +1061,6 @@ new Vue({
                 })
             alert("Unavaliable Now")
         },
-        //This method updates the bikes status, so it is not use anymore
         Avaliable(_status: 2) {
             let urlGet = baseCycleUrl + "slut/" + this.select
             axios.put<ICycle>(urlGet)
@@ -1055,7 +1074,6 @@ new Vue({
         },
         //#endregion
         //#region Messages
-        //This method gets the current user id, cycle id so you can create a message to a bike
         opretMessage() {
             let urlSecond = baseMessageUrl
             this.addMessageData.messages_user_id = this.CurrentUserId
@@ -1079,7 +1097,6 @@ new Vue({
                     }
                 )
         },
-        //
         StolenHelper2(_status: 1) {
             let urlGet = baseCycleUrl + "start/" + this.cycle_id
             // this.opretTrip()
@@ -1091,7 +1108,7 @@ new Vue({
                     alert(error.message)
                 })
         },
-        //
+
         opretStolen() {
             let urlGet = baseMessageUrl
             this.addMessageData.messages_Id = this.CurrentUserId
@@ -1115,7 +1132,6 @@ new Vue({
                     }
                 )
         },
-        //
         StolenHelper(_status: 1) {
             let urlGet = baseCycleUrl + "start/" + this.select
             // this.opretTrip()
@@ -1127,7 +1143,7 @@ new Vue({
                     alert(error.message)
                 })
         },
-        //
+
         ADMHentBeskeder() {
             let urlGet = baseMessageUrl
             axios.get<IMessage>(urlGet)
@@ -1142,7 +1158,7 @@ new Vue({
                     }
                 )
         },
-        //
+
         ADMHentBeskederCykel() {
             let urlGet = baseMessageUrl + "cykel/" + parseInt(this.select)
             axios.get<IMessage[]>(urlGet)
@@ -1189,4 +1205,6 @@ new Vue({
 
         //#endregion
     },
+    
 })
+
