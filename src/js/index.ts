@@ -160,7 +160,7 @@ new Vue({
         loginPassword: "",
         ResponseTrip: null,
         //#endregion
-        cycle_name: "",
+        cycle_name: " ",
         //#region Create data
         //These are used when you create and update a thing
         addData: { user_email: "", user_password: "", user_firstname: "", user_lastname: "", user_mobile: 0, userQuestionOne: "", userAnswerOne: "", userQuestionTwo: "", userAnswerTwo: "", userQuestionThree: "", userAnswerThree: "" },
