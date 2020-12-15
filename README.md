@@ -9,7 +9,7 @@ Dette repository indeholder vores samlede besvarelse af eksamensopgaven, stillet
 -   **Undervisere:**  Vibeke Sandau
 -   **Udarbejdet af:** Michelle Dam Kristensen, Morten Jakobsen Møller, Benjamin Curovic og Lukas Jürs Schmidt
 -   **Hold ID:**  rf19da2c3-3c.
--   **Rest API:**  https://mort-typescript.azurewebsites.net/ | https://github.com/Mort094/KUBikes
+-   **Rest API:**  http://mort-rest.azurewebsites.net/api/ | https://github.com/Mort094/KUBikes
 
 ## Før at du kan køre programmet forventer vi at
 
