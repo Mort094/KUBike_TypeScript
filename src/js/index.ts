@@ -439,17 +439,7 @@ new Vue({
             //Metode kaldt, hvis alt gør godt.
             this.startTrip()
         },
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
         //Tidsfunktion
-=======
->>>>>>> parent of 8d5777a... Comments
-=======
->>>>>>> parent of 8d5777a... Comments
-=======
->>>>>>> parent of 8d5777a... Comments
         TimeFunction: function () {
             //Varaibler tilføjet igennem en date tostring()
             this.currentDateWithFormat = new Date().toString()
