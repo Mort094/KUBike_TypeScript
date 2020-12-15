@@ -68,6 +68,7 @@ new Vue({
     data: {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         center:{ 
             lat: 40.730610, 
             lng: -73.935242
@@ -75,6 +76,8 @@ new Vue({
             platform: null,
             apikey: "YRiO3eCm-Zmx_JN3qpZmRtYI1mpaM_eSb6osTJ_zsww",
             // You can get the API KEY from developer.here.com
+=======
+>>>>>>> parent of 8d5777a... Comments
 =======
 >>>>>>> parent of 8d5777a... Comments
 =======
@@ -439,7 +442,10 @@ new Vue({
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         //Tidsfunktion
+=======
+>>>>>>> parent of 8d5777a... Comments
 =======
 >>>>>>> parent of 8d5777a... Comments
 =======
