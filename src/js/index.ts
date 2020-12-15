@@ -66,6 +66,7 @@ interface IMessage {
 new Vue({
     el: "#app",
     data: {
+<<<<<<< HEAD
         center:{ 
             lat: 40.730610, 
             lng: -73.935242
@@ -73,6 +74,8 @@ new Vue({
             platform: null,
             apikey: "YRiO3eCm-Zmx_JN3qpZmRtYI1mpaM_eSb6osTJ_zsww",
             // You can get the API KEY from developer.here.com
+=======
+>>>>>>> parent of 8d5777a... Comments
         helperSelecter: "",
         currentDateWithFormat: "",
         select: '',
@@ -431,7 +434,10 @@ new Vue({
             this.startTrip()
         },
 
+<<<<<<< HEAD
         //Tidsfunktion
+=======
+>>>>>>> parent of 8d5777a... Comments
         TimeFunction: function () {
             //Varaibler tilføjet igennem en date tostring()
             this.currentDateWithFormat = new Date().toString()
